@@ -8,19 +8,11 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
-  navigation: any[] = [
+  navigation: { title: string; url: string }[] = [
     {
       title: 'NAVIGATION.HOME',
       url: '',
     },
-    // {
-    //   title: 'NAVIGATION.SERVICES',
-    //   url: '/services',
-    // },
-    // {
-    //   title: 'NAVIGATION.PRODUCTS',
-    //   url: '/products',
-    // },
     {
       title: 'NAVIGATION.AUTOMATION',
       url: '/automation',
@@ -47,13 +39,13 @@ export class HeaderComponent implements OnInit {
   constructor(private translate: TranslateService) {}
 
   ngOnInit() {
-    this.selected = this.languages[1];
+    this.setSelected(this.translate.currentLang || this.translate.defaultLang);
+    this.translate.onLangChange.subscribe(({ lang }) => this.setSelected(lang));
   }
 
   setLanguage(language: string) {
-    this.selected = language;
     this.hideLanguageList = true;
-    this.translate.use(language.toLocaleLowerCase());
+    this.translate.use(language.toLowerCase());
   }
 
   toggleLanguageList() {
@@ -70,5 +62,9 @@ export class HeaderComponent implements OnInit {
     if (this.showMenu && !this.hideLanguageList) {
       this.hideLanguageList = true;
     }
+  }
+
+  private setSelected(lang: string) {
+    this.selected = (lang || 'en').toUpperCase();
   }
 }

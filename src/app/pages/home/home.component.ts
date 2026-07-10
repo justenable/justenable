@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AnimationOptions } from 'ngx-lottie';
-import { UtilsService } from 'src/app/services/utils.service';
+import { Industry } from 'src/app/models/industry.model';
+import { ServiceCard } from 'src/app/models/service-card.model';
 // import function to register Swiper custom elements
 import { register } from 'swiper/element/bundle';
 
@@ -14,30 +15,30 @@ export class HomeComponent {
     path: '/assets/animation/coding.json',
   };
 
-  services: any = [
+  services: ServiceCard[] = [
     {
       title: 'DESIGN_ENGINEERING',
       description: 'DESIGN_ENGINEERING',
-      coverImage: 'assets/img/design engineering.webp',
+      coverImage: 'assets/img/design-engineering.webp',
     },
     {
       title: 'SOFTWARE_ENGINEERING',
       description: 'SOFTWARE_ENGINEERING',
-      coverImage: 'assets/img/Software Engineering.png',
+      coverImage: 'assets/img/software-engineering.png',
     },
     {
       title: 'PROJECT_MANAGEMENT',
       description: 'PROJECT_MANAGEMENT',
-      coverImage: 'assets/img/Project Management.gif',
+      coverImage: 'assets/img/project-management.gif',
     },
     {
       title: 'MAINTENANCE_AND_GENERAL_WORK',
       description: 'MAINTENANCE_AND_GENERAL_WORK',
-      coverImage: 'assets/img/Maintenance and general work.jpeg',
+      coverImage: 'assets/img/maintenance-and-general-work.webp',
     },
   ];
 
-  industries: any = [
+  industries: Industry[] = [
     {
       name: 'FMCG',
     },
@@ -51,10 +52,6 @@ export class HomeComponent {
       name: 'OIL_AND_GAS',
     },
   ];
-
-  constructor(private titleService: UtilsService) {
-    this.titleService.setTitle('NAVIGATION.HOME');
-  }
 
   ngAfterViewInit(): void {
     register();

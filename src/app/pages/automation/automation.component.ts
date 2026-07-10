@@ -1,13 +1,17 @@
-import { Component } from '@angular/core';
-
+import { AfterViewInit, Component } from '@angular/core';
+import { Observable } from 'rxjs';
+import { ContentSection } from 'src/app/models/content-section.model';
+import { TitledText } from 'src/app/models/titled-text.model';
+import { UtilsService } from 'src/app/services/utils.service';
+import { register } from 'swiper/element/bundle';
 @Component({
   selector: 'app-automation',
   templateUrl: './automation.component.html',
   styleUrls: ['./automation.component.scss'],
 })
-export class AutomationComponent {
+export class AutomationComponent implements AfterViewInit {
   companyName: string = 'Just Enable';
-  sections = [
+  sections: ContentSection[] = [
     {
       title: 'GLOBAL.PROCESS_AUTOMATION',
       texts: [
@@ -51,9 +55,13 @@ export class AutomationComponent {
     },
   ];
 
-  extractData(str: string, title?: boolean) {
-    return title
-      ? str.substring(0, str.indexOf(':'))
-      : str.substring(str.indexOf(':') + 1).trim();
+  outroItems$: Observable<TitledText[]> = this.utils.streamTitledList(
+    'GLOBAL.AUTOMATION_OUTRO_TEXT'
+  );
+
+  constructor(private utils: UtilsService) {}
+
+  ngAfterViewInit(): void {
+    register();
   }
 }

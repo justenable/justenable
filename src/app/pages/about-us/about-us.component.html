@@ -1,13 +1,16 @@
 <div class="mx-auto">
     <div [ngClass]="section.bgColor"
-         *ngFor="let section of sections"
+         *ngFor="let section of sections; let isFirst = first"
          class="px-4 border-b border-gray-100 pb-28 text-gray-500 bg-gradient-to-br">
         <div class="lg:w-2/6 mx-auto">
             <ng-lottie [options]="{ path: section.image }"></ng-lottie>
         </div>
-        <h1 class="mx-auto max-w-screen-xl text-center uppercase mb-6 font-bold text-4xl">
+        <h1 *ngIf="isFirst" class="mx-auto max-w-screen-xl text-center uppercase mb-6 font-bold text-4xl">
             {{ section.title | translate }}
         </h1>
+        <h2 *ngIf="!isFirst" class="mx-auto max-w-screen-xl text-center uppercase mb-6 font-bold text-4xl">
+            {{ section.title | translate }}
+        </h2>
         <p [innerHTML]="section.text | translate"
            class="mx-auto max-w-screen-xl text-center lg:text-left text-lg font-light">
         </p>

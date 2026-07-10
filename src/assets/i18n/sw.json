@@ -1,4 +1,7 @@
 {
+	"A11Y.SELECT_LANGUAGE": "Chagua lugha",
+	"A11Y.TOGGLE_NAVIGATION": "Onyesha au ufiche menyu ya urambazaji",
+	"A11Y.TOGGLE_THEME": "Washa au uzime hali ya giza",
 	"GLOBAL.ASSET_MANAGEMENT": "Usimamizi wa Mali",
 	"GLOBAL.ASSET_MANAGEMENT_TEXT.0": "Tunatoa huduma za kina za usimamizi wa mali ili kufuatilia, kufuatilia na kudumisha mali zako muhimu katika maisha yao yote.",
 	"GLOBAL.ASSET_MANAGEMENT_TEXT.1": "Timu yetu hutumia programu na mbinu za usimamizi wa mali ili kuboresha matumizi ya mali, kufuatilia historia ya urekebishaji, na kupanga mipango ya kubadilisha au kusasisha.",
@@ -91,11 +94,7 @@
 	"NAVIGATION.CONTACT_US": "Wasiliana nasi",
 	"NAVIGATION.HOME": "Nyumbani",
 	"NAVIGATION.MAINTENANCE": "Matengenezo",
-	"NAVIGATION.PRODUCTS": "Bidhaa",
-	"NAVIGATION.SERVICES": "Huduma",
-	"NAVIGATION.WORK": "Kazi",
-	"POLICY.ACCESSIBILITY": "Upatikanaji",
-	"POLICY.COOKIE_POLICY": "Sera ya kuki",
-	"POLICY.PRIVACY_POLICY": "Sera ya faragha",
-	"POLICY.TERMS_CONDITIONS": "Masharti na Masharti"
+	"NOT_FOUND.BACK_HOME": "Rudi mwanzoni",
+	"NOT_FOUND.MESSAGE": "Ukurasa unaoutafuta haupo au umehamishwa.",
+	"NOT_FOUND.TITLE": "Ukurasa haukupatikana"
 }

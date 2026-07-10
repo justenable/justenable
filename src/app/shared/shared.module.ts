@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClientJsonpModule, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -14,10 +14,12 @@ import { ClickElsewhereDirective } from '../directives/click-elsewhere.directive
     FormsModule,
     LottieModule,
     TranslateModule,
+    // HttpClient is only provided through this import (AppModule imports
+    // SharedModule); the TranslateHttpLoader depends on it. Move to
+    // AppModule before removing it here.
     HttpClientModule,
     ReactiveFormsModule,
     RouterModule,
-    HttpClientJsonpModule,
   ],
 
   exports: [
@@ -25,11 +27,9 @@ import { ClickElsewhereDirective } from '../directives/click-elsewhere.directive
     FormsModule,
     LottieModule,
     TranslateModule,
-    HttpClientModule,
     ReactiveFormsModule,
     RouterModule,
     ClickElsewhereDirective,
-    HttpClientJsonpModule,
   ],
 })
 export class SharedModule {}

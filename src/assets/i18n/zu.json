@@ -1,4 +1,7 @@
 {
+	"A11Y.SELECT_LANGUAGE": "Khetha ulimi",
+	"A11Y.TOGGLE_NAVIGATION": "Vula noma uvale imenyu yokuzulazula",
+	"A11Y.TOGGLE_THEME": "Vula noma uvale imodi emnyama",
 	"GLOBAL.ASSET_MANAGEMENT": "Ukuphathwa Kwempahla",
 	"GLOBAL.ASSET_MANAGEMENT_TEXT.0": "Sihlinzeka ngamasevisi aphelele okuphatha impahla ukuze silandelele, sigade, futhi sigcine izimpahla zakho ezibalulekile kuwo wonke umjikelezo wabo wokuphila.",
 	"GLOBAL.ASSET_MANAGEMENT_TEXT.1": "Ithimba lethu lisebenzisa isofthiwe namasu okuphatha impahla ukuze lithuthukise ukusetshenziswa kwempahla, lilandelele umlando wokunakekelwa, kanye nohlelo lokushintshwa noma lokuthuthukisa.",
@@ -91,11 +94,7 @@
 	"NAVIGATION.CONTACT_US": "Xhumana nathi",
 	"NAVIGATION.HOME": "Ikhaya",
 	"NAVIGATION.MAINTENANCE": "Isondlo",
-	"NAVIGATION.PRODUCTS": "Imikhiqizo",
-	"NAVIGATION.SERVICES": "Imisebenzi",
-	"NAVIGATION.WORK": "Sebenza",
-	"POLICY.ACCESSIBILITY": "Ukufinyeleleka",
-	"POLICY.COOKIE_POLICY": "Inqubomgomo Yamakhukhi",
-	"POLICY.PRIVACY_POLICY": "Inqubomgomo yobumfihlo",
-	"POLICY.TERMS_CONDITIONS": "Imigomo nemibandela"
+	"NOT_FOUND.BACK_HOME": "Buyela ekhaya",
+	"NOT_FOUND.MESSAGE": "Ikhasi olifunayo alikho noma selisusiwe.",
+	"NOT_FOUND.TITLE": "Ikhasi alitholakalanga"
 }

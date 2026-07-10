@@ -1,4 +1,7 @@
 {
+	"A11Y.SELECT_LANGUAGE": "Choisir la langue",
+	"A11Y.TOGGLE_NAVIGATION": "Afficher ou masquer le menu de navigation",
+	"A11Y.TOGGLE_THEME": "Activer ou désactiver le mode sombre",
 	"GLOBAL.ASSET_MANAGEMENT": "La gestion d'actifs",
 	"GLOBAL.ASSET_MANAGEMENT_TEXT.0": "Nous fournissons des services complets de gestion des actifs pour suivre, surveiller et entretenir vos précieux actifs tout au long de leur cycle de vie.",
 	"GLOBAL.ASSET_MANAGEMENT_TEXT.1": "Notre équipe utilise des logiciels et des techniques de gestion des actifs pour optimiser l'utilisation des actifs, suivre l'historique de maintenance et planifier les remplacements ou les mises à niveau.",
@@ -91,11 +94,7 @@
 	"NAVIGATION.CONTACT_US": "Contactez nous",
 	"NAVIGATION.HOME": "Accueil",
 	"NAVIGATION.MAINTENANCE": "Entretien",
-	"NAVIGATION.PRODUCTS": "Des produits",
-	"NAVIGATION.SERVICES": "Services",
-	"NAVIGATION.WORK": "Travail",
-	"POLICY.ACCESSIBILITY": "Accessibilité",
-	"POLICY.COOKIE_POLICY": "Politique en matière de cookies",
-	"POLICY.PRIVACY_POLICY": "Politique de confidentialité",
-	"POLICY.TERMS_CONDITIONS": "Conditions générales"
+	"NOT_FOUND.BACK_HOME": "Retour à l'accueil",
+	"NOT_FOUND.MESSAGE": "La page que vous recherchez n'existe pas ou a été déplacée.",
+	"NOT_FOUND.TITLE": "Page introuvable"
 }

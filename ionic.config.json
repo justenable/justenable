@@ -1,7 +1,0 @@
-{
-  "name": "Just Enable",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "angular"
-}

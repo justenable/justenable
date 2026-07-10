@@ -1,4 +1,8 @@
 import { Component } from '@angular/core';
+import { Observable } from 'rxjs';
+import { ContentSection } from 'src/app/models/content-section.model';
+import { TitledText } from 'src/app/models/titled-text.model';
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-maintenance',
@@ -7,7 +11,7 @@ import { Component } from '@angular/core';
 })
 export class MaintenanceComponent {
   companyName: string = 'Just Enable';
-  sections = [
+  sections: ContentSection[] = [
     {
       title: 'GLOBAL.PREVENTIVE_MAINTENANCE',
       texts: [
@@ -63,9 +67,9 @@ export class MaintenanceComponent {
     },
   ];
 
-  extractData(str: string, title?: boolean) {
-    return title
-      ? str.substring(0, str.indexOf(':'))
-      : str.substring(str.indexOf(':') + 1).trim();
-  }
+  outroItems$: Observable<TitledText[]> = this.utils.streamTitledList(
+    'GLOBAL.MAINTENANCE_OUTRO_TEXT'
+  );
+
+  constructor(private utils: UtilsService) {}
 }

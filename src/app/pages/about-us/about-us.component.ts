@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { UtilsService } from 'src/app/services/utils.service';
+import { AboutSection } from 'src/app/models/about-section.model';
 
 @Component({
   selector: 'app-about-us',
@@ -7,7 +7,7 @@ import { UtilsService } from 'src/app/services/utils.service';
   styleUrls: ['./about-us.component.scss'],
 })
 export class AboutUsComponent {
-  sections = [
+  sections: AboutSection[] = [
     {
       title: 'GLOBAL.OUR_STORY',
       text: 'GLOBAL.OUR_STORY_TEXT',
@@ -27,8 +27,4 @@ export class AboutUsComponent {
       image: '/assets/animation/technology.json',
     },
   ];
-
-  constructor(private titleService: UtilsService) {
-    this.titleService.setTitle('NAVIGATION.ABOUT_US');
-  }
 }

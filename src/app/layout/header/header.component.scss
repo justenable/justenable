@@ -16,7 +16,7 @@ div.navigation {
       li {
         @apply w-full;
         a {
-          @apply text-gray-500 py-4 text-center uppercase h-full flex justify-center items-center text-lg font-light;
+          @apply text-gray-700 py-4 text-center uppercase h-full flex justify-center items-center text-lg font-bold;
         }
         a:hover {
           @apply bg-gradient-to-br from-gray-300 via-gray-50 to-gray-100;
@@ -32,28 +32,28 @@ div.navigation {
       @apply shadow-lg translate-x-0;
     }
 
-    div.menu-button {
-      @apply lg:hidden p-4 min-h-full flex flex-col justify-center items-center hover:from-gray-300 via-gray-50 to-gray-100 cursor-pointer;
+    button.menu-button {
+      @apply appearance-none bg-transparent border-0 lg:hidden p-4 min-h-full flex flex-col justify-center items-center hover:from-gray-300 via-gray-50 to-gray-100 cursor-pointer;
 
-      div {
+      span {
         @apply h-1 bg-gray-400;
       }
 
-      div:nth-child(1) {
+      span:nth-child(1) {
         @apply w-6;
       }
-      div:nth-child(2) {
+      span:nth-child(2) {
         @apply my-1 w-9;
       }
-      div:nth-child(3) {
+      span:nth-child(3) {
         @apply w-4;
       }
     }
 
-    div.menu-button:hover {
+    button.menu-button:hover {
       @apply bg-gradient-to-br from-amber-500 via-orange-400 to-orange-500;
 
-      div {
+      span {
         @apply bg-gray-50;
       }
     }
@@ -61,17 +61,17 @@ div.navigation {
     div.language {
       @apply min-h-full w-full relative border-l border-r border-gray-100;
       max-width: 140px;
-      > div {
-        @apply bg-white z-20 relative h-full m-0 flex justify-center items-center uppercase bg-gradient-to-br hover:from-gray-200 via-gray-100 to-gray-100 cursor-pointer;
-        h5 {
+      > button {
+        @apply appearance-none border-0 w-full bg-white z-20 relative h-full m-0 flex justify-center items-center uppercase bg-gradient-to-br hover:from-gray-200 via-gray-100 to-gray-100 cursor-pointer;
+        span {
           @apply text-gray-500;
         }
 
-        ion-icon {
+        svg {
           @apply ml-4 flex items-center transition;
         }
 
-        ion-icon.rotate {
+        svg.rotate {
           @apply rotate-180;
         }
       }
@@ -79,9 +79,9 @@ div.navigation {
       ul {
         @apply flex-col absolute right-full lg:right-0 w-full bg-gray-600 shadow-sm text-center z-10 transition-transform ease-out;
         li {
-          @apply w-full px-3 py-2 bg-white;
-          h5 {
-            @apply m-0 uppercase;
+          @apply w-full bg-white;
+          button {
+            @apply appearance-none border-0 bg-transparent w-full px-3 py-2 m-0 uppercase cursor-pointer;
           }
         }
 

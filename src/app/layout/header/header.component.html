@@ -3,7 +3,7 @@
      routerDirection="root"
      routerLink="/"
      routerLinkActive="active-link">
-    <img alt="JE Logo" src="./assets/img/JE logo.jpg" />
+    <img alt="JE Logo" src="./assets/img/je-logo.webp" />
   </a>
   <nav>
     <ul [ngClass]="{ 'show-menu': showMenu }">
@@ -17,28 +17,42 @@
       </li>
     </ul>
     <div class="language">
-      <div (click)="toggleLanguageList()"
-           (clickElsewhere)="hideLanguageList = true">
-        <h5>{{ selected }}</h5>
-        <ion-icon [ngClass]="{ rotate: !hideLanguageList }"
-                  color="medium"
-                  name="chevron-down">
-        </ion-icon>
-      </div>
+      <button (click)="toggleLanguageList()"
+              (clickElsewhere)="hideLanguageList = true"
+              [attr.aria-expanded]="!hideLanguageList"
+              [attr.aria-label]="'A11Y.SELECT_LANGUAGE' | translate"
+              aria-haspopup="true"
+              type="button">
+        <span>{{ selected }}</span>
+        <svg [ngClass]="{ rotate: !hideLanguageList }"
+             aria-hidden="true"
+             class="w-4 h-4 text-gray-500"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="2"
+             viewBox="0 0 24 24"
+             xmlns="http://www.w3.org/2000/svg">
+          <path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
       <ul [ngClass]="{ hidden: hideLanguageList }">
-        <li (click)="setLanguage(lang)"
-            [ngClass]="{ selected: selected === lang }"
+        <li [ngClass]="{ selected: selected === lang }"
             *ngFor="let lang of languages">
-          <h5>{{ "LANGUAGE." + lang | translate }}</h5>
+          <button (click)="setLanguage(lang)" type="button">
+            {{ "LANGUAGE." + lang | translate }}
+          </button>
         </li>
       </ul>
     </div>
-    <div (click)="toggleMenu()"
-         (clickElsewhere)="showMenu = false"
-         class="menu-button">
-      <div></div>
-      <div></div>
-      <div></div>
-    </div>
+    <button (click)="toggleMenu()"
+            (clickElsewhere)="showMenu = false"
+            [attr.aria-expanded]="showMenu"
+            [attr.aria-label]="'A11Y.TOGGLE_NAVIGATION' | translate"
+            class="menu-button"
+            type="button">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
   </nav>
 </div>

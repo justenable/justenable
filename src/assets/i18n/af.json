@@ -1,4 +1,7 @@
 {
+	"A11Y.SELECT_LANGUAGE": "Kies taal",
+	"A11Y.TOGGLE_NAVIGATION": "Wys of versteek die navigasiekieslys",
+	"A11Y.TOGGLE_THEME": "Skakel donker modus aan of af",
 	"GLOBAL.ASSET_MANAGEMENT": "Batebestuur",
 	"GLOBAL.ASSET_MANAGEMENT_TEXT.0": "Ons verskaf omvattende batebestuursdienste om jou waardevolle bates regdeur hul lewensiklus op te spoor, te monitor en in stand te hou.",
 	"GLOBAL.ASSET_MANAGEMENT_TEXT.1": "Ons span gebruik batebestuursagteware en -tegnieke om batebenutting te optimaliseer, onderhoudsgeskiedenis na te spoor en te beplan vir vervangings of opgraderings.",
@@ -91,11 +94,7 @@
 	"NAVIGATION.CONTACT_US": "KONTAK ONS",
 	"NAVIGATION.HOME": "huis",
 	"NAVIGATION.MAINTENANCE": "Onderhoud",
-	"NAVIGATION.PRODUCTS": "Produkte",
-	"NAVIGATION.SERVICES": "dienste",
-	"NAVIGATION.WORK": "werk",
-	"POLICY.ACCESSIBILITY": "Toeganklikheid",
-	"POLICY.COOKIE_POLICY": "Koekiebeleid",
-	"POLICY.PRIVACY_POLICY": "Privaatheidsbeleid",
-	"POLICY.TERMS_CONDITIONS": "terme en voorwaardes"
+	"NOT_FOUND.BACK_HOME": "Terug na die tuisblad",
+	"NOT_FOUND.MESSAGE": "Die bladsy waarna jy soek, bestaan nie of is geskuif.",
+	"NOT_FOUND.TITLE": "Bladsy nie gevind nie"
 }

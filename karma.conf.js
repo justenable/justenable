@@ -19,7 +19,10 @@ module.exports = function (config) {
         // for example, you can disable the random execution with `random: false`
         // or set a specific seed with `seed: 4321`
       },
-      clearContext: false // leave Jasmine Spec Runner output visible in browser
+      // clearContext must be true: Chrome 128+ headless falsely reports
+      // "Some of your tests did a full page reload!" when the context is
+      // kept alive (karma-runner/karma#3887, angular/angular-cli#28271).
+      clearContext: true
     },
     jasmineHtmlReporter: {
       suppressAll: true // removes the duplicated traces

@@ -1,4 +1,7 @@
 {
+	"A11Y.SELECT_LANGUAGE": "Select language",
+	"A11Y.TOGGLE_NAVIGATION": "Toggle navigation menu",
+	"A11Y.TOGGLE_THEME": "Toggle dark mode",
 	"GLOBAL.ASSET_MANAGEMENT": "Asset Management",
 	"GLOBAL.ASSET_MANAGEMENT_TEXT.0": "We provide comprehensive asset management services to track, monitor, and maintain your valuable assets throughout their lifecycle.",
 	"GLOBAL.ASSET_MANAGEMENT_TEXT.1": "Our team utilizes asset management software and techniques to optimize asset utilization, track maintenance history, and plan for replacements or upgrades.",
@@ -91,11 +94,7 @@
 	"NAVIGATION.CONTACT_US": "Contact US",
 	"NAVIGATION.HOME": "Home",
 	"NAVIGATION.MAINTENANCE": "Maintenance",
-	"NAVIGATION.PRODUCTS": "Products",
-	"NAVIGATION.SERVICES": "Services",
-	"NAVIGATION.WORK": "Work",
-	"POLICY.ACCESSIBILITY": "Accessibility",
-	"POLICY.COOKIE_POLICY": "Cookie Policy",
-	"POLICY.PRIVACY_POLICY": "Privacy Policy",
-	"POLICY.TERMS_CONDITIONS": "Terms & Conditions"
+	"NOT_FOUND.BACK_HOME": "Back to home",
+	"NOT_FOUND.MESSAGE": "The page you are looking for does not exist or has been moved.",
+	"NOT_FOUND.TITLE": "Page not found"
 }
