@@ -33,14 +33,16 @@ export class HeaderComponent implements OnInit {
   ];
 
   languages = environment.languages;
-  selected: string = '';
-  hideLanguageList: boolean = true;
-  showMenu: boolean = false;
+  selected = '';
+  hideLanguageList = true;
+  showMenu = false;
 
   constructor(private translate: TranslateService) {}
 
   ngOnInit() {
-    this.setSelected(this.translate.currentLang || this.translate.defaultLang);
+    this.setSelected(
+      this.translate.getCurrentLang() ?? this.translate.fallbackLang() ?? 'en'
+    );
     this.translate.onLangChange.subscribe(({ lang }) => this.setSelected(lang));
   }
 

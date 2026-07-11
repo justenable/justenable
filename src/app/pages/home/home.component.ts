@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { AnimationOptions } from 'ngx-lottie';
 import { Industry } from 'src/app/models/industry.model';
 import { ServiceCard } from 'src/app/models/service-card.model';
@@ -11,7 +11,7 @@ import { register } from 'swiper/element/bundle';
     styleUrls: ['./home.component.scss'],
     standalone: false
 })
-export class HomeComponent {
+export class HomeComponent implements AfterViewInit {
   options: AnimationOptions = {
     path: '/assets/animation/coding.json',
   };

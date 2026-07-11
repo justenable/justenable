@@ -4,7 +4,7 @@ import { ClickElsewhereDirective } from './click-elsewhere.directive';
 
 @Component({
     template: `
-    <div clickElsewhere (clickElsewhere)="outsideClicks = outsideClicks + 1">
+    <div (appClickElsewhere)="outsideClicks = outsideClicks + 1">
       <button id="inside" type="button">inside</button>
     </div>
     <button id="outside" type="button">outside</button>

@@ -1,6 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import {
+  provideTranslateService,
+  TranslatePipe,
+  TranslateService,
+} from '@ngx-translate/core';
 import { ClickElsewhereDirective } from 'src/app/directives/click-elsewhere.directive';
 import { HeaderComponent } from './header.component';
 
@@ -12,7 +16,8 @@ describe('HeaderComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [HeaderComponent, ClickElsewhereDirective],
-      imports: [RouterTestingModule, TranslateModule.forRoot()],
+      imports: [RouterTestingModule, TranslatePipe],
+      providers: [provideTranslateService()],
     });
     translate = TestBed.inject(TranslateService);
     translate.use('en');
@@ -49,7 +54,7 @@ describe('HeaderComponent', () => {
 
     component.setLanguage('ZU');
 
-    expect(translate.currentLang).toBe('zu');
+    expect(translate.getCurrentLang()).toBe('zu');
     expect(component.selected).toBe('ZU');
     expect(component.hideLanguageList).toBeTrue();
   });

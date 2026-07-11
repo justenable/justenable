@@ -1,6 +1,10 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import {
+  provideTranslateService,
+  TranslatePipe,
+  TranslateService,
+} from '@ngx-translate/core';
 import { TitledText } from 'src/app/models/titled-text.model';
 import { AutomationComponent } from './automation.component';
 
@@ -12,7 +16,8 @@ describe('AutomationComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [AutomationComponent],
-      imports: [TranslateModule.forRoot()],
+      imports: [TranslatePipe],
+      providers: [provideTranslateService()],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     });
     translate = TestBed.inject(TranslateService);

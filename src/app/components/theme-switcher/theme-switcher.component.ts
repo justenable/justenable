@@ -9,7 +9,7 @@ const THEME_STORAGE_KEY = 'isDarkMode';
     standalone: false
 })
 export class ThemeSwitcherComponent {
-  isDark: boolean = false;
+  isDark = false;
 
   constructor() {
     this.applyTheme(this.resolveInitialTheme());

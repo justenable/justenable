@@ -1,6 +1,10 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import {
+  provideTranslateService,
+  TranslatePipe,
+  TranslateService,
+} from '@ngx-translate/core';
 import { MaintenanceComponent } from './maintenance.component';
 
 describe('MaintenanceComponent', () => {
@@ -10,7 +14,8 @@ describe('MaintenanceComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [MaintenanceComponent],
-      imports: [TranslateModule.forRoot()],
+      imports: [TranslatePipe],
+      providers: [provideTranslateService()],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     });
     TestBed.inject(TranslateService).use('en');

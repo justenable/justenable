@@ -1,6 +1,6 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
+import { provideTranslateService, TranslatePipe } from '@ngx-translate/core';
 import { AboutUsComponent } from './about-us.component';
 
 describe('AboutUsComponent', () => {
@@ -10,7 +10,8 @@ describe('AboutUsComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [AboutUsComponent],
-      imports: [TranslateModule.forRoot()],
+      imports: [TranslatePipe],
+      providers: [provideTranslateService()],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     });
     fixture = TestBed.createComponent(AboutUsComponent);

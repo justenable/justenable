@@ -18,7 +18,7 @@
     </ul>
     <div class="language">
       <button (click)="toggleLanguageList()"
-              (clickElsewhere)="hideLanguageList = true"
+              (appClickElsewhere)="hideLanguageList = true"
               [attr.aria-expanded]="!hideLanguageList"
               [attr.aria-label]="'A11Y.SELECT_LANGUAGE' | translate"
               aria-haspopup="true"
@@ -45,7 +45,7 @@
       </ul>
     </div>
     <button (click)="toggleMenu()"
-            (clickElsewhere)="showMenu = false"
+            (appClickElsewhere)="showMenu = false"
             [attr.aria-expanded]="showMenu"
             [attr.aria-label]="'A11Y.TOGGLE_NAVIGATION' | translate"
             class="menu-button"

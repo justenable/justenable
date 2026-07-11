@@ -1,14 +1,15 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
   beforeEach(() => {
     localStorage.removeItem('lang');
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule, TranslateModule.forRoot()],
+      imports: [RouterTestingModule],
+      providers: [provideTranslateService()],
       declarations: [AppComponent],
       // app-header / app-footer / app-theme-switcher are stubbed out at
       // the shell level; they have their own specs.
@@ -28,7 +29,7 @@ describe('AppComponent', () => {
     const translate = TestBed.inject(TranslateService);
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
-    expect(translate.currentLang).toBe('fr');
+    expect(translate.getCurrentLang()).toBe('fr');
   });
 
   it('falls back to english for unsupported stored languages', () => {
@@ -37,7 +38,7 @@ describe('AppComponent', () => {
     spyOn(translate, 'getBrowserLang').and.returnValue('de');
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
-    expect(translate.currentLang).toBe('en');
+    expect(translate.getCurrentLang()).toBe('en');
   });
 
   it('persists language changes and updates the html lang attribute', () => {

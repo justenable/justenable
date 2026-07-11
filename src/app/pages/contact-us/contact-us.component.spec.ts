@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
+import { provideTranslateService, TranslatePipe } from '@ngx-translate/core';
 import { ContactUsComponent } from './contact-us.component';
 
 describe('ContactUsComponent', () => {
@@ -9,7 +9,8 @@ describe('ContactUsComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [ContactUsComponent],
-      imports: [TranslateModule.forRoot()],
+      imports: [TranslatePipe],
+      providers: [provideTranslateService()],
     });
     fixture = TestBed.createComponent(ContactUsComponent);
     component = fixture.componentInstance;

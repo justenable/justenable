@@ -11,7 +11,7 @@ import { UtilsService } from 'src/app/services/utils.service';
     standalone: false
 })
 export class MaintenanceComponent {
-  companyName: string = 'Just Enable';
+  companyName = 'Just Enable';
   sections: ContentSection[] = [
     {
       title: 'GLOBAL.PREVENTIVE_MAINTENANCE',

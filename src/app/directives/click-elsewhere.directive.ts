@@ -6,11 +6,11 @@ import {
   Output,
 } from '@angular/core';
 @Directive({
-    selector: '[clickElsewhere]',
+    selector: '[appClickElsewhere]',
     standalone: false
 })
 export class ClickElsewhereDirective {
-  @Output() clickElsewhere = new EventEmitter<MouseEvent>();
+  @Output() appClickElsewhere = new EventEmitter<MouseEvent>();
   constructor(private elementRef: ElementRef) {}
   @HostListener('document:click', ['$event'])
   public onDocumentClick(event: MouseEvent): void {
@@ -19,7 +19,7 @@ export class ClickElsewhereDirective {
       targetElement &&
       !this.elementRef.nativeElement.contains(targetElement)
     ) {
-      this.clickElsewhere.emit(event);
+      this.appClickElsewhere.emit(event);
     }
   }
 }

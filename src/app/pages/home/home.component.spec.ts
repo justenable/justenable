@@ -1,6 +1,6 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
+import { provideTranslateService, TranslatePipe } from '@ngx-translate/core';
 import { HomeComponent } from './home.component';
 
 describe('HomeComponent', () => {
@@ -10,7 +10,8 @@ describe('HomeComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [HomeComponent],
-      imports: [TranslateModule.forRoot()],
+      imports: [TranslatePipe],
+      providers: [provideTranslateService()],
       // ng-lottie and swiper-container render as custom elements here;
       // their behavior is out of scope for this spec.
       schemas: [CUSTOM_ELEMENTS_SCHEMA],

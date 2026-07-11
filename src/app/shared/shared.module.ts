@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { LottieComponent } from 'ngx-lottie';
 import { ClickElsewhereDirective } from '../directives/click-elsewhere.directive';
 
@@ -13,7 +13,7 @@ import { ClickElsewhereDirective } from '../directives/click-elsewhere.directive
     CommonModule,
     FormsModule,
     LottieComponent,
-    TranslateModule,
+    TranslatePipe,
     ReactiveFormsModule,
     RouterModule,
   ],
@@ -21,7 +21,7 @@ import { ClickElsewhereDirective } from '../directives/click-elsewhere.directive
     CommonModule,
     FormsModule,
     LottieComponent,
-    TranslateModule,
+    TranslatePipe,
     ReactiveFormsModule,
     RouterModule,
     ClickElsewhereDirective,

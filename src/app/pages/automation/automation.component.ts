@@ -11,7 +11,7 @@ import { register } from 'swiper/element/bundle';
     standalone: false
 })
 export class AutomationComponent implements AfterViewInit {
-  companyName: string = 'Just Enable';
+  companyName = 'Just Enable';
   sections: ContentSection[] = [
     {
       title: 'GLOBAL.PROCESS_AUTOMATION',

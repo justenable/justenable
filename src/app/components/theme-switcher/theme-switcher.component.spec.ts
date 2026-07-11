@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
+import { provideTranslateService, TranslatePipe } from '@ngx-translate/core';
 import { ThemeSwitcherComponent } from './theme-switcher.component';
 
 describe('ThemeSwitcherComponent', () => {
@@ -12,7 +12,8 @@ describe('ThemeSwitcherComponent', () => {
     localStorage.setItem('isDarkMode', 'false');
     TestBed.configureTestingModule({
       declarations: [ThemeSwitcherComponent],
-      imports: [TranslateModule.forRoot()],
+      imports: [TranslatePipe],
+      providers: [provideTranslateService()],
     });
     fixture = TestBed.createComponent(ThemeSwitcherComponent);
     component = fixture.componentInstance;

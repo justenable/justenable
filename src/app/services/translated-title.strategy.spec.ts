@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { Title } from '@angular/platform-browser';
 import { Router, TitleStrategy } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { TranslatedTitleStrategy } from './translated-title.strategy';
 
 @Component({
@@ -28,9 +28,9 @@ describe('TranslatedTitleStrategy', () => {
             title: 'PAGE_TITLE.ABOUT_US',
           },
         ]),
-        TranslateModule.forRoot(),
       ],
       providers: [
+        provideTranslateService(),
         { provide: TitleStrategy, useClass: TranslatedTitleStrategy },
       ],
     });

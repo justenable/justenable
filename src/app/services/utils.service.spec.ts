@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { TitledText } from '../models/titled-text.model';
 import { UtilsService } from './utils.service';
 
@@ -9,7 +9,7 @@ describe('UtilsService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [TranslateModule.forRoot()],
+      providers: [provideTranslateService()],
     });
     service = TestBed.inject(UtilsService);
     translate = TestBed.inject(TranslateService);

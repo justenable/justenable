@@ -20,8 +20,11 @@ export class UtilsService {
     // use flat dotted keys, so the prefix itself resolves to nothing.
     return this.translate.stream(prefix).pipe(
       map(() => {
-        const lang = this.translate.currentLang || this.translate.defaultLang;
-        const translations = this.translate.translations[lang] || {};
+        const lang =
+          this.translate.getCurrentLang() ??
+          this.translate.fallbackLang() ??
+          'en';
+        const translations = this.translate.getTranslations(lang) ?? {};
         return Object.keys(translations)
           .filter((key) => key.startsWith(prefix + '.'))
           .sort(
@@ -29,7 +32,7 @@ export class UtilsService {
               Number(a.slice(prefix.length + 1)) -
               Number(b.slice(prefix.length + 1))
           )
-          .map((key) => this.splitTitledText(translations[key]));
+          .map((key) => this.splitTitledText(String(translations[key])));
       })
     );
   }
