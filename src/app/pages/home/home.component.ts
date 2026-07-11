@@ -1,4 +1,4 @@
-import { AfterViewInit, Component } from '@angular/core';
+import { afterNextRender, Component } from '@angular/core';
 import { AnimationOptions } from 'ngx-lottie';
 import { Industry } from 'src/app/models/industry.model';
 import { ServiceCard } from 'src/app/models/service-card.model';
@@ -11,7 +11,12 @@ import { register } from 'swiper/element/bundle';
     styleUrls: ['./home.component.scss'],
     standalone: false
 })
-export class HomeComponent implements AfterViewInit {
+export class HomeComponent {
+  constructor() {
+    // Swiper registers custom elements against the real DOM; browser only.
+    afterNextRender(() => register());
+  }
+
   options: AnimationOptions = {
     path: '/assets/animation/coding.json',
   };
@@ -53,8 +58,4 @@ export class HomeComponent implements AfterViewInit {
       name: 'OIL_AND_GAS',
     },
   ];
-
-  ngAfterViewInit(): void {
-    register();
-  }
 }

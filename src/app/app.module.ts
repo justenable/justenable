@@ -31,6 +31,9 @@ export function playerFactory() {
         suffix: '.json',
       }),
     }),
+    // No provideClientHydration: translations load asynchronously in the
+    // browser, so the first client render cannot match the prerendered
+    // English HTML; a full re-render on bootstrap avoids NG0500 mismatches.
     provideLottieOptions({ player: playerFactory }),
   ],
   bootstrap: [AppComponent],

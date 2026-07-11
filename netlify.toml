@@ -2,7 +2,10 @@
   command = "npm run build"
   publish = "www/browser"
 
+# Prerendered routes are real files (e.g. about-us/index.html); Netlify only
+# applies a non-forced (no "!") 200 redirect when no file matches, so this
+# fallback serves the CSR shell solely for unknown routes (wildcard 404).
 [[redirects]]
   from = "/*"
-  to = "/index.html"
+  to = "/index.csr.html"
   status = 200

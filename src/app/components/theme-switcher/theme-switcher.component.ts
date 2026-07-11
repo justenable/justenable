@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 
 const THEME_STORAGE_KEY = 'isDarkMode';
 
@@ -11,8 +12,14 @@ const THEME_STORAGE_KEY = 'isDarkMode';
 export class ThemeSwitcherComponent {
   isDark = false;
 
+  private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+
   constructor() {
-    this.applyTheme(this.resolveInitialTheme());
+    // localStorage, matchMedia and documentElement only exist in the
+    // browser; prerendered pages ship with the default (light) theme.
+    if (this.isBrowser) {
+      this.applyTheme(this.resolveInitialTheme());
+    }
   }
 
   toggleTheme() {

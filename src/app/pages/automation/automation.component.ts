@@ -1,4 +1,4 @@
-import { AfterViewInit, Component } from '@angular/core';
+import { afterNextRender, Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ContentSection } from 'src/app/models/content-section.model';
 import { TitledText } from 'src/app/models/titled-text.model';
@@ -10,7 +10,7 @@ import { register } from 'swiper/element/bundle';
     styleUrls: ['./automation.component.scss'],
     standalone: false
 })
-export class AutomationComponent implements AfterViewInit {
+export class AutomationComponent {
   companyName = 'Just Enable';
   sections: ContentSection[] = [
     {
@@ -60,9 +60,8 @@ export class AutomationComponent implements AfterViewInit {
     'GLOBAL.AUTOMATION_OUTRO_TEXT'
   );
 
-  constructor(private utils: UtilsService) {}
-
-  ngAfterViewInit(): void {
-    register();
+  constructor(private utils: UtilsService) {
+    // Swiper registers custom elements against the real DOM; browser only.
+    afterNextRender(() => register());
   }
 }
