@@ -75,10 +75,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "justenable:build:production"
+              "buildTarget": "justenable:build:production"
             },
             "development": {
-              "browserTarget": "justenable:build:development"
+              "buildTarget": "justenable:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -86,7 +86,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "justenable:build"
+            "buildTarget": "justenable:build"
           }
         },
         "test": {
