@@ -35,7 +35,7 @@ export class HomeComponent {
     {
       title: 'PROJECT_MANAGEMENT',
       description: 'PROJECT_MANAGEMENT',
-      coverImage: 'assets/img/project-management.gif',
+      coverImage: 'assets/img/project-management.webp',
     },
     {
       title: 'MAINTENANCE_AND_GENERAL_WORK',
