@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClient } from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { LottieModule } from 'ngx-lottie';
+import { provideLottieOptions } from 'ngx-lottie';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FooterComponent } from './layout/footer/footer.component';
@@ -30,7 +30,6 @@ export function playerFactory() {
   imports: [
     AppRoutingModule,
     BrowserModule,
-    LottieModule.forRoot({ player: playerFactory }),
     SharedModule,
     TranslateModule.forRoot({
       defaultLanguage: 'en',
@@ -41,7 +40,7 @@ export function playerFactory() {
       },
     }),
   ],
-  providers: [],
+  providers: [provideLottieOptions({ player: playerFactory })],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
