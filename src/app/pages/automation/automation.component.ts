@@ -5,9 +5,10 @@ import { TitledText } from 'src/app/models/titled-text.model';
 import { UtilsService } from 'src/app/services/utils.service';
 import { register } from 'swiper/element/bundle';
 @Component({
-  selector: 'app-automation',
-  templateUrl: './automation.component.html',
-  styleUrls: ['./automation.component.scss'],
+    selector: 'app-automation',
+    templateUrl: './automation.component.html',
+    styleUrls: ['./automation.component.scss'],
+    standalone: false
 })
 export class AutomationComponent implements AfterViewInit {
   companyName: string = 'Just Enable';

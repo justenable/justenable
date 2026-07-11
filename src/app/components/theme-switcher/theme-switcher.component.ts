@@ -3,9 +3,10 @@ import { Component } from '@angular/core';
 const THEME_STORAGE_KEY = 'isDarkMode';
 
 @Component({
-  selector: 'app-theme-switcher',
-  templateUrl: './theme-switcher.component.html',
-  styleUrls: ['./theme-switcher.component.scss'],
+    selector: 'app-theme-switcher',
+    templateUrl: './theme-switcher.component.html',
+    styleUrls: ['./theme-switcher.component.scss'],
+    standalone: false
 })
 export class ThemeSwitcherComponent {
   isDark: boolean = false;

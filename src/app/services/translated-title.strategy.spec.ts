@@ -6,7 +6,10 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslatedTitleStrategy } from './translated-title.strategy';
 
-@Component({ template: '' })
+@Component({
+    template: '',
+    standalone: false
+})
 class DummyComponent {}
 
 describe('TranslatedTitleStrategy', () => {

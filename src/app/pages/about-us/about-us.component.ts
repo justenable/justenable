@@ -2,9 +2,10 @@ import { Component } from '@angular/core';
 import { AboutSection } from 'src/app/models/about-section.model';
 
 @Component({
-  selector: 'app-about-us',
-  templateUrl: './about-us.component.html',
-  styleUrls: ['./about-us.component.scss'],
+    selector: 'app-about-us',
+    templateUrl: './about-us.component.html',
+    styleUrls: ['./about-us.component.scss'],
+    standalone: false
 })
 export class AboutUsComponent {
   sections: AboutSection[] = [

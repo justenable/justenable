@@ -3,12 +3,13 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ClickElsewhereDirective } from './click-elsewhere.directive';
 
 @Component({
-  template: `
+    template: `
     <div clickElsewhere (clickElsewhere)="outsideClicks = outsideClicks + 1">
       <button id="inside" type="button">inside</button>
     </div>
     <button id="outside" type="button">outside</button>
   `,
+    standalone: false
 })
 class HostComponent {
   outsideClicks = 0;

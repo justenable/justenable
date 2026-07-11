@@ -5,7 +5,10 @@ import {
   HostListener,
   Output,
 } from '@angular/core';
-@Directive({ selector: '[clickElsewhere]' })
+@Directive({
+    selector: '[clickElsewhere]',
+    standalone: false
+})
 export class ClickElsewhereDirective {
   @Output() clickElsewhere = new EventEmitter<MouseEvent>();
   constructor(private elementRef: ElementRef) {}

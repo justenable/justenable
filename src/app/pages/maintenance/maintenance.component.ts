@@ -5,9 +5,10 @@ import { TitledText } from 'src/app/models/titled-text.model';
 import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
-  selector: 'app-maintenance',
-  templateUrl: './maintenance.component.html',
-  styleUrls: ['./maintenance.component.scss'],
+    selector: 'app-maintenance',
+    templateUrl: './maintenance.component.html',
+    styleUrls: ['./maintenance.component.scss'],
+    standalone: false
 })
 export class MaintenanceComponent {
   companyName: string = 'Just Enable';
