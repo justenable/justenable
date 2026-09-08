@@ -1,0 +1,65 @@
+:host {
+  display: block;
+}
+
+// 4.15: the whole row is the link. From sm the four cells share one line;
+// below that the label sits above the value while the tag and the arrow span
+// both lines. No column gap: the fixed tracks already carry the spacing, and a
+// gap would come out of the value track, which the email fills at lg.
+.channel-row {
+  @apply grid items-center text-ink;
+  grid-template-columns: 3rem 1fr 2rem;
+  grid-template-areas:
+    'tag label arrow'
+    'tag value arrow';
+  min-height: 56px;
+  padding: 16px 20px;
+}
+
+@screen sm {
+  .channel-row {
+    grid-template-columns: 3rem 7rem 1fr 2rem;
+    grid-template-areas: 'tag label value arrow';
+  }
+}
+
+.channel-row__tag {
+  grid-area: tag;
+}
+
+.channel-row__label {
+  grid-area: label;
+}
+
+.channel-row__value {
+  grid-area: value;
+  overflow-wrap: anywhere;
+}
+
+// Identifiers carry their own <wbr> break points; letting the browser break
+// anywhere would cut the email or a phone number mid-word before those.
+.channel-row__value--identifier {
+  overflow-wrap: normal;
+}
+
+.channel-row__arrow {
+  grid-area: arrow;
+  justify-self: end;
+}
+
+// Rows run edge to edge inside the plate, so the end rows follow its corners
+// and the hover fill stays inside the border. No overflow: hidden on the
+// plate: it would clip the focus ring of the full-width rows.
+li:first-child > .channel-row {
+  border-start-start-radius: calc(var(--radius-2) - 1px);
+  border-start-end-radius: calc(var(--radius-2) - 1px);
+}
+
+li:last-child > .channel-row {
+  border-end-start-radius: calc(var(--radius-2) - 1px);
+  border-end-end-radius: calc(var(--radius-2) - 1px);
+}
+
+.map-address {
+  overflow-wrap: anywhere;
+}

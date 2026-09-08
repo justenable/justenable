@@ -1,9 +1,10 @@
-
 import { Inject, Injectable, DOCUMENT } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
-import { RouterStateSnapshot, TitleStrategy } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot, TitleStrategy } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { environment } from 'src/environments/environment';
+
+const SITE_NAME = 'Just Enable';
 
 @Injectable()
 export class TranslatedTitleStrategy extends TitleStrategy {
@@ -23,7 +24,12 @@ export class TranslatedTitleStrategy extends TitleStrategy {
   override updateTitle(snapshot: RouterStateSnapshot): void {
     this.lastTitleKey = this.buildTitle(snapshot);
     this.applyTitle();
-    this.updateCanonicalUrl(snapshot.url);
+    if (isNotFound(snapshot.root)) {
+      this.markNotFound();
+    } else {
+      this.meta.removeTag('name="robots"');
+      this.updateCanonicalUrl(snapshot.url);
+    }
   }
 
   // The static tags in index.html only cover the homepage; keep the
@@ -32,9 +38,7 @@ export class TranslatedTitleStrategy extends TitleStrategy {
   private updateCanonicalUrl(url: string): void {
     const path = url.split('?')[0].split('#')[0];
     const canonicalUrl = environment.siteUrl + path;
-    let link = this.document.head.querySelector<HTMLLinkElement>(
-      'link[rel="canonical"]'
-    );
+    let link = this.canonicalLink();
     if (!link) {
       link = this.document.createElement('link');
       link.setAttribute('rel', 'canonical');
@@ -44,15 +48,41 @@ export class TranslatedTitleStrategy extends TitleStrategy {
     this.meta.updateTag({ property: 'og:url', content: canonicalUrl });
   }
 
+  // The SPA fallback serves unknown URLs; they must neither be indexed nor
+  // canonicalise themselves (or the home page).
+  private markNotFound(): void {
+    this.meta.updateTag({ name: 'robots', content: 'noindex' });
+    this.canonicalLink()?.remove();
+    this.meta.removeTag('property="og:url"');
+  }
+
+  private canonicalLink(): HTMLLinkElement | null {
+    return this.document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+  }
+
   private applyTitle(): void {
     if (!this.lastTitleKey) {
-      this.title.setTitle('Just Enable');
+      this.setTitle(SITE_NAME);
       return;
     }
     this.translate
       .get(this.lastTitleKey)
-      .subscribe((translated) =>
-        this.title.setTitle(`${translated} | Just Enable`)
-      );
+      .subscribe((translated) => this.setTitle(`${translated} | ${SITE_NAME}`));
   }
+
+  // Social previews read og:title / twitter:title, which index.html only
+  // sets for the home page.
+  private setTitle(title: string): void {
+    this.title.setTitle(title);
+    this.meta.updateTag({ property: 'og:title', content: title });
+    this.meta.updateTag({ name: 'twitter:title', content: title });
+  }
+}
+
+function isNotFound(route: ActivatedRouteSnapshot): boolean {
+  let leaf = route;
+  while (leaf.firstChild) {
+    leaf = leaf.firstChild;
+  }
+  return leaf.routeConfig?.path === '**';
 }

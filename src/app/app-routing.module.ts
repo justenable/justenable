@@ -19,6 +19,9 @@ const routes: Routes = [
   },
   {
     path: '',
+    // Without pathMatch: 'full' the empty path prefix-matches every URL, so
+    // the routes listed after it would load HomeModule before backtracking.
+    pathMatch: 'full',
     title: 'NAVIGATION.HOME',
     loadChildren: () =>
       import('./pages/home/home.module').then((m) => m.HomeModule),
@@ -50,7 +53,12 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [
+    RouterModule.forRoot(routes, {
+      anchorScrolling: 'enabled',
+      scrollPositionRestoration: 'top',
+    }),
+  ],
   exports: [RouterModule],
   providers: [{ provide: TitleStrategy, useClass: TranslatedTitleStrategy }],
 })

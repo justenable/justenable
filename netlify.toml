@@ -3,9 +3,11 @@
   publish = "www/browser"
 
 # Prerendered routes are real files (e.g. about-us/index.html); Netlify only
-# applies a non-forced (no "!") 200 redirect when no file matches, so this
-# fallback serves the CSR shell solely for unknown routes (wildcard 404).
+# applies a non-forced (no "!") redirect when no file matches, so this
+# fallback serves the CSR shell solely for unknown routes. It answers 404 so
+# crawlers do not index unknown URLs as pages; the app boots the same on a
+# 404 response.
 [[redirects]]
   from = "/*"
   to = "/index.csr.html"
-  status = 200
+  status = 404

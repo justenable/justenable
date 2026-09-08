@@ -1,67 +1,70 @@
-<div class="px-4 py-20 bg-gradient-to-tr from-rose-500 to-amber-500 h-full flex flex-row items-center justify-center">
-    <div class="max-w-screen-xl w-full mx-auto flex flex-col lg:flex-row items-stretch lg:h-3/4 gap-2">
-        <div class="p-8 flex-1 bg-gray-50 rounded-sm shadow-md h-full flex flex-col items-center justify-center">
-            <h1 class="text-5xl text-gray-700 mb-6 uppercase">
-                {{ 'NAVIGATION.CONTACT_US' | translate }}
-            </h1>
-            <div class="space-y-4 flex flex-col">
-                <p class="text-xl font-extralight">
-                    {{ 'GLOBAL.CONTACT_US_TEXT' | translate }}
-                </p>
-                <a class="font-extralight inline-flex items-center w-fit hover:text-amber-500 group/contact"
-                    href="mailto:{{ email }}">
-                    <svg aria-hidden="true"
-                        class="w-5 h-5 group-hover/contact:text-amber-500 dark:text-gray-800 text-white mr-2"
-                        fill="currentColor" viewBox="0 0 20 16" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                            d="m10.036 8.278 9.258-7.79A1.979 1.979 0 0 0 18 0H2A1.987 1.987 0 0 0 .641.541l9.395 7.737Z" />
+<app-title-block
+  tag="C"
+  eyebrowKey="NAVIGATION.CONTACT_US"
+  titleKey="NAVIGATION.CONTACT_US"
+  leadKey="GLOBAL.CONTACT_US_TEXT"
+/>
 
-                        <path
-                            d="M11.241 9.817c-.36.275-.801.425-1.255.427-.428 0-.845-.138-1.187-.395L0 2.6V14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2.5l-8.759 7.317Z" />
+<div class="section">
+  <div class="container-x">
+    <div class="grid gap-8 lg:grid-cols-12">
+      <div class="lg:col-span-6">
+        <ul class="plate divide-y divide-border p-0">
+          @for (channel of channels; track channel.tag) {
+            <li>
+              <a
+                [href]="channel.href"
+                [attr.target]="channel.kind === 'address' ? '_blank' : null"
+                [attr.rel]="channel.kind === 'address' ? 'noopener' : null"
+                class="channel-row hover:bg-surface-raised motion-safe:transition-colors motion-safe:duration-1"
+              >
+                <span class="channel-row__tag tag">{{ channel.tag }}</span>
+                <span class="channel-row__label eyebrow">
+                  {{ channel.labelKey | translate }}
+                </span>
+                @if (channel.kind === 'address') {
+                  <span
+                    class="channel-row__value font-mono text-mono-value"
+                    lang="en"
+                  >
+                    {{ channel.value }}
+                  </span>
+                  <span class="sr-only">{{ 'GLOBAL.NEW_WINDOW' | translate }}</span>
+                } @else {
+                  <span class="channel-row__value channel-row__value--identifier font-mono text-mono-value-l" translate="no">
+                    @for (part of channel.valueParts; track $index; let last = $last) {{{ part }}@if (!last) {<wbr />}}
+                  </span>
+                }
+                <span class="channel-row__arrow text-ink-muted" aria-hidden="true">
+                  &rarr;
+                </span>
+              </a>
+            </li>
+          }
+        </ul>
+      </div>
 
-                    </svg>
-                    {{ email }}
-                </a>
-                <a class="font-extralight inline-flex items-center w-fit hover:text-amber-500 group/contact"
-                    href="tel:{{ phone }}">
-                    <svg aria-hidden="true"
-                        class="w-5 h-5 group-hover/contact:text-amber-500 dark:text-gray-800 text-white mr-2"
-                        fill="currentColor" viewBox="0 0 14 20" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                            d="M12 0H2a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2ZM7.5 17.5h-1a1 1 0 0 1 0-2h1a1 1 0 0 1 0 2ZM12 13H2V4h10v9Z" />
-
-                    </svg>
-                    {{ phone }}
-                </a>
-                <a class="font-extralight inline-flex items-center w-fit hover:text-amber-500 group/contact"
-                    href="tel:{{ mobile }}">
-                    <svg aria-hidden="true"
-                        class="w-5 h-5 group-hover/contact:text-amber-500 dark:text-gray-800 text-white mr-2"
-                        fill="currentColor" viewBox="0 0 19 18" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                            d="M18 13.446a3.02 3.02 0 0 0-.946-1.985l-1.4-1.4a3.054 3.054 0 0 0-4.218 0l-.7.7a.983.983 0 0 1-1.39 0l-2.1-2.1a.983.983 0 0 1 0-1.389l.7-.7a2.98 2.98 0 0 0 0-4.217l-1.4-1.4a2.824 2.824 0 0 0-4.218 0c-3.619 3.619-3 8.229 1.752 12.979C6.785 16.639 9.45 18 11.912 18a7.175 7.175 0 0 0 5.139-2.325A2.9 2.9 0 0 0 18 13.446Z" />
-
-                    </svg>
-                    {{ mobile }}
-                </a>
-
-                <a class="font-extralight inline-flex items-center w-fit hover:text-amber-500 group/contact"
-                    href="{{ locationLink }}" target="_blank">
-                    <svg class="w-5 h-5 group-hover/contact:text-amber-500 dark:text-gray-800 text-white mr-2"
-                        fill="currentColor" viewBox="0 0 16 20" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                            d="M8 0a7.992 7.992 0 0 0-6.583 12.535 1 1 0 0 0 .12.183l.12.146c.112.145.227.285.326.4l5.245 6.374a1 1 0 0 0 1.545-.003l5.092-6.205c.206-.222.4-.455.578-.7l.127-.155a.934.934 0 0 0 .122-.192A8.001 8.001 0 0 0 8 0Zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z" />
-
-                    </svg>
-                    {{ location }}
-                </a>
-            </div>
-        </div>
-        <iframe title="Just Enable office location"
-            class="border-none w-full min-h-[400px] h-full flex-1 rounded-sm shadow-md overflow-hidden" loading="lazy"
+      <div class="lg:col-span-6">
+        <div class="screen overflow-hidden p-0">
+          <iframe
+            [title]="'CONTACT.MAP_TITLE' | translate"
+            class="block aspect-[4/3] min-h-[320px] w-full border-0"
+            loading="lazy"
             referrerpolicy="no-referrer-when-downgrade"
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3592.774396556427!2d28.281045276882622!3d-25.778014277341704!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1e9560965d11f047%3A0x6fc40db5e1b65adf!2s68%20Glenwood%20Rd%2C%20Lynnwood%20Glen%2C%20Pretoria%2C%200081%2C%20South%20Africa!5e0!3m2!1sen!2sus!4v1689975341370!5m2!1sen!2sus">
-        </iframe>
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3592.774396556427!2d28.281045276882622!3d-25.778014277341704!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1e9560965d11f047%3A0x6fc40db5e1b65adf!2s68%20Glenwood%20Rd%2C%20Lynnwood%20Glen%2C%20Pretoria%2C%200081%2C%20South%20Africa!5e0!3m2!1sen!2sus!4v1689975341370!5m2!1sen!2sus"
+          ></iframe>
+        </div>
+        <address class="map-address mt-4 font-mono text-mono-value not-italic text-ink" lang="en">
+          @for (line of addressLines; track line) {
+            <span class="block">{{ line }}</span>
+          }
+        </address>
+        <a [href]="mapsUrl" class="btn btn--ghost -ml-2 mt-2" rel="noopener" target="_blank">
+          <span>{{ 'GLOBAL.OPEN_IN_MAPS' | translate }}</span>
+          <span aria-hidden="true">&rarr;</span>
+          <span class="sr-only">{{ 'GLOBAL.NEW_WINDOW' | translate }}</span>
+        </a>
+      </div>
     </div>
-
+  </div>
 </div>

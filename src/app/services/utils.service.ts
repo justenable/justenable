@@ -37,10 +37,20 @@ export class UtilsService {
     );
   }
 
+  /**
+   * An entry without a colon is kept as an untitled note rather than
+   * dropped, so a translation slip never removes content from the page.
+   * Both halves are trimmed: French writes "Titre : note" with a space
+   * before the colon.
+   */
   private splitTitledText(value: string): TitledText {
+    const colon = value.indexOf(':');
+    if (colon === -1) {
+      return { title: '', text: value.trim() };
+    }
     return {
-      title: value.substring(0, value.indexOf(':')),
-      text: value.substring(value.indexOf(':') + 1).trim(),
+      title: value.substring(0, colon).trim(),
+      text: value.substring(colon + 1).trim(),
     };
   }
 }

@@ -1,0 +1,13 @@
+:host {
+  display: inline-flex;
+  flex: none;
+}
+
+.logo-plate {
+  @apply inline-flex rounded-1 bg-white p-1;
+}
+
+img {
+  display: block;
+  width: auto;
+}

@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
 
-# TODO: confirm production domain
 Sitemap: https://justenable.co.za/sitemap.xml

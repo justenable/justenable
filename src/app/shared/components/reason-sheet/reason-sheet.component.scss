@@ -1,0 +1,11 @@
+:host {
+  display: block;
+}
+
+// Plate cells are not covered by the global heading rule.
+td,
+th,
+dt,
+dd {
+  overflow-wrap: anywhere;
+}

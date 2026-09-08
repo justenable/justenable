@@ -1,0 +1,14 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+h3,
+p {
+  overflow-wrap: anywhere;
+}
+
+// Photographs are the only non-token colour on the page; dim them a touch at night.
+:host-context(.dark) img {
+  filter: brightness(0.92);
+}

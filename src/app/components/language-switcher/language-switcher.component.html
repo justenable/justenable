@@ -1,0 +1,55 @@
+@if (segmented) {
+  <div class="lang-group" role="radiogroup" [attr.aria-labelledby]="labelId">
+    <p class="eyebrow" [id]="labelId">{{ 'A11Y.SELECT_LANGUAGE' | translate }}</p>
+    <div class="lang-group__row">
+      @for (language of languages; track language.code) {
+        <button (click)="selectSegment(language.code)"
+                (keydown)="onGroupKeydown($event)"
+                [attr.aria-checked]="language.code === current()"
+                [attr.tabindex]="language.code === current() ? 0 : -1"
+                [lang]="language.code"
+                class="btn btn--secondary btn--sm"
+                role="radio"
+                type="button">
+          <app-lamp [lit]="language.code === current()" size="8" />
+          <span>{{ language.name }}</span>
+        </button>
+      }
+    </div>
+  </div>
+} @else {
+  <div class="lang" (appClickElsewhere)="onClickOutside()">
+    <button (click)="toggleMenu()"
+            (keydown)="onTriggerKeydown($event)"
+            [attr.aria-expanded]="open()"
+            [attr.aria-controls]="open() ? 'lang-menu' : null"
+            [attr.aria-label]="('A11Y.SELECT_LANGUAGE' | translate) + ': ' + currentName()"
+            aria-haspopup="true"
+            class="lang__trigger"
+            type="button">
+      <span aria-hidden="true" class="tag text-ink">{{ current() }}</span>
+      <svg aria-hidden="true" class="lang__chevron" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 12 12">
+        <path d="m2.5 4.5 3.5 3.5 3.5-3.5" />
+      </svg>
+    </button>
+    @if (open()) {
+      <ul class="lang__menu plate p-1 shadow-popover" id="lang-menu" role="menu">
+        @for (language of languages; track language.code) {
+          <li role="none">
+            <button (click)="select(language.code)"
+                    (keydown)="onMenuKeydown($event)"
+                    [attr.aria-checked]="language.code === current()"
+                    [lang]="language.code"
+                    class="lang__item"
+                    role="menuitemradio"
+                    tabindex="-1"
+                    type="button">
+              <app-lamp [lit]="language.code === current()" size="8" />
+              <span>{{ language.name }}</span>
+            </button>
+          </li>
+        }
+      </ul>
+    }
+  </div>
+}

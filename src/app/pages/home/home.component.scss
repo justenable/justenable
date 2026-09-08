@@ -1,6 +1,35 @@
-.swiper-button-next,
-.swiper-button-prev {
-  position: absolute;
-  top: 28rem !important;
-  color: red !important;
+:host {
+  display: block;
+}
+
+// Industries strip (spec 4.13): four cells on one plate, separated by lines
+// like a terminal block. The cells keep the row height so the separators run
+// the full height; names may run three lines (Zulu FMCG is 48 characters).
+.terminal-cell {
+  padding: 20px 24px;
+  border-top: 1px solid rgb(var(--color-border));
+  overflow-wrap: anywhere;
+
+  &:first-child {
+    border-top: 0;
+  }
+
+  @screen sm {
+    &:nth-child(2) {
+      border-top: 0;
+    }
+
+    &:nth-child(odd) {
+      border-right: 1px solid rgb(var(--color-border));
+    }
+  }
+
+  @screen lg {
+    border-top: 0;
+    border-right: 1px solid rgb(var(--color-border));
+
+    &:last-child {
+      border-right: 0;
+    }
+  }
 }

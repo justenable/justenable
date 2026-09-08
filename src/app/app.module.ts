@@ -1,26 +1,28 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { isPlatformBrowser } from '@angular/common';
+import { inject, NgModule, PLATFORM_ID, provideAppInitializer } from '@angular/core';
+import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
 
-import { provideTranslateService } from '@ngx-translate/core';
+import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
-import { provideLottieOptions } from 'ngx-lottie';
+import { firstValueFrom } from 'rxjs';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { FooterComponent } from './layout/footer/footer.component';
-import { HeaderComponent } from './layout/header/header.component';
+import { LanguageSwitcherComponent } from './components/language-switcher/language-switcher.component';
+import { SkipLinkComponent } from './components/skip-link/skip-link.component';
+import { ThemeToggleComponent } from './components/theme-toggle/theme-toggle.component';
+import { SiteFooterComponent } from './layout/site-footer/site-footer.component';
+import { SiteHeaderComponent } from './layout/site-header/site-header.component';
+import { resolveInitialLang } from './shared/languages';
 import { SharedModule } from './shared/shared.module';
-import { ThemeSwitcherComponent } from './components/theme-switcher/theme-switcher.component';
-
-export function playerFactory() {
-  return import('lottie-web');
-}
 
 @NgModule({
   declarations: [
     AppComponent,
-    HeaderComponent,
-    FooterComponent,
-    ThemeSwitcherComponent,
+    SkipLinkComponent,
+    SiteHeaderComponent,
+    SiteFooterComponent,
+    LanguageSwitcherComponent,
+    ThemeToggleComponent,
   ],
   imports: [AppRoutingModule, BrowserModule, SharedModule],
   providers: [
@@ -31,10 +33,17 @@ export function playerFactory() {
         suffix: '.json',
       }),
     }),
-    // No provideClientHydration: translations load asynchronously in the
-    // browser, so the first client render cannot match the prerendered
-    // English HTML; a full re-render on bootstrap avoids NG0500 mismatches.
-    provideLottieOptions({ player: playerFactory }),
+    // Translations are loaded before the first render so the hydrating
+    // render has the same structure as the prerendered English HTML (text
+    // nodes are swapped in place; hydration validates node types, not text).
+    // Without hydration the prerendered DOM is thrown away at bootstrap and
+    // every route collapses to header + footer until the route chunk lands.
+    provideAppInitializer(() => {
+      const translate = inject(TranslateService);
+      const isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+      return firstValueFrom(translate.use(resolveInitialLang(translate, isBrowser)));
+    }),
+    provideClientHydration(),
   ],
   bootstrap: [AppComponent],
 })

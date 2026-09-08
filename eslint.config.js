@@ -49,5 +49,18 @@ module.exports = defineConfig([
       // migration is deliberately not applied to this codebase.
       "@angular-eslint/template/prefer-control-flow": "off",
     },
-  }
+  },
+  {
+    // Node scripts (npm run i18n:check): plain ESM, no Angular or TypeScript rules.
+    files: ["scripts/**/*.mjs"],
+    extends: [eslint.configs.recommended],
+    languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: "module",
+      globals: {
+        console: "readonly",
+        process: "readonly",
+      },
+    },
+  },
 ]);

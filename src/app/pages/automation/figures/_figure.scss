@@ -1,0 +1,51 @@
+// The drawing language shared by the automation figures (design-system
+// section 1, mimic and timeline glyph). The svg root carries the stroke
+// presentation attributes; this partial pins the stroke weight and gives
+// closed shapes, markers and tags their fills, which must be classes because
+// presentation attributes do not resolve var() reliably across browsers.
+:host {
+  display: block;
+  width: 100%;
+}
+
+// Drawn 480 units wide and rendered anywhere from 290px to 520px, so strokes
+// keep their CSS px weight like the mimic's.
+svg :is(line, path, rect, circle, ellipse, polyline, polygon) {
+  vector-effect: non-scaling-stroke;
+}
+
+.face {
+  fill: rgb(var(--color-surface));
+}
+
+.bus {
+  stroke-width: 3;
+}
+
+.dot {
+  fill: currentColor;
+  stroke: none;
+}
+
+// The one accent per figure: an orange dot with an ink ring, like the
+// timeline glyph's marker. Never a lamp: lamps are for nav-level state.
+.figure-marker {
+  fill: rgb(var(--color-accent));
+  stroke-width: 1.25;
+}
+
+// An unfilled marker where the same state is not true (the asset glyph's rings).
+.ring {
+  fill: rgb(var(--color-surface));
+  stroke-width: 1.25;
+}
+
+// The tag step inside the SVG, as .mimic-tag.
+.figure-tag {
+  @apply font-mono;
+  fill: currentColor;
+  stroke: none;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}

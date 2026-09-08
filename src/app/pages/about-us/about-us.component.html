@@ -1,18 +1,33 @@
-<div class="mx-auto">
-    <div [ngClass]="section.bgColor"
-         *ngFor="let section of sections; let isFirst = first"
-         class="px-4 border-b border-gray-100 pb-28 text-gray-500 bg-gradient-to-br">
-        <div class="lg:w-2/6 mx-auto">
-            <ng-lottie [options]="{ path: section.image }"></ng-lottie>
-        </div>
-        <h1 *ngIf="isFirst" class="mx-auto max-w-screen-xl text-center uppercase mb-6 font-bold text-4xl">
-            {{ section.title | translate }}
-        </h1>
-        <h2 *ngIf="!isFirst" class="mx-auto max-w-screen-xl text-center uppercase mb-6 font-bold text-4xl">
-            {{ section.title | translate }}
-        </h2>
-        <p [innerHTML]="section.text | translate"
-           class="mx-auto max-w-screen-xl text-center lg:text-left text-lg font-light">
-        </p>
+<app-title-block eyebrowKey="NAVIGATION.ABOUT_US" titleKey="NAVIGATION.ABOUT_US" />
+
+@for (section of sections; track section.id; let odd = $odd) {
+  <app-feature-section
+    [tag]="section.tag"
+    [id]="section.id"
+    [titleKey]="section.titleKey"
+    [reverse]="odd"
+  >
+    <div body class="flex max-w-[68ch] flex-col gap-4">
+      @for (key of section.textKeys; track key) {
+        <p class="text-body text-ink-muted">{{ key | translate }}</p>
+      }
     </div>
-</div>
+    @switch (section.figure) {
+      @case ('nameplate') {
+        <app-nameplate figure />
+      }
+      @case ('office') {
+        <app-figure figure captionKey="ABOUT.FIGURE_CULTURE">
+          <app-office-figure />
+        </app-figure>
+      }
+      @case ('stack') {
+        <app-figure figure captionKey="ABOUT.FIGURE_TECHNOLOGY">
+          <app-stack-figure />
+        </app-figure>
+      }
+    }
+  </app-feature-section>
+}
+
+<app-cta-band textKey="GLOBAL.CONTACT_US_TEXT" />

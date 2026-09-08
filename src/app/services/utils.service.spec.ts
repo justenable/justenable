@@ -16,10 +16,6 @@ describe('UtilsService', () => {
     translate.use('en');
   });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
-
   it('splits "Title: text" entries and sorts keys numerically', () => {
     translate.setTranslation(
       'en',
@@ -54,5 +50,23 @@ describe('UtilsService', () => {
 
     translate.use('fr');
     expect(result[0]).toEqual({ title: 'Bonjour', text: 'le monde' });
+  });
+
+  it('trims both halves of a French "Titre : note" entry', () => {
+    translate.setTranslation('en', { 'LIST.0': 'Rentable : En automatisant les tâches' }, true);
+
+    let result: TitledText[] = [];
+    service.streamTitledList('LIST').subscribe((items) => (result = items));
+
+    expect(result).toEqual([{ title: 'Rentable', text: 'En automatisant les tâches' }]);
+  });
+
+  it('keeps an entry without a colon as an untitled note', () => {
+    translate.setTranslation('en', { 'LIST.0': 'Just a note' }, true);
+
+    let result: TitledText[] = [];
+    service.streamTitledList('LIST').subscribe((items) => (result = items));
+
+    expect(result).toEqual([{ title: '', text: 'Just a note' }]);
   });
 });

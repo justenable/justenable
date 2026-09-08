@@ -1,0 +1,126 @@
+// Design tokens (spec section 2).
+//
+// Colour tokens are stored as space-separated RGB channel triplets so that
+// Tailwind's `rgb(var(--color-x) / <alpha-value>)` mapping can add an alpha
+// channel. In SCSS always write `rgb(var(--color-ink))`; never use
+// `var(--color-ink)` on its own, it is not a valid colour value.
+// Non-colour tokens are plain values.
+
+:root {
+  color-scheme: light;
+
+  /* grounds */
+  --color-canvas: 232 234 231; /* #E8EAE7 enclosure grey (RAL 7035 lifted) */
+  --color-surface: 255 255 255; /* #FFFFFF label plate */
+  --color-surface-raised: 243 244 242; /* #F3F4F2 inset panel face: chips, sheet header, figure ground */
+  --color-accent-soft: 255 227 207; /* #FFE3CF tinted sheet header row */
+
+  /* lines */
+  --color-border: 195 199 195; /* #C3C7C3 decorative rules, plate edges */
+  --color-border-strong: 110 116 111; /* #6E746F interactive borders, unlit lamp ring */
+
+  /* ink */
+  --color-ink: 17 20 17; /* #111411 headings, primary text, strokes */
+  --color-ink-muted: 69 74 70; /* #454A46 body copy, eyebrows */
+  --color-ink-subtle: 95 101 95; /* #5F655F tags, captions (never below 12px) */
+
+  /* signal */
+  --color-accent: 255 106 0; /* #FF6A00 lit lamp, primary button, 3px title rule. NON-TEXT ONLY in light */
+  --color-accent-hover: 232 95 0; /* #E85F00 */
+  --color-accent-text: 168 64 0; /* #A84000 text-safe orange: links, live labels */
+  --color-accent-contrast: 17 20 17; /* #111411 text on orange (safety-sign black-on-orange) */
+  --color-focus: 168 64 0; /* #A84000 */
+
+  /* the fixed-light "screen" the map sits on in BOTH themes */
+  --color-screen: 243 244 242; /* #F3F4F2 */
+
+  /* spacing (8px module) */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+  --space-10: 8rem;
+  --section-y: clamp(2.5rem, 1.75rem + 3vw, 4.5rem);
+  --plate-pad: clamp(1.25rem, 1rem + 1.5vw, 2rem);
+  --gutter: 1rem; /* 1.5rem from 640px, 2rem from 1024px (see .container-x) */
+
+  /* radius: enclosures have small radii; nothing is a pill, nothing is zero */
+  --radius-1: 4px; /* buttons, chips, inputs, screens */
+  --radius-2: 6px; /* plates */
+  --radius-round: 999px; /* rocker track and knob only */
+
+  /* shadow: elevation is expressed by plate borders; shadows exist only for things that float */
+  --shadow-0: none;
+  --shadow-popover: 0 8px 24px rgb(0 0 0 / 0.12);
+
+  /* motion */
+  --dur-1: 120ms; /* colour, border, underline */
+  --dur-2: 200ms; /* rocker knob, mobile panel, popover */
+  --dur-draw: 500ms; /* mimic bus draw */
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease-std: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* z layers */
+  --z-panel: 40; /* mobile nav panel */
+  --z-header: 50; /* sticky header */
+  --z-popover: 60; /* language popover (inside header) */
+  --z-skip: 100; /* skip link when focused */
+}
+
+.dark {
+  color-scheme: dark;
+
+  --color-canvas: 23 25 27; /* #17191B night-shift graphite */
+  --color-surface: 32 35 38; /* #202326 */
+  --color-surface-raised: 41 45 48; /* #292D30 */
+  --color-accent-soft: 58 36 22; /* #3A2416 */
+
+  --color-border: 54 59 62; /* #363B3E */
+  --color-border-strong: 122 128 132; /* #7A8084 (#6F7579 rejected at 2.97:1 on raised) */
+
+  --color-ink: 233 234 230; /* #E9EAE6 */
+  --color-ink-muted: 184 188 183; /* #B8BCB7 */
+  --color-ink-subtle: 147 152 147; /* #939893 */
+
+  --color-accent: 255 106 0; /* #FF6A00 */
+  --color-accent-hover: 255 122 31; /* #FF7A1F */
+  --color-accent-text: 255 138 61; /* #FF8A3D night amber */
+  --color-accent-contrast: 17 20 17; /* #111411 stays black: #E9EAE6 on orange is 2.38:1 */
+  --color-focus: 255 138 61; /* #FF8A3D */
+
+  --shadow-popover: 0 8px 24px rgb(0 0 0 / 0.5);
+  /* screen tokens unchanged: the screen stays light at night */
+}
+
+/* Footer rear panel: the dark token set re-scoped on one subtree, both themes.
+   Tailwind utilities keep working inside it. */
+.rear-panel {
+  color-scheme: dark;
+  --color-canvas: 32 35 38;
+  --color-surface: 32 35 38;
+  --color-surface-raised: 41 45 48;
+  --color-border: 54 59 62;
+  --color-border-strong: 122 128 132;
+  --color-ink: 233 234 230;
+  --color-ink-muted: 184 188 183;
+  --color-ink-subtle: 147 152 147;
+  --color-accent-text: 255 138 61;
+  --color-focus: 255 138 61;
+}
+
+/* Screen: a lit wall screen in a dark room. The map sits on it in both themes
+   so Google's tiles never land on graphite. Drawn figures need no screen. */
+.screen {
+  background: rgb(var(--color-screen));
+  border: 1px solid rgb(var(--color-border));
+  border-radius: var(--radius-1);
+  color-scheme: light;
+}
+.dark .screen {
+  filter: brightness(0.94);
+}

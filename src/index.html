@@ -3,13 +3,29 @@
 
 <head>
   <meta charset="utf-8" />
-  <!-- TODO: confirm production domain (derived from info@justenable.co.za; no explicit site URL found in repo) -->
   <title>Just Enable | Electrical, Automation & Digital Solutions</title>
   <base href="/" />
   <meta content="width=device-width, initial-scale=1" name="viewport" />
+  <meta name="color-scheme" content="light dark" />
+  <!-- Header surface per theme; ThemeService and the script below rewrite both on a manual toggle. -->
+  <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#202326" media="(prefers-color-scheme: dark)" />
+  <!-- Applies the stored/OS theme before first paint; prerendered HTML is light. Must match ThemeService. -->
+  <script>
+    (function () {
+      try {
+        var stored = localStorage.getItem("isDarkMode");
+        var dark = stored === "true" || (stored !== "false" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+        var root = document.documentElement;
+        root.classList.toggle("dark", dark);
+        var color = dark ? "#202326" : "#FFFFFF";
+        var tags = document.querySelectorAll('meta[name="theme-color"]');
+        for (var i = 0; i < tags.length; i++) tags[i].setAttribute("content", color);
+      } catch (e) { /* storage blocked: fall through to light */ }
+    })();
+  </script>
   <meta name="description"
     content="Just Enable delivers electrical, automation and digital solutions: process and industrial automation, software engineering, maintenance and project management." />
-  <meta name="theme-color" content="#f97316" />
   <link rel="canonical" href="https://justenable.co.za/" />
 
   <meta property="og:title" content="Just Enable | Electrical, Automation & Digital Solutions" />
@@ -26,7 +42,8 @@
     content="Just Enable delivers electrical, automation and digital solutions: process and industrial automation, software engineering, maintenance and project management." />
   <meta name="twitter:image" content="https://justenable.co.za/assets/img/je-logo.webp" />
 
-  <link href="assets/icon/favicon.png" rel="icon" type="image/x-icon" />
+  <link href="assets/icon/favicon.svg" rel="icon" type="image/svg+xml" />
+  <link href="assets/icon/favicon.png" rel="icon" sizes="32x32" type="image/png" />
 
   <script type="application/ld+json">
     {
@@ -64,7 +81,7 @@
   </script>
 </head>
 
-<body class="dark">
+<body>
   <app-root></app-root>
 </body>
 

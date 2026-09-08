@@ -1,0 +1,45 @@
+.site-footer {
+  padding-block: var(--space-7) var(--space-5);
+}
+
+.site-footer__brand {
+  @apply flex items-center gap-2.5;
+}
+
+.site-footer__wordmark {
+  @apply font-display text-[18px] font-semibold leading-none;
+}
+
+// Five translations at once; the current language is the only one in ink.
+.tagline-stack {
+  @apply mt-6 flex flex-col gap-1 font-mono text-mono-value text-ink-muted;
+}
+.tagline-stack .is-current {
+  @apply font-medium text-ink;
+}
+
+.site-footer__columns {
+  @apply mt-8 grid gap-8 border-t border-border pt-8 md:grid-cols-3;
+}
+
+.site-footer__list {
+  @apply mt-3 flex flex-col;
+}
+
+.site-footer__link {
+  @apply inline-flex min-h-[44px] min-w-[44px] items-center text-ink hover:underline;
+  overflow-wrap: anywhere;
+}
+
+.site-footer__address {
+  @apply mt-3 not-italic text-ink-muted;
+  overflow-wrap: anywhere;
+}
+
+.site-footer__maps {
+  @apply mt-3 inline-flex min-h-[44px] items-center gap-1 text-accent-text decoration-2 underline-offset-[3px] hover:underline;
+}
+
+.site-footer__bottom {
+  @apply mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-border pt-5 text-ink-muted;
+}

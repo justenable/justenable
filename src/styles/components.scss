@@ -1,0 +1,111 @@
+// Shared component classes (spec 4.6 to 4.8, 4.24). Everything sits in the
+// Tailwind components layer so a utility on the element still wins.
+
+@layer components {
+  .container-x {
+    @apply mx-auto w-full max-w-container px-4 sm:px-6 lg:px-8;
+  }
+
+  // Plates are literal label plates: plate-on-ground is only 1.21:1, so every
+  // plate carries a 1px border.
+  .plate {
+    @apply rounded-2 border border-border bg-surface;
+    padding: var(--plate-pad);
+  }
+  .plate--inset {
+    @apply bg-surface-raised;
+  }
+
+  .btn {
+    @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-1 px-5 text-center font-sans text-button motion-safe:transition-colors motion-safe:duration-1;
+    // Labels wrap: Afrikaans "Terug na die tuisblad" is 21 characters.
+    white-space: normal;
+  }
+  .btn--primary {
+    @apply bg-accent text-accent-contrast hover:bg-accent-hover active:bg-accent-hover;
+  }
+  .btn--secondary {
+    @apply border border-border-strong bg-transparent text-ink hover:bg-surface-raised;
+    &[aria-checked='true'],
+    &.is-selected {
+      @apply border-ink bg-ink text-canvas hover:bg-ink;
+    }
+  }
+  .btn--ghost {
+    @apply px-2 text-accent-text decoration-2 underline-offset-[3px] hover:underline;
+  }
+  .btn--sm {
+    @apply min-h-[44px] px-3.5 text-sm/none;
+  }
+  .btn--lg {
+    @apply min-h-[52px] px-7 text-base/none;
+  }
+
+  .eyebrow {
+    @apply font-display text-eyebrow uppercase text-ink-muted stretch-85;
+  }
+
+  // Default ink is for plates; add text-ink-muted when the tag sits on the canvas.
+  .tag {
+    @apply font-mono text-tag uppercase text-ink-subtle;
+  }
+  .tag--chip {
+    @apply inline-block rounded-1 bg-surface-raised px-1.5 py-0.5;
+  }
+
+  .tagline {
+    @apply font-display text-display-l text-ink;
+    font-weight: 500;
+    font-stretch: 100%;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+  }
+
+  .section {
+    padding-block: var(--section-y);
+  }
+
+  // A cable marker: the chip straddles the 1px line, left-aligned with the container.
+  .section-marker {
+    @apply border-t border-border;
+    > .tag {
+      @apply relative -top-[11px];
+    }
+  }
+
+  // Terminals, not discs: a 6px square marks each bullet.
+  .dash-list {
+    @apply flex flex-col gap-3 pl-5;
+    > li {
+      @apply relative text-body text-ink-muted;
+      &::before {
+        content: '';
+        @apply absolute -left-5 h-1.5 w-1.5 bg-ink-subtle;
+        top: 0.65em;
+      }
+    }
+  }
+
+  // The 404 card is the only place the hazard stripe exists.
+  .hazard {
+    height: 8px;
+    background: repeating-linear-gradient(
+      45deg,
+      rgb(var(--color-ink)) 0 12px,
+      rgb(var(--color-accent)) 12px 24px
+    );
+  }
+
+  // RevealDirective (4.24): not applied anywhere in v1, kept as the sanctioned mechanism.
+  .reveal {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  .reveal.is-revealed {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 240ms var(--ease-out) var(--reveal-delay, 0ms),
+      transform 240ms var(--ease-out) var(--reveal-delay, 0ms);
+  }
+}

@@ -1,0 +1,33 @@
+:host {
+  display: block;
+}
+
+// The strip is drawn in a 480px-wide space and rendered at whatever the
+// figure column gives it, so strokes are pinned to their CSS px width like
+// the mimic's: the glyph stays an ink drawing next to the text rather than
+// a thick bar.
+.glyph * {
+  vector-effect: non-scaling-stroke;
+}
+
+// Fill via a class, not an attribute: presentation attributes do not resolve
+// var() reliably across browsers.
+.glyph__marker {
+  fill: rgb(var(--color-accent));
+}
+
+// Rings sit on the line the way the marker does, so they cover it.
+.glyph__ring {
+  fill: rgb(var(--color-surface));
+}
+
+// The tag step inside the SVG, as .mimic-tag. The root svg sets the stroke
+// for every line, and text would inherit it and render bold and blurred.
+.figure-tag {
+  @apply font-mono;
+  stroke: none;
+  fill: currentColor;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}

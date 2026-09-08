@@ -1,0 +1,27 @@
+:host {
+  display: block;
+}
+
+.nameplate {
+  @apply flex flex-col gap-5;
+}
+
+// Label column sized by the widest translated label so the values line up;
+// below xs the plate is too narrow for two columns and the rows stack.
+.nameplate__rows {
+  @apply grid items-center gap-x-4 xs:grid-cols-[max-content_1fr] xs:auto-rows-[minmax(44px,auto)];
+}
+
+.nameplate__rows dd + dt {
+  @apply mt-3 xs:mt-0;
+}
+
+.nameplate__value {
+  @apply font-mono text-mono-value text-ink;
+  overflow-wrap: anywhere;
+}
+
+.nameplate__link {
+  @apply inline-flex min-h-[44px] items-center text-ink hover:underline;
+  overflow-wrap: anywhere;
+}

@@ -1,0 +1,88 @@
+<header class="site-header">
+  <div class="container-x site-header__row">
+    <a [attr.aria-label]="'A11Y.HOME_LINK' | translate" class="site-header__brand" routerLink="/">
+      <app-logo [height]="32" aria-hidden="true" />
+      <span class="site-header__wordmark">Just Enable</span>
+    </a>
+
+    <nav [attr.aria-label]="'A11Y.MAIN_NAVIGATION' | translate" class="site-header__nav">
+      <ul class="site-header__list">
+        @for (item of nav; track item.url) {
+          <li>
+            @if (item.primary) {
+              <a [routerLink]="item.url"
+                 [routerLinkActiveOptions]="{ exact: true }"
+                 ariaCurrentWhenActive="page"
+                 class="btn btn--primary btn--sm"
+                 routerLinkActive="is-current">{{ item.key | translate }}</a>
+            } @else {
+              <a #rla="routerLinkActive"
+                 [routerLink]="item.url"
+                 [routerLinkActiveOptions]="{ exact: true }"
+                 ariaCurrentWhenActive="page"
+                 class="nav-link"
+                 routerLinkActive="is-current">
+                <app-lamp [lit]="rla.isActive" size="8" />
+                <span>{{ item.key | translate }}</span>
+              </a>
+            }
+          </li>
+        }
+      </ul>
+    </nav>
+
+    <div class="site-header__tools">
+      <app-language-switcher />
+      <app-theme-toggle />
+      <button #burger
+              (click)="toggleMenu()"
+              [attr.aria-expanded]="layout.menuOpen()"
+              [attr.aria-label]="(layout.menuOpen() ? 'A11Y.CLOSE_MENU' : 'A11Y.TOGGLE_NAVIGATION') | translate"
+              [attr.aria-controls]="layout.menuOpen() ? 'site-menu' : null"
+              [class.is-open]="layout.menuOpen()"
+              class="burger"
+              type="button">
+        <span class="burger__line"></span>
+        <span class="burger__line"></span>
+        <span class="burger__line"></span>
+      </button>
+    </div>
+  </div>
+
+  @if (layout.menuOpen()) {
+    <div #panel
+         (appClickElsewhere)="onClickOutside($event)"
+         class="site-menu"
+         id="site-menu">
+      <nav [attr.aria-label]="'A11Y.MAIN_NAVIGATION' | translate" class="container-x">
+        <ul class="site-menu__list">
+          @for (item of nav; track item.url) {
+            <li>
+              @if (item.primary) {
+                <a [routerLink]="item.url"
+                   [routerLinkActiveOptions]="{ exact: true }"
+                   ariaCurrentWhenActive="page"
+                   class="btn btn--primary mt-2 w-full"
+                   routerLinkActive="is-current">{{ item.key | translate }}</a>
+              } @else {
+                <a #rla="routerLinkActive"
+                   [routerLink]="item.url"
+                   [routerLinkActiveOptions]="{ exact: true }"
+                   ariaCurrentWhenActive="page"
+                   class="site-menu__row"
+                   routerLinkActive="is-current">
+                  <app-lamp [lit]="rla.isActive" size="8" />
+                  <span>{{ item.key | translate }}</span>
+                </a>
+              }
+            </li>
+          }
+        </ul>
+      </nav>
+      <div class="container-x site-menu__settings">
+        <app-language-switcher segmented />
+        <app-theme-toggle labelled />
+      </div>
+    </div>
+  }
+</header>

@@ -1,0 +1,9 @@
+:host {
+  display: block;
+}
+
+// The plate drops its own padding so the hazard strips run edge to edge; the
+// body takes it back.
+.not-found__body {
+  padding: var(--plate-pad);
+}

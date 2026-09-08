@@ -1,0 +1,19 @@
+.skip-link {
+  @apply sr-only;
+}
+
+// Undo sr-only by hand rather than via not-sr-only, which also zeroes the
+// button padding.
+.skip-link:focus-visible {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: var(--z-skip);
+  width: auto;
+  height: auto;
+  margin: 0;
+  padding: 0 1.25rem;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}

@@ -1,0 +1,55 @@
+<footer class="rear-panel site-footer border-t border-border bg-surface text-ink">
+  <div class="container-x">
+    <div class="site-footer__brand">
+      <app-logo [height]="28" aria-hidden="true" />
+      <span class="site-footer__wordmark">Just Enable</span>
+    </div>
+
+    <ul class="tagline-stack">
+      @for (tagline of taglines; track tagline.code) {
+        <li [attr.aria-current]="tagline.code === current() ? 'true' : null"
+            [class.is-current]="tagline.code === current()"
+            [lang]="tagline.code">{{ tagline.text }}</li>
+      }
+    </ul>
+
+    <div class="site-footer__columns">
+      <nav [attr.aria-label]="'A11Y.FOOTER_NAVIGATION' | translate">
+        <p class="eyebrow">{{ 'FOOTER.NAVIGATION' | translate }}</p>
+        <ul class="site-footer__list">
+          @for (item of nav; track item.url) {
+            <li><a [routerLink]="item.url" class="site-footer__link">{{ item.key | translate }}</a></li>
+          }
+        </ul>
+      </nav>
+
+      <div>
+        <p class="eyebrow">{{ 'FOOTER.CONTACT' | translate }}</p>
+        <ul class="site-footer__list font-mono text-mono-value" translate="no">
+          <li><a [href]="'mailto:' + contact.email" class="site-footer__link">{{ contact.email }}</a></li>
+          <li><a [href]="contact.phoneHref" class="site-footer__link">{{ contact.phone }}</a></li>
+          <li><a [href]="contact.mobileHref" class="site-footer__link">{{ contact.mobile }}</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <p class="eyebrow">{{ 'FOOTER.ADDRESS' | translate }}</p>
+        <address class="site-footer__address font-mono text-mono-value" lang="en">
+          @for (line of contact.addressLines; track line) {
+            <span class="block">{{ line }}</span>
+          }
+        </address>
+        <a [href]="contact.mapsUrl" class="site-footer__maps" rel="noopener" target="_blank">
+          <span>{{ 'GLOBAL.OPEN_IN_MAPS' | translate }}</span>
+          <span aria-hidden="true">&rarr;</span>
+          <span class="sr-only">{{ 'GLOBAL.NEW_WINDOW' | translate }}</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="site-footer__bottom">
+      <p class="font-mono text-mono-value">&copy; {{ year }} Just Enable.</p>
+      <p class="tag">PRETORIA · ZA</p>
+    </div>
+  </div>
+</footer>

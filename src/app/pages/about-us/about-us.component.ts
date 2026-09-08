@@ -2,30 +2,33 @@ import { Component } from '@angular/core';
 import { AboutSection } from 'src/app/models/about-section.model';
 
 @Component({
-    selector: 'app-about-us',
-    templateUrl: './about-us.component.html',
-    styleUrls: ['./about-us.component.scss'],
-    standalone: false
+  selector: 'app-about-us',
+  templateUrl: './about-us.component.html',
+  styleUrl: './about-us.component.scss',
+  standalone: false,
 })
 export class AboutUsComponent {
-  sections: AboutSection[] = [
+  readonly sections: AboutSection[] = [
     {
-      title: 'GLOBAL.OUR_STORY',
-      text: 'GLOBAL.OUR_STORY_TEXT',
-      bgColor: ['from-gray-100', 'to-white'],
-      image: '/assets/animation/our-story.json',
+      tag: '01',
+      id: 'our-story',
+      titleKey: 'GLOBAL.OUR_STORY',
+      textKeys: ['GLOBAL.OUR_STORY_TEXT.0', 'GLOBAL.OUR_STORY_TEXT.1'],
+      figure: 'nameplate',
     },
     {
-      title: 'GLOBAL.OUR_CULTURE',
-      text: 'GLOBAL.OUR_CULTURE_TEXT',
-      bgColor: ['from-white', 'to-gray-100', 'pt-24'],
-      image: '/assets/animation/culture.json',
+      tag: '02',
+      id: 'our-culture',
+      titleKey: 'GLOBAL.OUR_CULTURE',
+      textKeys: ['GLOBAL.OUR_CULTURE_TEXT'],
+      figure: 'office',
     },
     {
-      title: 'GLOBAL.TECHNOLOGY',
-      text: 'GLOBAL.TECHNOLOGY_TEXT',
-      bgColor: ['from-gray-100', 'to-white'],
-      image: '/assets/animation/technology.json',
+      tag: '03',
+      id: 'technology',
+      titleKey: 'GLOBAL.TECHNOLOGY',
+      textKeys: ['GLOBAL.TECHNOLOGY_TEXT'],
+      figure: 'stack',
     },
   ];
 }

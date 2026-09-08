@@ -1,0 +1,22 @@
+<div class="plate flex h-full flex-col overflow-hidden p-0">
+  <div class="aspect-[4/3] overflow-hidden border-b border-border bg-surface-raised">
+    @if (media.kind === 'photo') {
+      <img
+        class="h-full w-full object-cover"
+        [src]="media.src"
+        [alt]="media.altKey | translate"
+        [width]="media.width"
+        [height]="media.height"
+        [style.object-position]="media.position"
+        loading="lazy"
+      />
+    } @else {
+      <app-ladder-figure class="h-full w-full" />
+    }
+  </div>
+  <div class="p-5 sm:p-6">
+    <p class="tag">{{ tag }}</p>
+    <h3 class="mt-2 text-heading-s text-ink">{{ titleKey | translate }}</h3>
+    <p class="mt-2 text-body text-ink-muted">{{ descriptionKey | translate }}</p>
+  </div>
+</div>

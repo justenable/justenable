@@ -1,0 +1,46 @@
+:host {
+  display: block;
+  color: rgb(var(--color-ink));
+}
+
+.rail,
+.wire,
+.coil,
+.block {
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  // Keeps the 1.5px line weight of the mimic when the card scales the drawing down.
+  vector-effect: non-scaling-stroke;
+}
+
+.rail,
+.wire,
+.coil {
+  fill: none;
+}
+
+.rail {
+  stroke-width: 2;
+}
+
+.block {
+  fill: rgb(var(--color-surface));
+}
+
+// The one accent on the card: the energised coil. Q0.1 stays in ink.
+.coil--lit {
+  stroke: rgb(var(--color-accent));
+  stroke-width: 2;
+}
+
+.label {
+  @apply font-mono;
+  fill: currentColor;
+  font-size: 11px;
+}
+
+.label--rail {
+  font-size: 12px;
+}

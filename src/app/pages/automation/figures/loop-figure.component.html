@@ -1,0 +1,41 @@
+<svg
+  aria-hidden="true"
+  viewBox="0 0 480 300"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <!-- Process: tank, level, pipe, pump, control valve, outlet. -->
+  <rect x="32" y="80" width="96" height="160" rx="3" />
+  <line x1="32" y1="144" x2="128" y2="144" />
+  <path d="M104 136h16l-8 8z" />
+  <line x1="128" y1="224" x2="208" y2="224" />
+  <line x1="240" y1="224" x2="304" y2="224" />
+  <line x1="352" y1="224" x2="464" y2="224" />
+  <path d="M458 220l6 4-6 4" />
+  <path d="M304 212v24l24-12z" />
+  <path d="M352 212v24l-24-12z" />
+
+  <!-- Diaphragm actuator on its stem, with the valve's position marker. -->
+  <path d="M312 180a16 16 0 0 1 32 0z" />
+  <line x1="328" y1="180" x2="328" y2="224" />
+
+  <!-- Signals: transmitter to PLC, PLC to actuator. -->
+  <line x1="128" y1="128" x2="160" y2="128" />
+  <path d="M176 112V64h120" stroke-dasharray="2 4" />
+  <line x1="328" y1="80" x2="328" y2="164" stroke-dasharray="2 4" />
+
+  <circle class="face" cx="176" cy="128" r="16" />
+  <text class="figure-tag" x="176" y="133" text-anchor="middle">LT</text>
+  <!-- Pump: a circle with a discharge triangle, so it is not read as another
+       instrument bubble. -->
+  <circle class="face" cx="224" cy="224" r="16" />
+  <path d="M214 214l24 10-24 10z" />
+  <rect class="face" x="296" y="48" width="64" height="32" rx="3" />
+  <text class="figure-tag" x="328" y="69" text-anchor="middle">PLC</text>
+  <text class="figure-tag" x="328" y="260" text-anchor="middle">CV</text>
+
+  <circle class="figure-marker" cx="328" cy="200" r="5" />
+</svg>

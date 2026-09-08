@@ -1,0 +1,117 @@
+:host {
+  // Sticky on the host, not on <header>: the host is the sticky box's
+  // containing block, and a block host sized to the header would leave it no
+  // room to stick.
+  @apply sticky top-0 z-header block;
+}
+
+.site-header {
+  @apply border-b border-border bg-surface;
+}
+
+.site-header__row {
+  @apply flex h-14 items-center gap-3 nav:h-16 nav:gap-6;
+}
+
+.site-header__brand {
+  @apply inline-flex min-h-[44px] items-center gap-2.5 rounded-1 text-ink;
+}
+
+// Below 360px the mark stands alone; the link keeps its accessible name
+// from aria-label.
+.site-header__wordmark {
+  @apply whitespace-nowrap font-display text-[18px] font-semibold leading-none max-xxs:hidden;
+}
+
+.site-header__nav {
+  @apply hidden flex-1 nav:block;
+}
+
+.site-header__list {
+  @apply flex items-center justify-end gap-4 xl:gap-6;
+}
+
+// Text nav item: lamp + label; current = ink, accent underline, lit lamp.
+.nav-link {
+  @apply inline-flex h-11 items-center gap-2 whitespace-nowrap px-2 text-nav text-ink-muted hover:text-ink motion-safe:transition-colors motion-safe:duration-1;
+  border-bottom: 2px solid transparent;
+}
+.nav-link.is-current {
+  @apply text-ink;
+  border-bottom-color: rgb(var(--color-accent));
+}
+
+// Contact us is the only black-on-orange control in the bar; orange on
+// orange would hide a lamp, so its current state is an underline.
+.btn.is-current {
+  text-decoration: underline 2px;
+  text-underline-offset: 4px;
+}
+
+.site-header__tools {
+  @apply ml-auto flex items-center gap-1;
+}
+
+.burger {
+  @apply inline-flex h-11 w-11 flex-col items-center justify-center gap-[5px] rounded-1 text-ink nav:hidden;
+}
+.burger__line {
+  display: block;
+  width: 20px;
+  height: 1.5px;
+  background: currentColor;
+}
+.burger.is-open .burger__line:nth-child(1) {
+  transform: translateY(6.5px) rotate(45deg);
+}
+.burger.is-open .burger__line:nth-child(2) {
+  opacity: 0;
+}
+.burger.is-open .burger__line:nth-child(3) {
+  transform: translateY(-6.5px) rotate(-45deg);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .burger__line {
+    transition:
+      transform var(--dur-2) var(--ease-std),
+      opacity var(--dur-1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .burger__line {
+    transition: opacity var(--dur-1);
+  }
+}
+
+.site-menu {
+  @apply fixed inset-x-0 z-panel overflow-y-auto border-b border-border bg-surface nav:hidden;
+  top: 56px;
+  max-height: calc(100dvh - 56px);
+}
+
+.site-menu__list {
+  @apply flex flex-col py-2;
+}
+
+.site-menu__row {
+  @apply flex min-h-[48px] items-center gap-3 px-2 text-nav text-ink-muted hover:text-ink motion-safe:transition-colors motion-safe:duration-1;
+}
+.site-menu__row.is-current {
+  @apply text-ink;
+}
+
+.site-menu__settings {
+  @apply flex flex-col gap-4 border-t border-border py-4;
+}
+
+@keyframes site-menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .site-menu {
+    animation: site-menu-in var(--dur-2) var(--ease-out) both;
+  }
+}

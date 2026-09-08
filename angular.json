@@ -30,16 +30,20 @@
               "src/favicon.ico",
               "src/robots.txt",
               "src/sitemap.xml",
-              "src/assets"
+              {
+                "glob": "**/*",
+                "input": "src/assets",
+                "output": "/assets",
+                "ignore": [
+                  "i18n/taglines.json"
+                ]
+              }
             ],
             "styles": [
               "src/styles.scss"
             ],
             "scripts": [],
             "browser": "src/main.ts",
-            "allowedCommonJsDependencies": [
-              "lottie-web"
-            ],
             "server": "src/main.server.ts",
             "outputMode": "static"
           },
@@ -112,7 +116,14 @@
               "src/favicon.ico",
               "src/robots.txt",
               "src/sitemap.xml",
-              "src/assets"
+              {
+                "glob": "**/*",
+                "input": "src/assets",
+                "output": "/assets",
+                "ignore": [
+                  "i18n/taglines.json"
+                ]
+              }
             ],
             "styles": [
               "src/styles.scss"
@@ -125,7 +136,8 @@
           "options": {
             "lintFilePatterns": [
               "src/**/*.ts",
-              "src/**/*.html"
+              "src/**/*.html",
+              "scripts/**/*.mjs"
             ]
           }
         }

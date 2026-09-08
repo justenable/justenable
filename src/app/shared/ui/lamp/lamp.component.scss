@@ -1,0 +1,25 @@
+:host {
+  display: inline-flex;
+  flex: none;
+  line-height: 0;
+}
+
+.lamp path {
+  fill: none;
+  stroke: rgb(var(--color-border-strong));
+  stroke-width: 1.25;
+  vector-effect: non-scaling-stroke;
+}
+
+.lamp--lit path {
+  fill: rgb(var(--color-accent));
+  stroke: rgb(var(--color-ink));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .lamp path {
+    transition:
+      fill var(--dur-1),
+      stroke var(--dur-1);
+  }
+}

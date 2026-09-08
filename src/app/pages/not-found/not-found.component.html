@@ -1,11 +1,23 @@
-<div class="max-w-screen-xl mx-auto container px-6 py-24 text-center text-gray-500 font-thin">
-    <h1 class="text-6xl lg:text-8xl">404</h1>
-    <h2 class="uppercase text-orange-500 mt-2">{{ 'NOT_FOUND.TITLE' | translate }}</h2>
-    <p class="mt-6">
-        {{ 'NOT_FOUND.MESSAGE' | translate }}
-    </p>
-    <a routerLink="/"
-        class="inline-block mt-8 px-6 py-3 rounded-md bg-orange-500 text-white hover:bg-orange-600 transition-colors">
-        {{ 'NOT_FOUND.BACK_HOME' | translate }}
-    </a>
+<div class="section">
+  <div class="container-x">
+    <div class="plate mx-auto max-w-[560px] overflow-hidden p-0">
+      <div class="hazard" aria-hidden="true"></div>
+      <div class="not-found__body">
+        <p class="flex items-center gap-2">
+          <app-lamp [lit]="false" [size]="14" />
+          <span class="tag">404</span>
+        </p>
+        <h1 class="mt-4 font-display text-display-l text-ink">
+          {{ 'NOT_FOUND.TITLE' | translate }}
+        </h1>
+        <p class="mt-3 text-body text-ink-muted">
+          {{ 'NOT_FOUND.MESSAGE' | translate }}
+        </p>
+        <a routerLink="/" class="btn btn--primary mt-6">
+          {{ 'NOT_FOUND.BACK_HOME' | translate }}
+        </a>
+      </div>
+      <div class="hazard" aria-hidden="true"></div>
+    </div>
+  </div>
 </div>

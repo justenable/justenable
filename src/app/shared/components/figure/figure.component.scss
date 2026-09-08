@@ -1,0 +1,19 @@
+:host {
+  display: block;
+}
+
+.figure {
+  @apply mx-auto w-full max-w-[520px];
+}
+
+// Below lg the figure sits above the text, so its height is capped; the SVG
+// keeps its ratio and shrinks to fit.
+.figure__art {
+  @apply flex justify-center;
+
+  // Descendant, not child: the svg usually sits inside a figure component's
+  // own host element.
+  ::ng-deep svg {
+    @apply block h-auto w-full max-lg:max-h-[280px];
+  }
+}

@@ -1,0 +1,19 @@
+<div class="plate plate--inset nameplate">
+  <!-- The company row below names the company in text, so the mark is decorative here. -->
+  <app-logo [height]="24" aria-hidden="true" />
+  <dl class="nameplate__rows">
+    <dt class="eyebrow">{{ 'NAMEPLATE.COMPANY' | translate }}</dt>
+    <dd class="nameplate__value">{{ company }}</dd>
+
+    <dt class="eyebrow">{{ 'NAMEPLATE.MOTTO' | translate }}</dt>
+    <dd class="nameplate__value">{{ 'HOME.SUBTITLE' | translate }}</dd>
+
+    <dt class="eyebrow">{{ 'GLOBAL.LOCATION' | translate }}</dt>
+    <dd class="nameplate__value" lang="en">{{ location }}</dd>
+
+    <dt class="eyebrow">{{ 'FOOTER.CONTACT' | translate }}</dt>
+    <dd class="nameplate__value" translate="no">
+      <a [href]="'mailto:' + email" class="nameplate__link">{{ email }}</a>
+    </dd>
+  </dl>
+</div>

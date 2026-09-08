@@ -1,0 +1,65 @@
+<svg
+  class="hidden w-full max-w-[520px] md:block"
+  viewBox="0 0 560 320"
+  role="img"
+  aria-labelledby="mimic-landscape-title"
+  aria-describedby="mimic-landscape-desc"
+>
+  <title id="mimic-landscape-title">{{ 'HOME.MIMIC_TITLE' | translate }}</title>
+  <desc id="mimic-landscape-desc">{{ 'HOME.MIMIC_DESC' | translate }}</desc>
+  <line class="mimic-line mimic-bus" x1="240" y1="40" x2="240" y2="272" pathLength="1" />
+  @for (row of rows; track row.node; let i = $index) {
+    <g>
+      <rect class="mimic-face" x="16" [attr.y]="row.y - 16" width="96" height="32" rx="3" />
+      <text class="mimic-tag mimic-tag--node" x="64" [attr.y]="row.y + 5" text-anchor="middle">
+        {{ row.node }}
+      </text>
+      <line class="mimic-line" x1="112" [attr.y1]="row.y" x2="232" [attr.y2]="row.y" pathLength="1" />
+      <line class="mimic-line" x1="232" [attr.y1]="row.y" x2="240" [attr.y2]="row.y + 8" pathLength="1" />
+      <circle class="mimic-dot" cx="240" [attr.cy]="row.y + 8" r="3" />
+      <line class="mimic-line" x1="240" [attr.y1]="row.y" x2="384" [attr.y2]="row.y" pathLength="1" />
+      <rect class="mimic-face" x="384" [attr.y]="row.y - 16" width="56" height="32" rx="3" />
+      <path
+        class="lamp-fill"
+        [attr.d]="lampPath"
+        [attr.transform]="lampTransform(412, row.y)"
+        [style.--i]="i"
+      />
+      <text class="mimic-tag" x="456" [attr.y]="row.y + 5">{{ row.terminal }}</text>
+    </g>
+  }
+</svg>
+
+<svg
+  class="mx-auto block w-full max-w-[320px] md:hidden"
+  viewBox="0 0 320 288"
+  role="img"
+  aria-labelledby="mimic-portrait-title"
+  aria-describedby="mimic-portrait-desc"
+>
+  <title id="mimic-portrait-title">{{ 'HOME.MIMIC_TITLE' | translate }}</title>
+  <desc id="mimic-portrait-desc">{{ 'HOME.MIMIC_DESC' | translate }}</desc>
+  <line class="mimic-line mimic-bus" x1="24" y1="128" x2="296" y2="128" pathLength="1" />
+  @for (column of columns; track column.node; let i = $index) {
+    <g>
+      <rect class="mimic-face" [attr.x]="column.x - 35" y="16" width="70" height="32" rx="3" />
+      <text class="mimic-tag mimic-tag--node" [attr.x]="column.x" y="37" text-anchor="middle">
+        {{ column.node }}
+      </text>
+      <line class="mimic-line" [attr.x1]="column.x" y1="48" [attr.x2]="column.x" y2="120" pathLength="1" />
+      <line class="mimic-line" [attr.x1]="column.x" y1="120" [attr.x2]="column.x + 8" y2="128" pathLength="1" />
+      <circle class="mimic-dot" [attr.cx]="column.x + 8" cy="128" r="3" />
+      <line class="mimic-line" [attr.x1]="column.x" y1="128" [attr.x2]="column.x" y2="208" pathLength="1" />
+      <rect class="mimic-face" [attr.x]="column.x - 28" y="208" width="56" height="32" rx="3" />
+      <path
+        class="lamp-fill"
+        [attr.d]="lampPath"
+        [attr.transform]="lampTransform(column.x, 224)"
+        [style.--i]="i"
+      />
+      <text class="mimic-tag" [attr.x]="column.x" y="268" text-anchor="middle">
+        {{ column.terminal }}
+      </text>
+    </g>
+  }
+</svg>

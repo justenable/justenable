@@ -1,0 +1,21 @@
+<div class="theme-toggle" [class.theme-toggle--labelled]="labelled">
+  @if (labelled) {
+    <span class="eyebrow" [id]="labelId">{{ 'THEME.DARK_MODE' | translate }}</span>
+  }
+  <button (click)="theme.toggle()"
+          [attr.aria-labelledby]="labelled ? labelId : null"
+          [attr.aria-pressed]="theme.isDark()"
+          class="rocker"
+          type="button">
+    @if (!labelled) {
+      <span class="sr-only">{{ 'A11Y.TOGGLE_THEME' | translate }}</span>
+    }
+    <span [class.is-active]="!theme.isDark()" aria-hidden="true" class="rocker__mark">O</span>
+    <span aria-hidden="true" class="rocker__track">
+      <span class="rocker__knob">
+        <app-lamp [lit]="theme.isDark()" size="10" />
+      </span>
+    </span>
+    <span [class.is-active]="theme.isDark()" aria-hidden="true" class="rocker__mark">I</span>
+  </button>
+</div>
