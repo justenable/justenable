@@ -323,6 +323,6 @@ Carried over from the design brief and still open:
 
 1. **Founding year.** `GLOBAL.OUR_STORY_TEXT.0` no longer states an age. Once the client confirms the year, prepend "Just Enable was founded in YYYY." in all five locales.
 2. **Native-speaker review** of all af, fr, sw and zu strings added or re-cased in the redesign.
-3. **Map click-to-load.** An address card with a "Show map" button would avoid about 1 MB of third-party load per contact visit; the brief asked for an embedded iframe, so confirm with the client. Also confirm the 2023 embed URL still resolves.
+3. **Map click-to-load.** DECIDED 2026-09-10: the client chose to keep the embedded iframe as it is. Measured cost on a mid-range Android over 4G is about 2.15 MB across 113 third-party requests, taking the contact page from roughly 0.2s to 3.6s, because the map sits above the fold so `loading="lazy"` never defers it. Revisit only if the client raises contact-page speed.
 4. **Figure captions** (`AUTOMATION.FIGURE_*`, `ABOUT.FIGURE_*`, `MAINTENANCE.GLYPH_*`), their outcome lines (`*_OUTCOME`) and the nine section framing sentences (`GLOBAL.<SECTION>_INTRO`) in af, fr, sw and zu were drafted without a native speaker; include them in the review above.
 5. **Real-device pass** at 1024 to 1179px (tablet landscape gets the panel) in French and Zulu, and a mid-range Android profile of the lamp test.
