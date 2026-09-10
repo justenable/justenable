@@ -9,6 +9,7 @@ const SITE_NAME = 'Just Enable';
 @Injectable()
 export class TranslatedTitleStrategy extends TitleStrategy {
   private lastTitleKey?: string;
+  private lastDescriptionKey?: string;
 
   constructor(
     private readonly title: Title,
@@ -17,13 +18,14 @@ export class TranslatedTitleStrategy extends TitleStrategy {
     @Inject(DOCUMENT) private readonly document: Document
   ) {
     super();
-    // Re-apply the current route title when the user switches language.
-    this.translate.onLangChange.subscribe(() => this.applyTitle());
+    // Re-apply the current route's copy when the user switches language.
+    this.translate.onLangChange.subscribe(() => this.applyRouteCopy());
   }
 
   override updateTitle(snapshot: RouterStateSnapshot): void {
     this.lastTitleKey = this.buildTitle(snapshot);
-    this.applyTitle();
+    this.lastDescriptionKey = descriptionKey(snapshot.root);
+    this.applyRouteCopy();
     if (isNotFound(snapshot.root)) {
       this.markNotFound();
     } else {
@@ -60,6 +62,11 @@ export class TranslatedTitleStrategy extends TitleStrategy {
     return this.document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
   }
 
+  private applyRouteCopy(): void {
+    this.applyTitle();
+    this.applyDescription();
+  }
+
   private applyTitle(): void {
     if (!this.lastTitleKey) {
       this.setTitle(SITE_NAME);
@@ -68,6 +75,21 @@ export class TranslatedTitleStrategy extends TitleStrategy {
     this.translate
       .get(this.lastTitleKey)
       .subscribe((translated) => this.setTitle(`${translated} | ${SITE_NAME}`));
+  }
+
+  // Without a per-route description every page ships the index.html
+  // boilerplate, so Google has nothing to tell the snippets apart. The '**'
+  // route carries no key: it is already noindex, and the static tags stand.
+  private applyDescription(): void {
+    const key = this.lastDescriptionKey;
+    if (!key) {
+      return;
+    }
+    this.translate.get(key).subscribe((description) => {
+      this.meta.updateTag({ name: 'description', content: description });
+      this.meta.updateTag({ property: 'og:description', content: description });
+      this.meta.updateTag({ name: 'twitter:description', content: description });
+    });
   }
 
   // Social previews read og:title / twitter:title, which index.html only
@@ -79,10 +101,18 @@ export class TranslatedTitleStrategy extends TitleStrategy {
   }
 }
 
-function isNotFound(route: ActivatedRouteSnapshot): boolean {
+function leafOf(route: ActivatedRouteSnapshot): ActivatedRouteSnapshot {
   let leaf = route;
   while (leaf.firstChild) {
     leaf = leaf.firstChild;
   }
-  return leaf.routeConfig?.path === '**';
+  return leaf;
+}
+
+function isNotFound(route: ActivatedRouteSnapshot): boolean {
+  return leafOf(route).routeConfig?.path === '**';
+}
+
+function descriptionKey(route: ActivatedRouteSnapshot): string | undefined {
+  return leafOf(route).data['description'] as string | undefined;
 }

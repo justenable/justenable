@@ -4,16 +4,30 @@ import {
   TranslatePipe,
   TranslateService,
 } from '@ngx-translate/core';
+import { INDUSTRY_KEYS, SERVICE_KEYS } from 'src/app/shared/catalogue';
 import {
   MimicComponent,
   NODE_HREF,
+  NODE_NAME_KEYS,
   NODES,
   TERMINAL_HREF,
+  TERMINAL_NAME_KEYS,
   TERMINALS,
 } from './mimic.component';
 
 // index.html adds this before first paint unless the visitor prefers reduced motion.
 const MOTION_CLASS = 'motion';
+
+// The mimic legend and the about page's nameplate name the same four
+// services and industries in the same order, so they read one list.
+describe('MimicComponent legends', () => {
+  it('names the services and industries from the shared catalogue', () => {
+    expect(NODE_NAME_KEYS).toBe(SERVICE_KEYS);
+    expect(TERMINAL_NAME_KEYS).toBe(INDUSTRY_KEYS);
+    expect(NODE_NAME_KEYS.length).toBe(NODES.length);
+    expect(TERMINAL_NAME_KEYS.length).toBe(TERMINALS.length);
+  });
+});
 
 describe('MimicComponent', () => {
   let fixture: ComponentFixture<MimicComponent>;

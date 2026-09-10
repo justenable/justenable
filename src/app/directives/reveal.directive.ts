@@ -30,10 +30,12 @@ export const REVEAL_BOTTOM_MARGIN = 8;
  *
  * While the prerendered page is still hydrating, anything the observer
  * would already count as in view is left alone: the visitor has been looking
- * at it, and hiding it to fade it back in would read as a blink. An element
- * that only just crosses the fold, and everything below it, still reveals on
- * scroll; after a client-side navigation every element reveals, because
- * nothing was on screen before.
+ * at it, and hiding it to fade it back in would read as a blink. It is still
+ * marked revealed, so its draw-in and any in-flight motion play: only the
+ * hiding is skipped, never the motion itself. An element that only just
+ * crosses the fold, and everything below it, still reveals on scroll; after
+ * a client-side navigation every element reveals, because nothing was on
+ * screen before.
  *
  * The element a fragment link points into is shown at once, with no rise:
  * the visitor asked for it, and the router measures its scroll from the box
@@ -65,8 +67,18 @@ export class RevealDirective implements OnInit, OnDestroy {
     }
     const element = this.host.nativeElement;
     if (this.hydration.hydrating() && this.inView(element)) {
+      // Skip the hiding half only. REVEAL_CLASS is what sets opacity 0, so
+      // withholding it is what stops the blink; REVEALED_CLASS on its own
+      // hides nothing and is what the draw-in and the in-flight figure
+      // motion key on, so the element still plays its documented motion
+      // instead of being frozen at its finished state for good.
+      element.classList.add(REVEALED_CLASS);
       return;
     }
+    this.arm(element);
+  }
+
+  private arm(element: HTMLElement): void {
     element.classList.add(REVEAL_CLASS);
     if (this.appRevealDelay > 0) {
       element.style.setProperty('--reveal-delay', `${this.appRevealDelay}ms`);

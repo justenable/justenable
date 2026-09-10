@@ -1,24 +1,15 @@
 import { Component } from '@angular/core';
+import { INDUSTRY_KEYS, SERVICE_KEYS } from 'src/app/shared/catalogue';
 import { LAMP_PATH } from 'src/app/shared/ui/lamp/lamp.component';
 
 export const NODES = ['S1', 'S2', 'S3', 'S4'] as const;
 export const TERMINALS = ['X1', 'X2', 'X3', 'X4'] as const;
 
 /** Translated name of each service node, in NODES order; the legend of S1 to S4. */
-export const NODE_NAME_KEYS = [
-  'GLOBAL.DESIGN_ENGINEERING',
-  'GLOBAL.SOFTWARE_ENGINEERING',
-  'GLOBAL.PROJECT_MANAGEMENT',
-  'GLOBAL.MAINTENANCE_AND_GENERAL_WORK',
-] as const;
+export const NODE_NAME_KEYS = SERVICE_KEYS;
 
 /** Translated name of each terminal, in TERMINALS order; the legend of X1 to X4. */
-export const TERMINAL_NAME_KEYS = [
-  'GLOBAL.FMCG',
-  'GLOBAL.PET',
-  'GLOBAL.MINING',
-  'GLOBAL.OIL_AND_GAS',
-] as const;
+export const TERMINAL_NAME_KEYS = INDUSTRY_KEYS;
 
 /** Fragment of the home H2 each kind of node links to. */
 export const NODE_HREF = '#services';

@@ -24,12 +24,14 @@ const routes: Routes = [
   {
     path: 'about-us',
     title: 'NAVIGATION.ABOUT_US',
+    data: { description: 'SEO.ABOUT_US_DESCRIPTION' },
     loadChildren: () =>
       import('./pages/about-us/about-us.module').then((m) => m.AboutUsModule),
   },
   {
     path: 'automation',
     title: 'NAVIGATION.AUTOMATION',
+    data: { description: 'SEO.AUTOMATION_DESCRIPTION' },
     loadChildren: () =>
       import('./pages/automation/automation.module').then(
         (m) => m.AutomationModule
@@ -40,13 +42,15 @@ const routes: Routes = [
     // Without pathMatch: 'full' the empty path prefix-matches every URL, so
     // the routes listed after it would load HomeModule before backtracking.
     pathMatch: 'full',
-    title: 'NAVIGATION.HOME',
+    title: 'SEO.HOME_TITLE',
+    data: { description: 'SEO.HOME_DESCRIPTION' },
     loadChildren: () =>
       import('./pages/home/home.module').then((m) => m.HomeModule),
   },
   {
     path: 'maintenance',
     title: 'NAVIGATION.MAINTENANCE',
+    data: { description: 'SEO.MAINTENANCE_DESCRIPTION' },
     loadChildren: () =>
       import('./pages/maintenance/maintenance.module').then(
         (m) => m.MaintenanceModule
@@ -55,6 +59,7 @@ const routes: Routes = [
   {
     path: 'contact-us',
     title: 'NAVIGATION.CONTACT_US',
+    data: { description: 'SEO.CONTACT_US_DESCRIPTION' },
     loadChildren: () =>
       import('./pages/contact-us/contact-us.module').then(
         (m) => m.ContactUsModule

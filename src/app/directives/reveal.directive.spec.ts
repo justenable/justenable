@@ -47,7 +47,10 @@ class TargetHostComponent {}
 
 describe('RevealDirective', () => {
   let fixture: ComponentFixture<
-    HostComponent | BelowFoldHostComponent | FoldHostComponent | TargetHostComponent
+    | HostComponent
+    | BelowFoldHostComponent
+    | FoldHostComponent
+    | TargetHostComponent
   >;
   let location: SpyLocation;
   let section: HTMLElement;
@@ -116,12 +119,21 @@ describe('RevealDirective', () => {
     expect(observers().length).toBe(0);
   });
 
-  it('leaves an element the visitor can already see alone while the prerendered page hydrates', () => {
+  // Only the hiding is skipped: .reveal is what sets opacity 0, while
+  // .is-revealed hides nothing and is what the figure draw-in and the
+  // in-flight motions key on, so they must still run.
+  it('never hides an element the visitor can already see while the prerendered page hydrates', () => {
     hydrating = true;
     render(false);
     expect(section.classList.contains('reveal')).toBeFalse();
     expect(section.style.getPropertyValue('--reveal-delay')).toBe('');
     expect(observers().length).toBe(0);
+  });
+
+  it('still marks that element revealed, so its motion plays', () => {
+    hydrating = true;
+    render(false);
+    expect(section.classList.contains('is-revealed')).toBeTrue();
   });
 
   it('still reveals an element below the fold while the prerendered page hydrates', () => {

@@ -2,8 +2,8 @@
  * What the company does and for whom, as translation keys: the four services
  * (S1 to S4, the home cards and mimic nodes) and the four industries (X1 to
  * X4, the industries strip and mimic terminals), each in its numbered order.
- * The about page's nameplate lists both; the home page should read them
- * from here too.
+ * The about page's nameplate lists both, and the home page's mimic re-exports
+ * them as its node and terminal legends, so the order lives in one place.
  */
 export const SERVICE_KEYS = [
   'GLOBAL.DESIGN_ENGINEERING',

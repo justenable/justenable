@@ -6,6 +6,8 @@
 // - taglines.json mirrors each locale's HOME.SUBTITLE (the footer tagline stack
 //   reads the constant, so it must never drift from the files)
 // - every *_OUTRO_TEXT.n contains ':' (the reason sheet splits title from note on it)
+// - an apostrophe between two letters is the typographic one (U+2019), so the
+//   two styles cannot drift apart within one rendered viewport
 // - no value carries HTML line breaks or leading/trailing whitespace
 //
 // An optional directory argument points the check at another set of files
@@ -58,6 +60,11 @@ for (const [locale, translations] of Object.entries(locales)) {
     }
     if (/_OUTRO_TEXT\.\d+$/.test(key) && !value.includes(':')) {
       problems.push(`no colon   ${key} (the reason sheet splits "Title: note" on it)`);
+    }
+    if (/[\p{L}]'[\p{L}]/u.test(value)) {
+      problems.push(
+        `apostrophe ${key} (use the typographic apostrophe U+2019, not ')`
+      );
     }
     if (/<br\s*\/?>/i.test(value)) {
       problems.push(`html br    ${key} (use numbered .0/.1 keys and separate <p> elements)`);

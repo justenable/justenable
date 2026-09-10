@@ -25,7 +25,12 @@ describe('TranslatedTitleStrategy', () => {
       declarations: [DummyComponent],
       providers: [
         provideRouter([
-          { path: 'about-us', component: DummyComponent, title: 'PAGE_TITLE.ABOUT_US' },
+          {
+            path: 'about-us',
+            component: DummyComponent,
+            title: 'PAGE_TITLE.ABOUT_US',
+            data: { description: 'PAGE_DESCRIPTION.ABOUT_US' },
+          },
           { path: '**', component: DummyComponent, title: 'NOT_FOUND.TITLE' },
         ]),
         provideTranslateService(),
@@ -39,12 +44,19 @@ describe('TranslatedTitleStrategy', () => {
     translate.use('en');
     translate.setTranslation(
       'en',
-      { 'PAGE_TITLE.ABOUT_US': 'About Us', 'NOT_FOUND.TITLE': 'Page not found' },
+      {
+        'PAGE_TITLE.ABOUT_US': 'About Us',
+        'PAGE_DESCRIPTION.ABOUT_US': 'Who we are and what we build.',
+        'NOT_FOUND.TITLE': 'Page not found',
+      },
       true
     );
     translate.setTranslation(
       'fr',
-      { 'PAGE_TITLE.ABOUT_US': 'Qui sommes-nous' },
+      {
+        'PAGE_TITLE.ABOUT_US': 'Qui sommes-nous',
+        'PAGE_DESCRIPTION.ABOUT_US': 'Qui nous sommes et ce que nous construisons.',
+      },
       true
     );
   });
@@ -55,6 +67,9 @@ describe('TranslatedTitleStrategy', () => {
     meta.removeTag('property="og:url"');
     meta.removeTag('property="og:title"');
     meta.removeTag('name="twitter:title"');
+    meta.removeTag('name="description"');
+    meta.removeTag('property="og:description"');
+    meta.removeTag('name="twitter:description"');
   });
 
   it('sets a translated title suffixed with the site name', async () => {
@@ -72,6 +87,29 @@ describe('TranslatedTitleStrategy', () => {
     await router.navigateByUrl('/about-us');
     expect(meta.getTag('property="og:title"')?.content).toBe('About Us | Just Enable');
     expect(meta.getTag('name="twitter:title"')?.content).toBe('About Us | Just Enable');
+  });
+
+  it('sets the route description across the description tags', async () => {
+    await router.navigateByUrl('/about-us');
+    const description = 'Who we are and what we build.';
+    expect(meta.getTag('name="description"')?.content).toBe(description);
+    expect(meta.getTag('property="og:description"')?.content).toBe(description);
+    expect(meta.getTag('name="twitter:description"')?.content).toBe(description);
+  });
+
+  it('re-applies the description when the language changes', async () => {
+    await router.navigateByUrl('/about-us');
+    translate.use('fr');
+    expect(meta.getTag('name="description"')?.content).toBe(
+      'Qui nous sommes et ce que nous construisons.'
+    );
+  });
+
+  // The 404 shell is noindex, so the static index.html tags may stand.
+  it('leaves the description alone on a route that carries no key', async () => {
+    await router.navigateByUrl('/about-us');
+    await router.navigateByUrl('/no-such-page');
+    expect(meta.getTag('name="description"')?.content).toBe('Who we are and what we build.');
   });
 
   it('keeps the canonical link and og:url in sync with the route', async () => {

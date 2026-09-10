@@ -99,6 +99,11 @@ const failures = [
     stderr: /zu\.json:\n {2}no colon {3}GLOBAL\.AUTOMATION_OUTRO_TEXT\.0/,
   },
   {
+    name: 'a typewriter apostrophe between two letters',
+    options: { edit: only('fr', (keys) => ({ ...keys, 'SHEET.NO': "L'application" })) },
+    stderr: /fr\.json:\n {2}apostrophe SHEET\.NO/,
+  },
+  {
     name: 'an HTML line break',
     options: { edit: only('sw', (keys) => ({ ...keys, 'SHEET.NO': 'No<br />1' })) },
     stderr: /sw\.json:\n {2}html br {4}SHEET\.NO/,

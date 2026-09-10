@@ -30,8 +30,7 @@ Marketing site for Justenable. Angular 20 + Tailwind 3.4, deployed to Netlify.
 - Lamps (`app-lamp`) only where state can vary (nav, language, theme rocker, mimic, 404); never as a bullet or decoration, never the only state cue.
 - Identifiers (S1, X1, A-01, M-01, 01) are locale-invariant, never translation keys, uppercase via CSS only.
 - Copy is sentence case in every locale; `<br>` and `innerHTML` are not used in translations (numbered `.0`/`.1` keys instead).
-- Keyframe motion lives in the global styles (`src/styles/components.scss`, `src/styles/figure-motion.scss`), not in component stylesheets: Angular's emulated encapsulation renames a component's `@keyframes` but does not rewrite an `animation:` declared inside a media block, so that motion is silently inert in production. Every animation is finite, never blinks, and leaves nothing hidden under `prefers-reduced-motion: reduce`.
+- Keyframes may live in a component stylesheet only if the `animation:` declaration sits in a top-level rule (never as the first declaration inside an at-rule) and is switched off by a separate `@media (prefers-reduced-motion: reduce)` override; otherwise declare them in the global styles (`src/styles/components.scss`, `src/styles/figure-motion.scss`). Angular's emulated encapsulation renames a component's `@keyframes` but does not rewrite an `animation:` that a minified production build leaves opening a rule inside a media block, so that motion is silently inert. See `docs/design-system.md` section 7 for the full authoring rule. Every animation is finite, never blinks, and leaves nothing hidden under `prefers-reduced-motion: reduce`.
 - No comments explaining "what" -- comments answer "why" only.
 - No em dashes in code, copy or docs; use `--` or rephrase.
-- Asset filenames are kebab-case (`src/assets/img`, `src/assets/animation`).
-- Animation JSONs in `src/assets/animation/` are minified; keep them that way.
+- Asset filenames are kebab-case (`src/assets/img`, `src/assets/icon`, `src/assets/og`).
