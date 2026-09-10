@@ -17,8 +17,9 @@ let nextId = 0;
 /**
  * Bar variant: a trigger showing the language code and a menu of endonyms
  * (menu / menuitemradio). Panel variant ([segmented]): a radiogroup of
- * secondary buttons. Both light a lamp next to the selected language; the
- * lamp is never the only state cue (aria-checked carries it).
+ * secondary buttons. In both, the selected row is marked by an inverted fill,
+ * a check mark and weight 600; the unselected ones keep an unlit lamp. No
+ * lamp lights on the inverted fill, where accent measures 2.38:1 (dark).
  */
 @Component({
   selector: 'app-language-switcher',

@@ -62,8 +62,15 @@ describe('LanguageSwitcherComponent', () => {
       // The menu does not exist while closed, so the IDREF must not dangle.
       expect(trigger().getAttribute('aria-controls')).toBeNull();
       expect(trigger().getAttribute('aria-label')).toBe('Select language: English');
-      expect(trigger().textContent?.trim()).toBe('en');
       expect(root().querySelector('#lang-menu')).toBeNull();
+    });
+
+    it('names the current language on the closed trigger, in code and in words', () => {
+      expect(trigger().querySelector('.lang__code')?.textContent?.trim()).toBe('en');
+      // The endonym is CSS-hidden below xl, but it must be in the markup so
+      // the trigger never rests on a two-letter code alone.
+      expect(trigger().querySelector('.lang__endonym')?.textContent?.trim()).toBe('English');
+      expect(trigger().querySelector('.lang__globe')).not.toBeNull();
     });
 
     it('opens a menu of endonyms with lang attributes and the current one checked', async () => {
@@ -73,7 +80,7 @@ describe('LanguageSwitcherComponent', () => {
       const menu = root().querySelector('#lang-menu')!;
       expect(menu.getAttribute('role')).toBe('menu');
       expect(items().map((item) => item.lang)).toEqual(['af', 'en', 'fr', 'sw', 'zu']);
-      expect(items().map((item) => item.textContent?.trim())).toEqual([
+      expect(items().map((item) => item.querySelector('.lang__name')?.textContent?.trim())).toEqual([
         'Afrikaans',
         'English',
         'Français',
@@ -87,7 +94,12 @@ describe('LanguageSwitcherComponent', () => {
         'false',
         'false',
       ]);
-      expect(items()[1].querySelector('.lamp--lit')).not.toBeNull();
+      // The check replaces the lamp on the selected row: accent on the
+      // inverted fill is 2.38:1 in dark and 6.46:1 in light, so the lamp's
+      // silhouette is unreadable there. Unlit lamps stay on the other rows.
+      expect(items()[1].querySelector('.lamp')).toBeNull();
+      expect(items()[0].querySelector('.lamp')).not.toBeNull();
+      expect(items().filter((item) => item.querySelector('.lamp--lit')).length).toBe(0);
       expect(document.activeElement).toBe(items()[1]);
     });
 
@@ -120,8 +132,51 @@ describe('LanguageSwitcherComponent', () => {
       expect(translate.getCurrentLang()).toBe('fr');
       expect(root().querySelector('#lang-menu')).toBeNull();
       expect(document.activeElement).toBe(trigger());
-      expect(trigger().textContent?.trim()).toBe('fr');
+      expect(trigger().querySelector('.lang__code')?.textContent?.trim()).toBe('fr');
+      expect(trigger().querySelector('.lang__endonym')?.textContent?.trim()).toBe('Français');
       expect(trigger().getAttribute('aria-label')).toBe('Choisir la langue: Français');
+    });
+
+    // WCAG 1.4.1: the selected row must be identifiable without perceiving
+    // colour, so each cue is asserted present on exactly one row and absent
+    // on the other four. No lamp is lit anywhere: the check occupies that
+    // column on the selected row instead.
+    it('marks the selected row with cues that are not colour, and only that row', async () => {
+      await openMenu();
+      const selected = items().filter((item) => item.classList.contains('is-selected'));
+      expect(selected.length).toBe(1);
+      expect(selected[0].lang).toBe('en');
+      expect(selected[0].getAttribute('aria-checked')).toBe('true');
+
+      // Shape: a check mark glyph.
+      expect(items().filter((item) => item.querySelector('svg.lang-check')).length).toBe(1);
+      expect(selected[0].querySelector('svg.lang-check')).not.toBeNull();
+
+      // Text: the language code repeated at the end of the row.
+      expect(items().filter((item) => item.querySelector('.lang__current')).length).toBe(1);
+      expect(selected[0].querySelector('.lang__current')?.textContent?.trim()).toBe('en');
+
+      for (const item of items().filter((i) => i.lang !== 'en')) {
+        expect(item.classList.contains('is-selected')).toBe(false);
+        expect(item.querySelector('svg.lang-check')).toBeNull();
+        expect(item.querySelector('.lang__current')).toBeNull();
+        expect(item.querySelector('.lamp')).not.toBeNull();
+      }
+    });
+
+    it('moves every selected-row cue when the language changes', async () => {
+      await openMenu();
+      items()[3].click();
+      fixture.detectChanges();
+      await openMenu();
+
+      const selected = items().filter((item) => item.classList.contains('is-selected'));
+      expect(selected.length).toBe(1);
+      expect(selected[0].lang).toBe('sw');
+      expect(selected[0].querySelector('svg.lang-check')).not.toBeNull();
+      expect(selected[0].querySelector('.lang__current')?.textContent?.trim()).toBe('sw');
+      expect(items()[1].querySelector('svg.lang-check')).toBeNull();
+      expect(items()[1].classList.contains('is-selected')).toBe(false);
     });
 
     it('closes on Tab and on an outside click', async () => {
@@ -168,7 +223,9 @@ describe('LanguageSwitcherComponent', () => {
         'false',
       ]);
       expect(radios().map((radio) => radio.tabIndex)).toEqual([-1, 0, -1, -1, -1]);
-      expect(radios()[1].querySelector('.lamp--lit')).not.toBeNull();
+      expect(radios()[1].querySelector('.lamp')).toBeNull();
+      expect(radios()[0].querySelector('.lamp')).not.toBeNull();
+      expect(radios().filter((radio) => radio.querySelector('.lamp--lit')).length).toBe(0);
       expect(radios()[2].lang).toBe('fr');
     });
 
@@ -194,6 +251,25 @@ describe('LanguageSwitcherComponent', () => {
       fixture.detectChanges();
       expect(translate.getCurrentLang()).toBe('sw');
       expect(radios()[3].getAttribute('aria-checked')).toBe('true');
+    });
+
+    // The chip's fill comes from .btn--secondary[aria-checked='true']; the
+    // check adds a silhouette that survives a greyscale render, and replaces
+    // the lit lamp, which is only 2.38:1 on that fill in dark mode.
+    it('marks the checked segment with a check mark, and only that one', () => {
+      expect(radios().filter((radio) => radio.querySelector('svg.lang-check')).length).toBe(1);
+      expect(radios()[1].querySelector('svg.lang-check')).not.toBeNull();
+      for (const radio of radios().filter((_, i) => i !== 1)) {
+        expect(radio.querySelector('svg.lang-check')).toBeNull();
+      }
+    });
+
+    it('moves the check mark when the selection changes', () => {
+      radios()[4].click();
+      fixture.detectChanges();
+      expect(radios().filter((radio) => radio.querySelector('svg.lang-check')).length).toBe(1);
+      expect(radios()[4].querySelector('svg.lang-check')).not.toBeNull();
+      expect(radios()[1].querySelector('svg.lang-check')).toBeNull();
     });
   });
 });

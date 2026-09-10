@@ -9,7 +9,12 @@ import { LayoutService } from 'src/app/services/layout.service';
 import { THEME_STORAGE_KEY } from 'src/app/services/theme.service';
 import { LampComponent } from 'src/app/shared/ui/lamp/lamp.component';
 import { LogoComponent } from 'src/app/shared/ui/logo/logo.component';
-import { FOCUSABLE, SCROLLED_OFFSET, SiteHeaderComponent } from './site-header.component';
+import {
+  FOCUSABLE,
+  SCROLLED_HYSTERESIS,
+  SCROLLED_OFFSET,
+  SiteHeaderComponent,
+} from './site-header.component';
 
 @Component({ template: '', standalone: true })
 class PageStubComponent {}
@@ -112,22 +117,73 @@ describe('SiteHeaderComponent', () => {
     );
   });
 
-  it('marks itself scrolled once the page has moved past the offset, and stops on destroy', () => {
-    const scrollY = spyOnProperty(window, 'scrollY', 'get');
+  describe('the scrolled state', () => {
+    let scrollY: jasmine.Spy;
+    let frames: FrameRequestCallback[];
+
+    // The handler defers its read to the next frame, so one scroll event
+    // costs one layout read however many events arrive; the spec drives the
+    // frame itself rather than waiting on the browser's.
     const scroll = (to: number) => {
       scrollY.and.returnValue(to);
       window.dispatchEvent(new Event('scroll'));
+      const due = frames;
+      frames = [];
+      due.forEach((frame) => frame(0));
     };
 
-    scroll(SCROLLED_OFFSET + 1);
-    expect(root().classList.contains('is-scrolled')).toBeTrue();
-    scroll(SCROLLED_OFFSET);
-    expect(root().classList.contains('is-scrolled')).toBeFalse();
+    beforeEach(() => {
+      scrollY = spyOnProperty(window, 'scrollY', 'get');
+      frames = [];
+      spyOn(window, 'requestAnimationFrame').and.callFake((frame) => {
+        frames.push(frame);
+        return frames.length;
+      });
+    });
 
-    scroll(SCROLLED_OFFSET + 1);
-    fixture.destroy();
-    scroll(0);
-    expect(root().classList.contains('is-scrolled')).toBeTrue();
+    it('marks itself scrolled once the page has moved past the offset', () => {
+      scroll(SCROLLED_OFFSET + 1);
+      expect(root().classList.contains('is-scrolled')).toBeTrue();
+
+      scroll(0);
+      expect(root().classList.contains('is-scrolled')).toBeFalse();
+    });
+
+    // The dead band: a scroll resting on the threshold, or a glide easing
+    // through it, must not flip the shadow on and off.
+    it('holds the state through the dead band below the offset', () => {
+      scroll(SCROLLED_OFFSET + 1);
+      expect(root().classList.contains('is-scrolled')).toBeTrue();
+
+      scroll(SCROLLED_OFFSET - SCROLLED_HYSTERESIS + 1);
+      expect(root().classList.contains('is-scrolled')).toBeTrue();
+
+      scroll(SCROLLED_OFFSET - SCROLLED_HYSTERESIS);
+      expect(root().classList.contains('is-scrolled')).toBeFalse();
+    });
+
+    it('does not re-enter the state until the page is past the offset again', () => {
+      scroll(SCROLLED_OFFSET);
+      expect(root().classList.contains('is-scrolled')).toBeFalse();
+      scroll(SCROLLED_OFFSET + 1);
+      expect(root().classList.contains('is-scrolled')).toBeTrue();
+    });
+
+    it('coalesces a burst of scroll events into one read', () => {
+      scrollY.and.returnValue(SCROLLED_OFFSET + 1);
+      window.dispatchEvent(new Event('scroll'));
+      window.dispatchEvent(new Event('scroll'));
+      window.dispatchEvent(new Event('scroll'));
+
+      expect(frames.length).toBe(1);
+    });
+
+    it('stops on destroy', () => {
+      scroll(SCROLLED_OFFSET + 1);
+      fixture.destroy();
+      scroll(0);
+      expect(root().classList.contains('is-scrolled')).toBeTrue();
+    });
   });
 
   it('marks the contact button current on /contact-us', async () => {

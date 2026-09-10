@@ -2,5 +2,18 @@
   <div class="figure__art text-ink">
     <ng-content />
   </div>
-  <figcaption class="tag mt-3 text-ink-muted">{{ captionKey | translate }}</figcaption>
+  @if (outcomeKey) {
+    <figcaption class="mt-3">
+      <span class="block text-body-s text-ink">{{
+        outcomeKey | translate
+      }}</span>
+      <span class="tag mt-1 block text-ink-muted">{{
+        captionKey | translate
+      }}</span>
+    </figcaption>
+  } @else {
+    <figcaption class="tag mt-3 text-ink-muted">
+      {{ captionKey | translate }}
+    </figcaption>
+  }
 </figure>

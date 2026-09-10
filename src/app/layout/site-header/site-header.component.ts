@@ -22,6 +22,13 @@ import { NAV } from 'src/app/shared/navigation';
 const NAV_BAR_QUERY = '(min-width: 1180px)';
 /** Scroll depth past which the header's rule becomes a shadow (`.is-scrolled`). */
 export const SCROLLED_OFFSET = 24;
+/**
+ * Dead band around SCROLLED_OFFSET. A scroll that comes to rest on the
+ * threshold, or a glide easing through it, would otherwise flip the shadow on
+ * and off for as long as it hovered there; the state has to travel this far
+ * back before it releases.
+ */
+export const SCROLLED_HYSTERESIS = 8;
 const SCROLLED_CLASS = 'is-scrolled';
 
 /** What the panel's focus trap cycles through; exported so the spec cannot drift from it. */
@@ -60,13 +67,20 @@ export class SiteHeaderComponent implements OnDestroy {
       this.layout.closeMenu();
     }
   };
+  private scrolled = false;
+  private scrollFrame = 0;
   // Toggles a class only, so it runs outside the zone: a change-detection
-  // pass per scroll event would be wasted work.
+  // pass per scroll event would be wasted work. The read is deferred to the
+  // next frame so a burst of scroll events costs one layout read, not one
+  // per event, which is what keeps a smooth scroll from stuttering.
   private readonly onScroll = () => {
-    this.host.nativeElement.classList.toggle(
-      SCROLLED_CLASS,
-      window.scrollY > SCROLLED_OFFSET
-    );
+    if (this.scrollFrame) {
+      return;
+    }
+    this.scrollFrame = requestAnimationFrame(() => {
+      this.scrollFrame = 0;
+      this.applyScrolled();
+    });
   };
 
   constructor() {
@@ -85,7 +99,7 @@ export class SiteHeaderComponent implements OnDestroy {
       this.navBar = window.matchMedia(NAV_BAR_QUERY);
       this.navBar.addEventListener('change', this.onNavBarChange);
       // A page can open already scrolled (a fragment link), so read once now.
-      this.onScroll();
+      this.applyScrolled();
       this.zone.runOutsideAngular(() =>
         window.addEventListener('scroll', this.onScroll, { passive: true })
       );
@@ -97,8 +111,23 @@ export class SiteHeaderComponent implements OnDestroy {
     this.navBar?.removeEventListener('change', this.onNavBarChange);
     if (this.isBrowser) {
       window.removeEventListener('scroll', this.onScroll);
+      cancelAnimationFrame(this.scrollFrame);
       this.document.body.style.overflow = '';
     }
+  }
+
+  // Past the offset it floats; it only settles again once the page is back
+  // above the dead band, so the shadow cannot flicker on the threshold.
+  private applyScrolled(): void {
+    const y = window.scrollY;
+    const scrolled = this.scrolled
+      ? y > SCROLLED_OFFSET - SCROLLED_HYSTERESIS
+      : y > SCROLLED_OFFSET;
+    if (scrolled === this.scrolled) {
+      return;
+    }
+    this.scrolled = scrolled;
+    this.host.nativeElement.classList.toggle(SCROLLED_CLASS, scrolled);
   }
 
   toggleMenu(): void {

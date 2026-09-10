@@ -9,6 +9,15 @@ const CAPTION_KEYS: Record<GlyphVariant, string> = {
   facility: 'MAINTENANCE.GLYPH_FACILITY',
 };
 
+/** The plain-language outcome each strip's caption becomes the subtitle of. */
+const OUTCOME_KEYS: Record<GlyphVariant, string> = {
+  preventive: 'MAINTENANCE.GLYPH_PREVENTIVE_OUTCOME',
+  corrective: 'MAINTENANCE.GLYPH_CORRECTIVE_OUTCOME',
+  predictive: 'MAINTENANCE.GLYPH_PREDICTIVE_OUTCOME',
+  asset: 'MAINTENANCE.GLYPH_ASSET_OUTCOME',
+  facility: 'MAINTENANCE.GLYPH_FACILITY_OUTCOME',
+};
+
 /**
  * The maintenance figure: a schedule strip drawn straight on the canvas
  * through the shared figure wrapper. The SVG is decorative; the figcaption
@@ -32,5 +41,9 @@ export class TimelineGlyphComponent {
 
   get captionKey(): string {
     return CAPTION_KEYS[this.variant];
+  }
+
+  get outcomeKey(): string {
+    return OUTCOME_KEYS[this.variant];
   }
 }

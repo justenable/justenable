@@ -8,10 +8,16 @@
                 [attr.aria-checked]="language.code === current()"
                 [attr.tabindex]="language.code === current() ? 0 : -1"
                 [lang]="language.code"
-                class="btn btn--secondary btn--sm"
+                class="btn btn--secondary btn--sm lang-seg"
                 role="radio"
                 type="button">
-          <app-lamp [lit]="language.code === current()" size="8" />
+          @if (language.code === current()) {
+            <svg aria-hidden="true" class="lang-check" viewBox="0 0 12 12">
+              <path d="m1.5 6.25 3 3 6-6.5" />
+            </svg>
+          } @else {
+            <app-lamp [lit]="false" size="8" />
+          }
           <span>{{ language.name }}</span>
         </button>
       }
@@ -27,7 +33,12 @@
             aria-haspopup="true"
             class="lang__trigger"
             type="button">
-      <span aria-hidden="true" class="tag text-ink">{{ current() }}</span>
+      <svg aria-hidden="true" class="lang__globe" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 16 16">
+        <circle cx="8" cy="8" r="6" />
+        <path d="M2 8h12M8 2c1.6 1.8 2.4 3.8 2.4 6S9.6 12.2 8 14C6.4 12.2 5.6 10.2 5.6 8S6.4 3.8 8 2Z" />
+      </svg>
+      <span aria-hidden="true" class="tag lang__code">{{ current() }}</span>
+      <span aria-hidden="true" class="lang__endonym">{{ currentName() }}</span>
       <svg aria-hidden="true" class="lang__chevron" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 12 12">
         <path d="m2.5 4.5 3.5 3.5 3.5-3.5" />
       </svg>
@@ -39,13 +50,25 @@
             <button (click)="select(language.code)"
                     (keydown)="onMenuKeydown($event)"
                     [attr.aria-checked]="language.code === current()"
+                    [class.is-selected]="language.code === current()"
                     [lang]="language.code"
                     class="lang__item"
                     role="menuitemradio"
                     tabindex="-1"
                     type="button">
-              <app-lamp [lit]="language.code === current()" size="8" />
-              <span>{{ language.name }}</span>
+              <span aria-hidden="true" class="lang__mark">
+                @if (language.code === current()) {
+                  <svg class="lang-check" viewBox="0 0 12 12">
+                    <path d="m1.5 6.25 3 3 6-6.5" />
+                  </svg>
+                } @else {
+                  <app-lamp [lit]="false" size="8" />
+                }
+              </span>
+              <span class="lang__name">{{ language.name }}</span>
+              @if (language.code === current()) {
+                <span aria-hidden="true" class="tag lang__current">{{ current() }}</span>
+              }
             </button>
           </li>
         }

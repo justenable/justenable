@@ -46,6 +46,8 @@ describe('AboutUsComponent', () => {
       'NAVIGATION.CONTACT_US': 'Contact us',
       'ABOUT.FIGURE_CULTURE': 'Office plan, not to scale',
       'ABOUT.FIGURE_TECHNOLOGY': 'From field devices to applications',
+      'ABOUT.FIGURE_CULTURE_OUTCOME': 'Where the team works together every day',
+      'ABOUT.FIGURE_TECHNOLOGY_OUTCOME': 'Your plant floor talks to your software',
     });
     translate.use('en');
     fixture = TestBed.createComponent(AboutUsComponent);
@@ -164,20 +166,33 @@ describe('AboutUsComponent', () => {
     expect(nameplate?.querySelectorAll('dd').length).toBe(6);
   });
 
+  it('leaves the about rows unframed: their body is already prose', () => {
+    for (const section of sectionElements()) {
+      expect(section.querySelector('h2 + p')).toBeNull();
+      expect(section.querySelector('h2')?.classList).toContain('mb-4');
+    }
+  });
+
   it('draws the office plan under the culture row and the stack under the technology row', () => {
     const [, culture, technology] = sectionElements();
 
     const office = culture.querySelector('app-figure');
     expect(office?.parentElement?.classList).toContain('order-first');
     expect(office?.querySelector('app-office-figure svg')).not.toBeNull();
-    expect(office?.querySelector('figcaption')?.textContent?.trim()).toBe(
+    expect(office?.querySelector('figcaption span')?.textContent?.trim()).toBe(
+      'Where the team works together every day'
+    );
+    expect(office?.querySelector('figcaption .tag')?.textContent?.trim()).toBe(
       'Office plan, not to scale'
     );
 
     const stack = technology.querySelector('app-figure');
     expect(stack?.parentElement?.classList).toContain('order-first');
     expect(stack?.querySelector('app-stack-figure svg')).not.toBeNull();
-    expect(stack?.querySelector('figcaption')?.textContent?.trim()).toBe(
+    expect(stack?.querySelector('figcaption span')?.textContent?.trim()).toBe(
+      'Your plant floor talks to your software'
+    );
+    expect(stack?.querySelector('figcaption .tag')?.textContent?.trim()).toBe(
       'From field devices to applications'
     );
 

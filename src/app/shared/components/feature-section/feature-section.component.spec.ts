@@ -17,6 +17,7 @@ import { FeatureSectionComponent } from './feature-section.component';
       tag="A-01"
       [id]="'a-01'"
       titleKey="GLOBAL.PROCESS_AUTOMATION"
+      [introKey]="introKey"
       [reverse]="reverse"
     >
       <ul body class="dash-list">
@@ -29,10 +30,15 @@ import { FeatureSectionComponent } from './feature-section.component';
 })
 class HostComponent {
   reverse = false;
+  introKey?: string;
 }
 
 @Component({
-  template: `<app-feature-section id="m-01" tag="M-01" titleKey="GLOBAL.PROCESS_AUTOMATION" />`,
+  template: `<app-feature-section
+    id="m-01"
+    tag="M-01"
+    titleKey="GLOBAL.PROCESS_AUTOMATION"
+  />`,
   standalone: false,
 })
 class StaticIdHostComponent {}
@@ -57,6 +63,8 @@ describe('FeatureSectionComponent', () => {
     const translate = TestBed.inject(TranslateService);
     translate.setTranslation('en', {
       'GLOBAL.PROCESS_AUTOMATION': 'Process automation',
+      'GLOBAL.PROCESS_AUTOMATION_INTRO':
+        'We take the repetitive steps off your people.',
     });
     translate.use('en');
     fixture = TestBed.createComponent(HostComponent);
@@ -87,7 +95,31 @@ describe('FeatureSectionComponent', () => {
 
     expect(root.querySelectorAll('#m-01').length).toBe(1);
     expect(root.querySelector('h2')?.id).toBe('m-01');
-    expect(root.querySelector('app-feature-section')?.hasAttribute('id')).toBeFalse();
+    expect(
+      root.querySelector('app-feature-section')?.hasAttribute('id'),
+    ).toBeFalse();
+  });
+
+  it('omits the framing sentence when no intro key is given', () => {
+    const textColumn = element.querySelector('h2')?.parentElement;
+    expect(textColumn?.querySelector('p')).toBeNull();
+    expect(element.querySelector('h2')?.classList).toContain('mb-4');
+  });
+
+  it('sets the framing sentence between the heading and the body, in the lead step', () => {
+    fixture.componentInstance.introKey = 'GLOBAL.PROCESS_AUTOMATION_INTRO';
+    fixture.detectChanges();
+
+    const heading = element.querySelector('h2')!;
+    const intro = heading.nextElementSibling as HTMLElement;
+    expect(intro.tagName).toBe('P');
+    expect(intro.textContent?.trim()).toBe(
+      'We take the repetitive steps off your people.',
+    );
+    expect(intro.classList).toContain('text-lead');
+    expect(intro.classList).toContain('text-ink-muted');
+    expect(intro.nextElementSibling?.tagName).toBe('UL');
+    expect(heading.classList).toContain('mb-3');
   });
 
   it('shows the tag in a section marker hidden from assistive technology', () => {

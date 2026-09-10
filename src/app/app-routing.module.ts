@@ -1,9 +1,10 @@
-import { ViewportScroller } from '@angular/common';
+import { isPlatformBrowser, ViewportScroller } from '@angular/common';
 import {
   DOCUMENT,
   inject,
   ModuleWithProviders,
   NgModule,
+  PLATFORM_ID,
   provideAppInitializer,
 } from '@angular/core';
 import {
@@ -16,6 +17,7 @@ import {
   withInMemoryScrolling,
   withViewTransitions,
 } from '@angular/router';
+import { SmoothViewportScroller } from './services/smooth-viewport-scroller';
 import { TranslatedTitleStrategy } from './services/translated-title.strategy';
 
 const routes: Routes = [
@@ -98,7 +100,11 @@ function skipFragmentOnlyTransition({ transition }: ViewTransitionInfo): void {
  */
 function useAnchorOffset(): void {
   const document = inject(DOCUMENT);
-  inject(ViewportScroller).setOffset(() => [
+  const scroller = inject(ViewportScroller);
+  if (!isPlatformBrowser(inject(PLATFORM_ID))) {
+    return;
+  }
+  scroller.setOffset(() => [
     0,
     parseFloat(
       getComputedStyle(document.documentElement).getPropertyValue('--anchor-offset')
@@ -119,6 +125,9 @@ export class AppRoutingModule {
    * prerendered content out and back in. The skip is a one-shot flag inside
    * the providers, so building them once per bundle would let whichever
    * spec navigates first consume it. The styles live in src/styles.scss.
+   *
+   * SmoothViewportScroller replaces the built-in scroller so every fragment
+   * navigation glides; see that file for why the built-in one lands short.
    */
   static forRoot(): ModuleWithProviders<AppRoutingModule> {
     return {
@@ -136,6 +145,11 @@ export class AppRoutingModule {
           })
         ),
         { provide: TitleStrategy, useClass: TranslatedTitleStrategy },
+        // One instance under both tokens: the router scrolls through
+        // ViewportScroller, while the section rail injects the concrete
+        // class to ask whether a glide it must not fight is in flight.
+        SmoothViewportScroller,
+        { provide: ViewportScroller, useExisting: SmoothViewportScroller },
         provideAppInitializer(useAnchorOffset),
       ],
     };

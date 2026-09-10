@@ -12,6 +12,14 @@ const CAPTIONS: Record<GlyphVariant, string> = {
   facility: 'Routine upkeep across building systems',
 };
 
+const OUTCOMES: Record<GlyphVariant, string> = {
+  preventive: 'Problems found while they are still small',
+  corrective: 'Back in production sooner after a breakdown',
+  predictive: 'Repairs planned before the machine stops',
+  asset: 'One record of every asset you own',
+  facility: 'The building keeps working for your people',
+};
+
 const VARIANTS = Object.keys(CAPTIONS) as GlyphVariant[];
 
 /** Axis units and tags only: nothing in the SVG needs translating. */
@@ -69,6 +77,11 @@ describe('TimelineGlyphComponent', () => {
       'MAINTENANCE.GLYPH_PREDICTIVE': CAPTIONS.predictive,
       'MAINTENANCE.GLYPH_ASSET': CAPTIONS.asset,
       'MAINTENANCE.GLYPH_FACILITY': CAPTIONS.facility,
+      'MAINTENANCE.GLYPH_PREVENTIVE_OUTCOME': OUTCOMES.preventive,
+      'MAINTENANCE.GLYPH_CORRECTIVE_OUTCOME': OUTCOMES.corrective,
+      'MAINTENANCE.GLYPH_PREDICTIVE_OUTCOME': OUTCOMES.predictive,
+      'MAINTENANCE.GLYPH_ASSET_OUTCOME': OUTCOMES.asset,
+      'MAINTENANCE.GLYPH_FACILITY_OUTCOME': OUTCOMES.facility,
     });
     translate.use('en');
     fixture = TestBed.createComponent(TimelineGlyphComponent);
@@ -86,15 +99,21 @@ describe('TimelineGlyphComponent', () => {
     expect(element.querySelector('.plate, .screen')).toBeNull();
   });
 
-  it('captions every variant with its own key', () => {
+  it('captions every variant with its own key, outcome first', () => {
     for (const variant of VARIANTS) {
       render(variant);
       expect(fixture.componentInstance.captionKey).toBe(
         `MAINTENANCE.GLYPH_${variant.toUpperCase()}`
       );
+      expect(fixture.componentInstance.outcomeKey).toBe(
+        `MAINTENANCE.GLYPH_${variant.toUpperCase()}_OUTCOME`
+      );
       const caption = element.querySelector('figure > figcaption');
-      expect(caption?.classList).toContain('tag');
-      expect(caption?.textContent?.trim()).toBe(CAPTIONS[variant]);
+      const outcome = caption?.querySelector('span');
+      expect(outcome?.textContent?.trim()).withContext(variant).toBe(OUTCOMES[variant]);
+      expect(outcome?.classList).toContain('text-body-s');
+      const mechanism = caption?.querySelector('.tag');
+      expect(mechanism?.textContent?.trim()).withContext(variant).toBe(CAPTIONS[variant]);
     }
   });
 

@@ -24,12 +24,20 @@
             <app-nameplate figure />
           }
           @case ('office') {
-            <app-figure figure captionKey="ABOUT.FIGURE_CULTURE">
+            <app-figure
+              figure
+              captionKey="ABOUT.FIGURE_CULTURE"
+              outcomeKey="ABOUT.FIGURE_CULTURE_OUTCOME"
+            >
               <app-office-figure />
             </app-figure>
           }
           @case ('stack') {
-            <app-figure figure captionKey="ABOUT.FIGURE_TECHNOLOGY">
+            <app-figure
+              figure
+              captionKey="ABOUT.FIGURE_TECHNOLOGY"
+              outcomeKey="ABOUT.FIGURE_TECHNOLOGY_OUTCOME"
+            >
               <app-stack-figure />
             </app-figure>
           }

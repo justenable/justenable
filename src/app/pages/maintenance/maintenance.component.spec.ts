@@ -7,6 +7,14 @@ import { sitePage } from 'src/app/shared/site-index';
 import { MaintenanceComponent } from './maintenance.component';
 import { TimelineGlyphComponent } from './timeline-glyph/timeline-glyph.component';
 
+const INTROS = {
+  'GLOBAL.PREVENTIVE_MAINTENANCE_INTRO': 'Preventive maintenance, in plain words',
+  'GLOBAL.CORRECTIVE_MAINTENANCE_INTRO': 'Corrective maintenance, in plain words',
+  'GLOBAL.PREDICTIVE_MAINTENANCE_INTRO': 'Predictive maintenance, in plain words',
+  'GLOBAL.ASSET_MANAGEMENT_INTRO': 'Asset management, in plain words',
+  'GLOBAL.FACILITY_MAINTENACE_INTRO': 'Facility maintenance, in plain words',
+};
+
 const normalize = (text: string | null | undefined): string =>
   text?.replace(/\s+/g, ' ').trim() ?? '';
 
@@ -25,6 +33,7 @@ describe('MaintenanceComponent', () => {
     translate = TestBed.inject(TranslateService);
     translate.setTranslation('en', {
       'GLOBAL.MAINTENANCE_OUTRO': 'Why choose {{ companyName }} for maintenance',
+      ...INTROS,
     });
     translate.use('en');
     fixture = TestBed.createComponent(MaintenanceComponent);
@@ -134,7 +143,14 @@ describe('MaintenanceComponent', () => {
   it('draws a captioned glyph in every section and no Lottie', () => {
     const glyphs = Array.from(element.querySelectorAll('app-timeline-glyph'));
     expect(glyphs.length).toBe(5);
-    expect(glyphs.map((glyph) => glyph.querySelector('figcaption')?.textContent?.trim())).toEqual([
+    expect(glyphs.map((glyph) => normalize(glyph.querySelector('figcaption span')?.textContent))).toEqual([
+      'MAINTENANCE.GLYPH_PREVENTIVE_OUTCOME',
+      'MAINTENANCE.GLYPH_CORRECTIVE_OUTCOME',
+      'MAINTENANCE.GLYPH_PREDICTIVE_OUTCOME',
+      'MAINTENANCE.GLYPH_ASSET_OUTCOME',
+      'MAINTENANCE.GLYPH_FACILITY_OUTCOME',
+    ]);
+    expect(glyphs.map((glyph) => normalize(glyph.querySelector('figcaption .tag')?.textContent))).toEqual([
       'MAINTENANCE.GLYPH_PREVENTIVE',
       'MAINTENANCE.GLYPH_CORRECTIVE',
       'MAINTENANCE.GLYPH_PREDICTIVE',
@@ -142,6 +158,16 @@ describe('MaintenanceComponent', () => {
       'MAINTENANCE.GLYPH_FACILITY',
     ]);
     expect(element.querySelector('ng-lottie, app-lottie-figure')).toBeNull();
+  });
+
+  it('frames every section with one plain sentence between the H2 and the bullets', () => {
+    const sections = Array.from(element.querySelectorAll('app-feature-section'));
+    expect(sections.map((section) => normalize(section.querySelector('h2 + p')?.textContent))).toEqual(
+      Object.values(INTROS)
+    );
+    for (const section of sections) {
+      expect(section.querySelector('h2 + p')?.nextElementSibling?.tagName).toBe('UL');
+    }
   });
 
   it('draws every glyph straight on the canvas with one accent marker', () => {

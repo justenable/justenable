@@ -2,7 +2,9 @@ import { isPlatformBrowser } from '@angular/common';
 import {
   afterNextRender,
   Component,
+  computed,
   DOCUMENT,
+  effect,
   inject,
   Input,
   OnChanges,
@@ -10,6 +12,7 @@ import {
   PLATFORM_ID,
   signal,
 } from '@angular/core';
+import { SmoothViewportScroller } from 'src/app/services/smooth-viewport-scroller';
 import { ContentsItem } from '../title-block/title-block.component';
 
 /**
@@ -29,6 +32,14 @@ export const RAIL_ROOT_MARGIN = '100000px 0px -55% 0px';
  * header. The active section is read from an IntersectionObserver over the
  * sections' H2 elements, in the browser only; the server and the first
  * client render light the first item.
+ *
+ * A click on a rail link starts a smooth scroll that passes every section
+ * between here and the destination, and the observer reports each one. Those
+ * reports are recorded but not shown: while SmoothViewportScroller says a
+ * glide is in flight the rail holds the destination lit, so the lamp settles
+ * on the section the visitor asked for instead of running down the list. The
+ * held id is dropped when the glide ends, and what the observer saw in the
+ * meantime is what the rail then shows.
  */
 @Component({
   selector: 'app-section-rail',
@@ -39,10 +50,17 @@ export const RAIL_ROOT_MARGIN = '100000px 0px -55% 0px';
 export class SectionRailComponent implements OnChanges, OnDestroy {
   @Input({ required: true }) items: ContentsItem[] = [];
 
-  readonly activeId = signal<string | null>(null);
+  /** What the observer has seen; the rail shows `activeId` instead. */
+  private readonly observedId = signal<string | null>(null);
+  /** The destination of a glide in flight, held lit until it lands. */
+  private readonly heldId = signal<string | null>(null);
+
+  /** The row that is lit and carries aria-current. */
+  readonly activeId = computed(() => this.heldId() ?? this.observedId());
 
   private readonly document = inject(DOCUMENT);
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+  private readonly scroller = inject(SmoothViewportScroller, { optional: true });
   /** Which headings have reached the line, by section id. */
   private readonly passed = new Set<string>();
   private observer?: IntersectionObserver;
@@ -53,13 +71,36 @@ export class SectionRailComponent implements OnChanges, OnDestroy {
     if (this.isBrowser) {
       afterNextRender(() => this.connect());
     }
+    // The hold is released by the glide ending, not by the click: the
+    // observer's last word about where the page actually stopped is what
+    // the rail should show, and it only has that once the scroll is at rest.
+    const gliding = this.scroller?.gliding;
+    if (gliding) {
+      effect(() => {
+        if (!gliding()) {
+          this.heldId.set(null);
+        }
+      });
+    }
   }
 
   ngOnChanges(): void {
     this.passed.clear();
-    this.activeId.set(this.resolveActive());
+    this.heldId.set(null);
+    this.observedId.set(this.resolveActive());
     if (this.observer) {
       this.connect();
+    }
+  }
+
+  /**
+   * Lights the section a rail link points at for as long as the scroll to it
+   * is running. Called from the template on click, before the router has
+   * started the navigation, so the lamp moves in the same frame as the click.
+   */
+  hold(id: string): void {
+    if (this.isBrowser) {
+      this.heldId.set(id);
     }
   }
 
@@ -95,7 +136,7 @@ export class SectionRailComponent implements OnChanges, OnDestroy {
         this.passed.delete(entry.target.id);
       }
     }
-    this.activeId.set(this.resolveActive());
+    this.observedId.set(this.resolveActive());
   }
 
   // The section being read is the last one whose heading has passed the

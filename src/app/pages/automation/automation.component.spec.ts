@@ -14,6 +14,20 @@ const CAPTIONS = {
   'AUTOMATION.FIGURE_DATA': 'Integration bus',
 };
 
+const OUTCOMES = {
+  'AUTOMATION.FIGURE_PROCESS_OUTCOME': 'Approvals move without waiting on anyone',
+  'AUTOMATION.FIGURE_INDUSTRIAL_OUTCOME': 'Production holds its setpoint automatically',
+  'AUTOMATION.FIGURE_IT_OUTCOME': 'New servers come up without manual setup',
+  'AUTOMATION.FIGURE_DATA_OUTCOME': 'Every system shows the same numbers',
+};
+
+const INTROS = {
+  'GLOBAL.PROCESS_AUTOMATION_INTRO': 'Process automation, in plain words',
+  'GLOBAL.INDUSTRIAL_AUTOMATION_INTRO': 'Industrial automation, in plain words',
+  'GLOBAL.IT_INFRASTRUCTURE_AUTOMATION_INTRO': 'IT automation, in plain words',
+  'GLOBAL.DATA_INTEGRATION_AND_WORKFLOW_AUTOMATION_MANAGEMENT_INTRO': 'Data integration, in plain words',
+};
+
 const OUTRO_TITLE = {
   'GLOBAL.AUTOMATION_OUTRO': 'Partner with {{ companyName }} for automation excellence',
 };
@@ -34,7 +48,7 @@ describe('AutomationComponent', () => {
       providers: [provideRouter([]), provideTranslateService()],
     });
     translate = TestBed.inject(TranslateService);
-    translate.setTranslation('en', { ...CAPTIONS, ...OUTRO_TITLE });
+    translate.setTranslation('en', { ...CAPTIONS, ...OUTCOMES, ...INTROS, ...OUTRO_TITLE });
     translate.use('en');
     fixture = TestBed.createComponent(AutomationComponent);
     component = fixture.componentInstance;
@@ -142,16 +156,33 @@ describe('AutomationComponent', () => {
     expect(element.querySelector('ng-lottie, app-lottie-figure')).toBeNull();
   });
 
-  it('captions every figure from its own key', () => {
-    const captions = Array.from(element.querySelectorAll('app-figure figcaption')).map((caption) =>
-      caption.textContent?.trim()
-    );
-    expect(captions).toEqual([
+  it('leads every caption with the outcome and keeps the mechanism as its subtitle', () => {
+    const captions = Array.from(element.querySelectorAll('app-figure figcaption'));
+    expect(captions.map((caption) => normalize(caption.querySelector('span')?.textContent))).toEqual([
+      OUTCOMES['AUTOMATION.FIGURE_PROCESS_OUTCOME'],
+      OUTCOMES['AUTOMATION.FIGURE_INDUSTRIAL_OUTCOME'],
+      OUTCOMES['AUTOMATION.FIGURE_IT_OUTCOME'],
+      OUTCOMES['AUTOMATION.FIGURE_DATA_OUTCOME'],
+    ]);
+    expect(captions.map((caption) => normalize(caption.querySelector('.tag')?.textContent))).toEqual([
       CAPTIONS['AUTOMATION.FIGURE_PROCESS'],
       CAPTIONS['AUTOMATION.FIGURE_INDUSTRIAL'],
       CAPTIONS['AUTOMATION.FIGURE_IT'],
       CAPTIONS['AUTOMATION.FIGURE_DATA'],
     ]);
+  });
+
+  it('frames every section with one plain sentence between the H2 and the bullets', () => {
+    const sections = Array.from(element.querySelectorAll('app-feature-section'));
+    expect(sections.map((section) => normalize(section.querySelector('h2 + p')?.textContent))).toEqual([
+      INTROS['GLOBAL.PROCESS_AUTOMATION_INTRO'],
+      INTROS['GLOBAL.INDUSTRIAL_AUTOMATION_INTRO'],
+      INTROS['GLOBAL.IT_INFRASTRUCTURE_AUTOMATION_INTRO'],
+      INTROS['GLOBAL.DATA_INTEGRATION_AND_WORKFLOW_AUTOMATION_MANAGEMENT_INTRO'],
+    ]);
+    for (const section of sections) {
+      expect(section.querySelector('h2 + p')?.nextElementSibling?.tagName).toBe('UL');
+    }
   });
 
   it('lights exactly one accent element per figure', () => {

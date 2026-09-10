@@ -3,11 +3,22 @@
     <div class="section-marker" aria-hidden="true">
       <span class="tag tag--chip">{{ tag }}</span>
     </div>
-    <div class="grid gap-6 lg:grid-cols-12 lg:gap-8 xl:gap-12">
+    <div class="grid gap-8 lg:grid-cols-12 xl:gap-12">
       <div class="lg:col-span-7 xl:col-span-6">
-        <h2 class="mb-4 text-heading-m text-ink" [id]="id" tabindex="-1">
+        <h2
+          class="text-heading-m text-ink"
+          [class.mb-3]="introKey"
+          [class.mb-4]="!introKey"
+          [id]="id"
+          tabindex="-1"
+        >
           {{ titleKey | translate }}
         </h2>
+        @if (introKey) {
+          <p class="mb-5 max-w-[68ch] text-lead text-ink-muted">
+            {{ introKey | translate }}
+          </p>
+        }
         <ng-content select="[body]" />
       </div>
       <div

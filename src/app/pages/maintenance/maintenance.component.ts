@@ -9,6 +9,15 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { ContentsItem } from 'src/app/shared/components/title-block/title-block.component';
 import { sitePage } from 'src/app/shared/site-index';
 
+/**
+ * A section plus the one plain sentence that frames it, as on the automation
+ * page: only the service pages carry a framing sentence, so it is not part of
+ * the shared `ContentSection`.
+ */
+type MaintenanceSection = ContentSection<{ glyph: GlyphVariant }> & {
+  intro: string;
+};
+
 @Component({
   selector: 'app-maintenance',
   templateUrl: './maintenance.component.html',
@@ -18,11 +27,12 @@ import { sitePage } from 'src/app/shared/site-index';
 export class MaintenanceComponent {
   readonly params = { companyName: 'Just Enable' };
 
-  readonly sections: ContentSection<{ glyph: GlyphVariant }>[] = [
+  readonly sections: MaintenanceSection[] = [
     {
       tag: 'M-01',
       id: 'm-01',
       title: 'GLOBAL.PREVENTIVE_MAINTENANCE',
+      intro: 'GLOBAL.PREVENTIVE_MAINTENANCE_INTRO',
       texts: [
         'GLOBAL.PREVENTIVE_MAINTENANCE_TEXT.0',
         'GLOBAL.PREVENTIVE_MAINTENANCE_TEXT.1',
@@ -34,6 +44,7 @@ export class MaintenanceComponent {
       tag: 'M-02',
       id: 'm-02',
       title: 'GLOBAL.CORRECTIVE_MAINTENANCE',
+      intro: 'GLOBAL.CORRECTIVE_MAINTENANCE_INTRO',
       texts: [
         'GLOBAL.CORRECTIVE_MAINTENANCE_TEXT.0',
         'GLOBAL.CORRECTIVE_MAINTENANCE_TEXT.1',
@@ -45,6 +56,7 @@ export class MaintenanceComponent {
       tag: 'M-03',
       id: 'm-03',
       title: 'GLOBAL.PREDICTIVE_MAINTENANCE',
+      intro: 'GLOBAL.PREDICTIVE_MAINTENANCE_INTRO',
       texts: [
         'GLOBAL.PREDICTIVE_MAINTENANCE_TEXT.0',
         'GLOBAL.PREDICTIVE_MAINTENANCE_TEXT.1',
@@ -57,6 +69,7 @@ export class MaintenanceComponent {
       tag: 'M-04',
       id: 'm-04',
       title: 'GLOBAL.ASSET_MANAGEMENT',
+      intro: 'GLOBAL.ASSET_MANAGEMENT_INTRO',
       texts: [
         'GLOBAL.ASSET_MANAGEMENT_TEXT.0',
         'GLOBAL.ASSET_MANAGEMENT_TEXT.1',
@@ -69,6 +82,7 @@ export class MaintenanceComponent {
       id: 'm-05',
       // The key's spelling is what all five locale files carry.
       title: 'GLOBAL.FACILITY_MAINTENACE',
+      intro: 'GLOBAL.FACILITY_MAINTENACE_INTRO',
       texts: [
         'GLOBAL.FACILITY_MAINTENACE_TEXT.0',
         'GLOBAL.FACILITY_MAINTENACE_TEXT.1',

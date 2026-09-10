@@ -6,6 +6,7 @@
         <a
           [routerLink]="[]"
           [fragment]="item.id"
+          (click)="hold(item.id)"
           class="rail__link"
           [class.is-active]="activeId() === item.id"
           [attr.aria-current]="activeId() === item.id ? 'true' : null"

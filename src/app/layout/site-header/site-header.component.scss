@@ -20,7 +20,7 @@
 @media (prefers-reduced-motion: no-preference) {
   .site-header {
     transition:
-      border-color var(--dur-2),
+      border-color var(--dur-2) var(--ease-out),
       box-shadow var(--dur-2) var(--ease-out);
   }
 }

@@ -1,4 +1,4 @@
-import { Component, PLATFORM_ID } from '@angular/core';
+import { Component, PLATFORM_ID, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, RouterModule } from '@angular/router';
 import {
@@ -6,6 +6,7 @@ import {
   TranslatePipe,
   TranslateService,
 } from '@ngx-translate/core';
+import { SmoothViewportScroller } from 'src/app/services/smooth-viewport-scroller';
 import { LampComponent } from 'src/app/shared/ui/lamp/lamp.component';
 import { FakeIntersectionObserver } from 'src/testing/intersection-observer';
 import { ContentsItem } from '../title-block/title-block.component';
@@ -38,9 +39,18 @@ class HostComponent {
   items = ITEMS;
 }
 
+/**
+ * Stands in for the router's scroller: the rail only needs to know whether a
+ * scroll it started is still in flight.
+ */
+class StubScroller {
+  readonly gliding = signal(false);
+}
+
 describe('SectionRailComponent', () => {
   let fixture: ComponentFixture<HostComponent>;
   let element: HTMLElement;
+  let scroller: StubScroller;
 
   const observers = (): FakeIntersectionObserver[] => FakeIntersectionObserver.instances;
   const links = (): HTMLAnchorElement[] => Array.from(element.querySelectorAll('nav a'));
@@ -71,6 +81,7 @@ describe('SectionRailComponent', () => {
         provideRouter([]),
         provideTranslateService(),
         { provide: PLATFORM_ID, useValue: platform },
+        { provide: SmoothViewportScroller, useClass: StubScroller },
       ],
     });
     const translate = TestBed.inject(TranslateService);
@@ -86,6 +97,7 @@ describe('SectionRailComponent', () => {
 
   async function render(platform: 'browser' | 'server' = 'browser'): Promise<void> {
     configure(platform);
+    scroller = TestBed.inject(SmoothViewportScroller) as unknown as StubScroller;
     fixture = TestBed.createComponent(HostComponent);
     element = fixture.nativeElement;
     fixture.detectChanges();
@@ -191,5 +203,99 @@ describe('SectionRailComponent', () => {
     await render();
     fixture.destroy();
     expect(observers()[0].disconnect).toHaveBeenCalledTimes(1);
+  });
+
+  // A rail link starts a smooth scroll that crosses every section in between,
+  // and the observer reports each one. The rail must show the destination
+  // throughout rather than running down the list.
+  describe('while a glide it started is in flight', () => {
+    /** Clicks a rail row the way a visitor does: the hold, then the scroll. */
+    function clickRow(id: string): void {
+      const link = links().find((a) => a.getAttribute('href') === `/#${id}`)!;
+      link.click();
+      scroller.gliding.set(true);
+      fixture.detectChanges();
+    }
+
+    it('lights the destination in the same frame as the click', async () => {
+      await render();
+      clickRow('a-05');
+
+      expect(litLamps()).toEqual(['/#a-05']);
+      expect(current()).toEqual(['/#a-05']);
+    });
+
+    it('holds the destination while the sections it passes report in', async () => {
+      await render();
+      clickRow('a-05');
+
+      report('a-01', true);
+      expect(current()).toEqual(['/#a-05']);
+      report('a-02', true);
+      expect(current()).toEqual(['/#a-05']);
+      report('a-03', true);
+      expect(current()).toEqual(['/#a-05']);
+
+      // Exactly one row is ever current, so a screen reader is never told
+      // the page is in two places at once.
+      expect(current().length).toBe(1);
+    });
+
+    it('settles on what the observer saw once the glide ends', async () => {
+      await render();
+      clickRow('a-05');
+      report('a-01', true);
+      report('a-02', true);
+      report('a-03', true);
+      report('a-05', true);
+
+      scroller.gliding.set(false);
+      fixture.detectChanges();
+
+      expect(litLamps()).toEqual(['/#a-05']);
+      expect(current()).toEqual(['/#a-05']);
+    });
+
+    // A glide that is clamped short of its target, or a visitor who scrolls
+    // away mid-flight: the rail must tell the truth once it is over, not keep
+    // the destination lit for ever.
+    it('gives the row back to the observer when the glide lands elsewhere', async () => {
+      await render();
+      clickRow('a-05');
+      report('a-01', true);
+      report('a-02', true);
+      expect(current()).toEqual(['/#a-05']);
+
+      scroller.gliding.set(false);
+      fixture.detectChanges();
+
+      expect(litLamps()).toEqual(['/#a-02']);
+      expect(current()).toEqual(['/#a-02']);
+    });
+
+    it('follows the observer again after the glide, with no hold left behind', async () => {
+      await render();
+      clickRow('a-03');
+      scroller.gliding.set(false);
+      fixture.detectChanges();
+
+      report('a-01', true);
+      expect(current()).toEqual(['/#a-01']);
+      report('a-02', true);
+      expect(current()).toEqual(['/#a-02']);
+    });
+
+    it('drops the hold when the items change', async () => {
+      await render();
+      clickRow('a-05');
+      expect(current()).toEqual(['/#a-05']);
+
+      fixture.componentInstance.items = [...ITEMS];
+      fixture.detectChanges();
+      await fixture.whenStable();
+      fixture.detectChanges();
+
+      expect(current()).toEqual(['/#a-01']);
+    });
   });
 });

@@ -19,7 +19,13 @@ export class SkipLinkComponent {
   skip(event: Event): void {
     event.preventDefault();
     const main = this.document.getElementById('main');
-    main?.scrollIntoView();
-    main?.focus();
+    if (!main) {
+      return;
+    }
+    // preventScroll, because focus's own scroll-into-view is instant and
+    // would cut the smooth one short; scroll-behavior on the root is what
+    // makes this a glide, and reduced motion turns it back into a jump.
+    main.scrollIntoView();
+    main.focus({ preventScroll: true });
   }
 }

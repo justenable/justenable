@@ -11,9 +11,13 @@
   vector-effect: non-scaling-stroke;
 }
 
+// The ring is a token so a surface that inverts its background can keep the
+// lamp's silhouette: set --lamp-ring on any ancestor. Emulated encapsulation
+// stops a consumer restyling this rule directly, but a custom property
+// inherits through it.
 .lamp--lit path {
   fill: rgb(var(--color-accent));
-  stroke: rgb(var(--color-ink));
+  stroke: rgb(var(--lamp-ring, var(--color-ink)));
 }
 
 @media (prefers-reduced-motion: no-preference) {

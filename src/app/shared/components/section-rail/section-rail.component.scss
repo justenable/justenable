@@ -24,13 +24,27 @@
 // Lamp, tag and name on one line, top-aligned so a name that wraps hangs
 // under its own first line.
 .rail__link {
-  @apply grid min-h-[44px] items-start gap-x-2.5 py-2.5 text-body-s text-ink-muted hover:text-ink motion-safe:transition-colors motion-safe:duration-1;
+  @apply grid min-h-[44px] items-start gap-x-2.5 py-2.5 text-body-s text-ink-muted hover:text-ink motion-safe:transition-colors motion-safe:duration-2;
   grid-template-columns: auto auto 1fr;
 }
 .rail__link.is-active {
   @apply text-ink;
+}
+
+// The active row thickens rather than snapping to a new weight: Plex Sans is
+// a variable font, so the wght axis interpolates where font-weight cannot.
+// font-weight stays in step for the static fallback face, and it reflows
+// nothing (the name's column is sized by the grid, not by its text).
+.rail__name {
+  font-variation-settings: 'wght' 400;
+}
+.rail__link.is-active .rail__name {
+  font-weight: 500;
+  font-variation-settings: 'wght' 500;
+}
+@media (prefers-reduced-motion: no-preference) {
   .rail__name {
-    font-weight: 500;
+    transition: font-variation-settings var(--dur-2) var(--ease-std);
   }
 }
 

@@ -24,6 +24,17 @@
 @tailwind utilities;
 
 @layer base {
+  // Every in-page jump glides: rail and contents links, the skip link, the
+  // mimic's anchors and the site index. Declared on both html and body
+  // because the scrolling element differs between engines. Reduced motion
+  // keeps the instant jump, which is the whole point of the preference.
+  @media (prefers-reduced-motion: no-preference) {
+    html,
+    body {
+      scroll-behavior: smooth;
+    }
+  }
+
   html,
   body {
     height: 100%;
@@ -77,6 +88,19 @@
   .font-mono {
     font-variant-numeric: tabular-nums;
   }
+}
+
+// The palette swap is a switch, not a cross-fade (design system section 6).
+// Every token changes at once, so without this every element carrying a
+// colour transition for its own hover would run it together: measured at 79
+// concurrent transitions on one toggle. ThemeService holds the class for the
+// two frames the swap takes. Outside the layers so nothing can outrank it,
+// and !important because the transitions it silences are utilities.
+html.theme-swap,
+html.theme-swap *,
+html.theme-swap ::before,
+html.theme-swap ::after {
+  transition: none !important;
 }
 
 // Route transitions (withViewTransitions in AppRoutingModule.forRoot): the

@@ -25,6 +25,17 @@ export const THEME_COLOR: Readonly<Record<Theme, string>> = {
 
 const DARK_SCHEME_QUERY = '(prefers-color-scheme: dark)';
 
+/**
+ * Set on <html> for one frame while the palette swaps. Every token changes at
+ * once, so every element that carries a colour transition for its own hover
+ * (buttons, nav links, the header rule, the lamps) would run it at the same
+ * moment: measured at 79 concurrent transitions on one toggle, which reads as
+ * the whole page smearing rather than switching. The class switches those
+ * transitions off for the swap only; the design system's rule is that the
+ * theme change itself has no cross-fade.
+ */
+export const THEME_SWAP_CLASS = 'theme-swap';
+
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
   private readonly document = inject(DOCUMENT);
@@ -32,6 +43,8 @@ export class ThemeService {
 
   readonly theme = signal<Theme>('light');
   readonly isDark = computed(() => this.theme() === 'dark');
+
+  private releaseTimer?: ReturnType<typeof setTimeout>;
 
   constructor() {
     // Prerendered pages ship light; the inline script in index.html applies
@@ -67,8 +80,29 @@ export class ThemeService {
   // color-scheme itself comes from the stylesheet (:root / .dark in tokens.scss).
   private apply(theme: Theme): void {
     this.theme.set(theme);
-    this.document.documentElement.classList.toggle('dark', theme === 'dark');
+    const root = this.document.documentElement;
+    this.suppressTransitions(root);
+    root.classList.toggle('dark', theme === 'dark');
     this.syncThemeColor(theme);
+  }
+
+  /**
+   * Holds transitions off across the swap, then releases them on the frame
+   * after the new palette has painted. Two frames, because the class must
+   * still be on when the changed tokens are recalculated; releasing in the
+   * same frame would let the transitions start after all.
+   */
+  private suppressTransitions(root: HTMLElement): void {
+    if (!this.isBrowser) {
+      return;
+    }
+    root.classList.add(THEME_SWAP_CLASS);
+    clearTimeout(this.releaseTimer);
+    const release = () => root.classList.remove(THEME_SWAP_CLASS);
+    requestAnimationFrame(() => requestAnimationFrame(release));
+    // A backstop for a tab that is not painting: rAF never fires there, and
+    // the class must not outlive the swap.
+    this.releaseTimer = setTimeout(release, 200);
   }
 
   // Both <meta name="theme-color"> tags carry a media attribute for the OS
