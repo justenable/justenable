@@ -1,4 +1,7 @@
 [build]
+  # Pin the toolchain: Angular 20 needs Node 20+, and without this Netlify
+  # installed dependencies on Node 18 and then built on 22.
+  environment = { NODE_VERSION = "22" }
   command = "npm run build"
   publish = "www/browser"
 
