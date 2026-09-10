@@ -38,17 +38,40 @@
     white-space: normal;
   }
   .btn--primary {
-    @apply bg-accent text-accent-contrast hover:bg-accent-hover active:bg-accent-hover;
+    @apply bg-accent text-accent-contrast;
+  }
+  .btn--primary:active {
+    @apply bg-accent-hover;
   }
   .btn--secondary {
-    @apply border border-border-strong bg-transparent text-ink hover:bg-surface-raised;
-    &[aria-checked='true'],
-    &.is-selected {
-      @apply border-ink bg-ink text-canvas hover:bg-ink;
-    }
+    @apply border border-border-strong bg-transparent text-ink;
+  }
+  .btn--secondary[aria-checked='true'],
+  .btn--secondary.is-selected {
+    @apply border-ink bg-ink text-canvas;
   }
   .btn--ghost {
-    @apply px-2 text-accent-text decoration-2 underline-offset-[3px] hover:underline;
+    @apply px-2 text-accent-text decoration-2 underline-offset-[3px];
+  }
+
+  // Hover states are written flat, carrying by hand the media guard that the
+  // Tailwind hover: variant emits. @apply-ing hover: makes Tailwind 4 emit
+  // native nesting (&:hover), which beasties (Angular's critical-CSS inliner)
+  // cannot parse, so those rules never reach the prerendered inline <style>.
+  @media (hover: hover) {
+    .btn--primary:hover {
+      @apply bg-accent-hover;
+    }
+    .btn--secondary:hover {
+      @apply bg-surface-raised;
+    }
+    .btn--secondary[aria-checked='true']:hover,
+    .btn--secondary.is-selected:hover {
+      @apply bg-ink;
+    }
+    .btn--ghost:hover {
+      @apply underline;
+    }
   }
   .btn--sm {
     @apply min-h-[44px] px-3.5 text-sm/none;
@@ -107,8 +130,8 @@
     height: 8px;
     background: repeating-linear-gradient(
       45deg,
-      rgb(var(--color-ink)) 0 12px,
-      rgb(var(--color-accent)) 12px 24px
+      rgb(var(--rgb-ink)) 0 12px,
+      rgb(var(--rgb-accent)) 12px 24px
     );
   }
 }

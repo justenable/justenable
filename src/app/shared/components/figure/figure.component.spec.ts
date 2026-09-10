@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { FakeIntersectionObserver } from 'src/testing/intersection-observer';
@@ -11,6 +11,7 @@ import { SharedModule } from '../../shared.module';
       <svg aria-hidden="true" viewBox="0 0 10 10"><circle r="1" /></svg>
     </app-figure>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 class HostComponent {

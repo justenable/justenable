@@ -1,3 +1,5 @@
+@reference '../../../styles/tailwind-reference.scss';
+
 :host {
   // Sticky on the host, not on <header>: the host is the sticky box's
   // containing block, and a block host sized to the header would leave it no
@@ -15,7 +17,7 @@
 // shadow. The height does not change.
 :host(.is-scrolled) .site-header {
   border-bottom-color: transparent;
-  box-shadow: var(--shadow-header);
+  box-shadow: var(--elevation-header);
 }
 @media (prefers-reduced-motion: no-preference) {
   .site-header {
@@ -68,7 +70,7 @@
 .nav-link.is-current {
   @apply text-ink;
   &::after {
-    background: rgb(var(--color-accent));
+    background: rgb(var(--rgb-accent));
     transform: scaleX(1);
   }
 }

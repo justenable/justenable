@@ -1,6 +1,6 @@
 import { isPlatformBrowser } from '@angular/common';
 import { inject, NgModule, PLATFORM_ID, provideAppInitializer } from '@angular/core';
-import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
+import { BrowserModule, provideClientHydration, withNoIncrementalHydration } from '@angular/platform-browser';
 
 import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -43,7 +43,7 @@ import { SharedModule } from './shared/shared.module';
       const isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
       return firstValueFrom(translate.use(resolveInitialLang(translate, isBrowser)));
     }),
-    provideClientHydration(),
+    provideClientHydration(withNoIncrementalHydration()),
   ],
   bootstrap: [AppComponent],
 })

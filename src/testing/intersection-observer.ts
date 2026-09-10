@@ -10,6 +10,7 @@ export class FakeIntersectionObserver implements IntersectionObserver {
 
   readonly root = null;
   readonly rootMargin: string;
+  readonly scrollMargin: string;
   readonly thresholds: readonly number[];
   readonly observed: Element[] = [];
   readonly disconnect = jasmine.createSpy('disconnect');
@@ -19,6 +20,7 @@ export class FakeIntersectionObserver implements IntersectionObserver {
     readonly init?: IntersectionObserverInit
   ) {
     this.rootMargin = init?.rootMargin ?? '0px';
+    this.scrollMargin = init?.scrollMargin ?? '0px';
     this.thresholds = ([] as number[]).concat(init?.threshold ?? 0);
     FakeIntersectionObserver.instances.push(this);
   }

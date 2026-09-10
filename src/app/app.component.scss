@@ -1,3 +1,5 @@
+@reference '../styles/tailwind-reference.scss';
+
 :host {
   @apply flex min-h-full flex-col;
 }

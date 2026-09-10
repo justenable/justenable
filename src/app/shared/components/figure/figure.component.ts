@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
 /**
  * A drawn figure on the canvas: the projected content is an inline SVG in
@@ -15,6 +15,7 @@ import { Component, Input } from '@angular/core';
   selector: 'app-figure',
   standalone: false,
   templateUrl: './figure.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './figure.component.scss',
 })
 export class FigureComponent {

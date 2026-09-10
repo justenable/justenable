@@ -12,7 +12,7 @@ p {
 // the media grows 3% inside its overflow-hidden slot. No shadow and no card
 // transform: plates sit on the enclosure, they do not float.
 .service-card:hover {
-  border-color: rgb(var(--color-border-strong));
+  border-color: rgb(var(--rgb-border-strong));
 }
 
 @media (prefers-reduced-motion: no-preference) {

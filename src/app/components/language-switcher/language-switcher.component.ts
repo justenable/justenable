@@ -8,6 +8,7 @@ import {
   Injector,
   Input,
   signal,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { currentLanguage, LANGUAGES, LanguageCode } from 'src/app/shared/languages';
@@ -25,6 +26,7 @@ let nextId = 0;
   selector: 'app-language-switcher',
   standalone: false,
   templateUrl: './language-switcher.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./language-switcher.component.scss'],
 })
 export class LanguageSwitcherComponent {

@@ -1,3 +1,5 @@
+@reference '../../../../styles/tailwind-reference.scss';
+
 // Only the xl layout has room for the rail; below it the title block's
 // contents row is the in-page navigation. Sticky 96px under the header, and
 // start-aligned so the grid area does not stretch it to the row's height,

@@ -74,26 +74,26 @@
 // the full height; names may run three lines (Zulu FMCG is 48 characters).
 .terminal-cell {
   padding: 20px 24px;
-  border-top: 1px solid rgb(var(--color-border));
+  border-top: 1px solid rgb(var(--rgb-border));
   overflow-wrap: anywhere;
 
   &:first-child {
     border-top: 0;
   }
 
-  @screen sm {
+  @media (width >= 40rem) {
     &:nth-child(2) {
       border-top: 0;
     }
 
     &:nth-child(odd) {
-      border-right: 1px solid rgb(var(--color-border));
+      border-right: 1px solid rgb(var(--rgb-border));
     }
   }
 
-  @screen lg {
+  @media (width >= 64rem) {
     border-top: 0;
-    border-right: 1px solid rgb(var(--color-border));
+    border-right: 1px solid rgb(var(--rgb-border));
 
     &:last-child {
       border-right: 0;
@@ -107,19 +107,19 @@
 // tinted sheet header the reason sheet uses.
 .site-index__head {
   padding: 14px 20px;
-  background: rgb(var(--color-accent-soft));
+  background: rgb(var(--rgb-accent-soft));
 }
 
 .site-index__row {
-  border-top: 1px solid rgb(var(--color-border));
+  border-top: 1px solid rgb(var(--rgb-border));
 }
 
 .site-index__column + .site-index__column {
-  border-top: 1px solid rgb(var(--color-border));
+  border-top: 1px solid rgb(var(--rgb-border));
 
-  @screen md {
+  @media (width >= 48rem) {
     border-top: 0;
-    border-left: 1px solid rgb(var(--color-border));
+    border-left: 1px solid rgb(var(--rgb-border));
   }
 }
 

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 /**
  * A-04's figure: an integration bus. Three source databases drop onto a
@@ -10,6 +10,7 @@ import { Component } from '@angular/core';
   selector: 'app-integration-figure',
   templateUrl: './integration-figure.component.html',
   styleUrl: './integration-figure.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class IntegrationFigureComponent {}

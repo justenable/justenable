@@ -1,3 +1,5 @@
+@reference '../../../../styles/tailwind-reference.scss';
+
 :host {
   display: block;
   width: 100%;
@@ -30,7 +32,7 @@ svg {
 // timeline glyph's marker. Fill via a class, not an attribute, because
 // presentation attributes do not resolve var() reliably across browsers.
 .figure-accent {
-  fill: rgb(var(--color-accent));
+  fill: rgb(var(--rgb-accent));
   stroke-width: 1.25;
 }
 

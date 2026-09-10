@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { ServiceCardMedia } from 'src/app/models/service-card.model';
 
 /**
@@ -11,6 +11,7 @@ import { ServiceCardMedia } from 'src/app/models/service-card.model';
   selector: 'app-service-card',
   templateUrl: './service-card.component.html',
   styleUrl: './service-card.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class ServiceCardComponent {

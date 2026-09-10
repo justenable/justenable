@@ -36,6 +36,10 @@ module.exports = defineConfig([
       // scope, so don't flag those conventions.
       "@angular-eslint/prefer-standalone": "off",
       "@angular-eslint/prefer-inject": "off",
+      // Angular 22's migration set every component to ChangeDetectionStrategy
+      // .Eager to preserve v21 behaviour. Moving the app to OnPush is a
+      // behaviour change, not a toolchain upgrade, so it is a separate job.
+      "@angular-eslint/prefer-on-push-component-change-detection": "off",
     },
   },
   {

@@ -11,6 +11,7 @@ import {
   OnDestroy,
   PLATFORM_ID,
   signal,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { SmoothViewportScroller } from 'src/app/services/smooth-viewport-scroller';
 import { ContentsItem } from '../title-block/title-block.component';
@@ -45,6 +46,7 @@ export const RAIL_ROOT_MARGIN = '100000px 0px -55% 0px';
   selector: 'app-section-rail',
   templateUrl: './section-rail.component.html',
   styleUrl: './section-rail.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class SectionRailComponent implements OnChanges, OnDestroy {

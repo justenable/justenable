@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { provideTranslateService, TranslateService } from '@ngx-translate/core';
@@ -6,7 +6,8 @@ import { blockStorage } from 'src/testing/storage';
 import { AppComponent } from './app.component';
 import { LayoutService } from './services/layout.service';
 
-@Component({ template: '', standalone: true })
+@Component({ template: '', changeDetection: ChangeDetectionStrategy.Eager,
+ standalone: true })
 class PageStubComponent {}
 
 describe('AppComponent', () => {

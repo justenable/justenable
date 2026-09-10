@@ -1,0 +1,143 @@
+/* Tailwind 4 theme (was tailwind.config.js under Tailwind 3).
+   
+   Colours keep the RGB-triplet convention documented in the design system,
+   under the --rgb-* name: tokens.scss holds `--rgb-x: R G B` and computes
+   the matching --color-x with its `colours` mixin, at :root and again in
+   every scope that re-points the triplets (.dark, .rear-panel). The two
+   namespaces must not share a name, because a bare triplet is not a valid
+   colour. The entries below only register those names with Tailwind so the
+   utilities exist; the values come from tokens.scss. Tailwind 4 adds alpha
+   with color-mix, so `text-canvas/80` still works without the v3
+   `<alpha-value>` placeholder. */
+@theme {
+  /* Screens. Tailwind 4 ships sm..2xl already; these are the additions,
+     including the nav breakpoint where the desktop bar replaces the panel. */
+  --breakpoint-xxxs: 300px;
+  --breakpoint-xxs: 360px;
+  --breakpoint-xs: 475px;
+  --breakpoint-nav: 1180px;
+
+  /* Colours: one entry per token in tokens.scss. */
+  --color-canvas: rgb(var(--rgb-canvas));
+  --color-surface: rgb(var(--rgb-surface));
+  --color-surface-raised: rgb(var(--rgb-surface-raised));
+  --color-accent-soft: rgb(var(--rgb-accent-soft));
+  --color-border: rgb(var(--rgb-border));
+  --color-border-strong: rgb(var(--rgb-border-strong));
+  --color-ink: rgb(var(--rgb-ink));
+  --color-ink-muted: rgb(var(--rgb-ink-muted));
+  --color-ink-subtle: rgb(var(--rgb-ink-subtle));
+  --color-accent: rgb(var(--rgb-accent));
+  --color-accent-hover: rgb(var(--rgb-accent-hover));
+  --color-accent-text: rgb(var(--rgb-accent-text));
+  --color-accent-contrast: rgb(var(--rgb-accent-contrast));
+  --color-focus: rgb(var(--rgb-focus));
+  --color-screen: rgb(var(--rgb-screen));
+
+  /* Families. Archivo's width axis is driven by the stretch-* utilities. */
+  --font-display: 'Archivo Variable', 'Archivo Fallback', 'Arial Narrow', Arial, Helvetica, sans-serif;
+  --font-sans: 'IBM Plex Sans Variable', 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* The named type scale. Each size carries its line height, tracking and
+     weight, as the v3 fontSize tuples did. */
+  --text-display-xl: clamp(2.25rem, 1.5rem + 3.5vw, 5rem);
+  --text-display-xl--line-height: 1.02;
+  --text-display-xl--letter-spacing: -0.02em;
+  --text-display-xl--font-weight: 700;
+
+  --text-display-l: clamp(1.75rem, 1.2rem + 2.2vw, 2.75rem);
+  --text-display-l--line-height: 1.1;
+  --text-display-l--letter-spacing: -0.015em;
+  --text-display-l--font-weight: 650;
+
+  --text-heading-m: clamp(1.5rem, 1.15rem + 1.5vw, 2.125rem);
+  --text-heading-m--line-height: 1.15;
+  --text-heading-m--letter-spacing: -0.01em;
+  --text-heading-m--font-weight: 650;
+
+  --text-heading-s: clamp(1.25rem, 1.05rem + 0.8vw, 1.5rem);
+  --text-heading-s--line-height: 1.2;
+  --text-heading-s--letter-spacing: -0.01em;
+  --text-heading-s--font-weight: 600;
+
+  --text-lead: clamp(1.125rem, 1rem + 0.5vw, 1.25rem);
+  --text-lead--line-height: 1.55;
+
+  --text-body: 1rem;
+  --text-body--line-height: 1.6;
+
+  --text-body-s: 0.875rem;
+  --text-body-s--line-height: 1.5;
+
+  --text-eyebrow: 0.8125rem;
+  --text-eyebrow--line-height: 1.2;
+  --text-eyebrow--letter-spacing: 0.1em;
+  --text-eyebrow--font-weight: 600;
+
+  --text-tag: 0.8125rem;
+  --text-tag--line-height: 1.4;
+  --text-tag--letter-spacing: 0.02em;
+  --text-tag--font-weight: 500;
+
+  --text-mono-value: 0.9375rem;
+  --text-mono-value--line-height: 1.5;
+
+  --text-mono-value-l: clamp(1.125rem, 1rem + 0.8vw, 1.5rem);
+  --text-mono-value-l--line-height: 1.3;
+  --text-mono-value-l--font-weight: 500;
+
+  --text-caption: 0.75rem;
+  --text-caption--line-height: 1.4;
+
+  --text-button: 0.9375rem;
+  --text-button--line-height: 1;
+  --text-button--letter-spacing: 0.01em;
+  --text-button--font-weight: 600;
+
+  --text-nav: 0.9375rem;
+  --text-nav--line-height: 1;
+  --text-nav--font-weight: 500;
+
+  /* The rest of theme.extend. The radius and shadow tokens live in
+     tokens.scss; these are the Tailwind-namespaced aliases that make
+     rounded-1/rounded-2 and shadow-popover/shadow-header resolve.
+
+     The shadows must stay var() references, never literals: Tailwind 4
+     inlines an @theme value into the utility at registration time, so a
+     literal here would freeze the light shadow and .dark could never change
+     it. Referencing --elevation-* keeps the utility resolving per scope, the
+     same reason colours go through --rgb-*. The two namespaces must not
+     share a name, hence --elevation-* rather than --shadow-*. */
+  --container-container: 90rem;
+  --radius-1: 4px;
+  --radius-2: 6px;
+  --shadow-popover: var(--elevation-popover);
+  --shadow-header: var(--elevation-header);
+}
+
+/* Dark mode is a class on <html>, as it was under darkMode: 'class'. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Archivo's width axis is exposed by fontsource as font-stretch (62% to 125%).
+   Drive it with font-stretch, never font-variation-settings. */
+@utility stretch-75 { font-stretch: 75%; }
+@utility stretch-85 { font-stretch: 85%; }
+@utility stretch-100 { font-stretch: 100%; }
+@utility stretch-112 { font-stretch: 112%; }
+
+/* Tailwind 4 has no duration or z-index theme namespace, so the motion and
+   layer tokens become explicit utilities. Values stay in tokens.scss. */
+@utility duration-1 { transition-duration: var(--dur-1); }
+@utility duration-2 { transition-duration: var(--dur-2); }
+@utility duration-reveal { transition-duration: var(--dur-reveal); }
+@utility z-panel { z-index: var(--z-panel); }
+@utility z-header { z-index: var(--z-header); }
+@utility z-popover { z-index: var(--z-popover); }
+@utility z-skip { z-index: var(--z-skip); }
+
+/* The v3 config exposed the two easings as transitionTimingFunction entries.
+   Tailwind 4 would bake an @theme value in as a literal, and these read from
+   tokens.scss, so they are utilities like the durations above. */
+@utility ease-out { transition-timing-function: var(--ease-out); }
+@utility ease-std { transition-timing-function: var(--ease-std); }

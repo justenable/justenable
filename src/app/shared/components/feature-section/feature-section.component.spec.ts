@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
   provideTranslateService,
@@ -26,6 +26,7 @@ import { FeatureSectionComponent } from './feature-section.component';
       <div figure class="screen">Figure</div>
     </app-feature-section>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 class HostComponent {
@@ -39,6 +40,7 @@ class HostComponent {
     tag="M-01"
     titleKey="GLOBAL.PROCESS_AUTOMATION"
   />`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 class StaticIdHostComponent {}

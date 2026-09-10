@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 /**
  * The "Technology" figure: an exploded elevation of the three layers the
@@ -11,6 +11,7 @@ import { Component } from '@angular/core';
   selector: 'app-stack-figure',
   templateUrl: './stack-figure.component.html',
   styleUrl: './figure.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class StackFigureComponent {}

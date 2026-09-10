@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 /**
  * The "Our culture" figure: a plan of the office with the desks, the half
@@ -10,6 +10,7 @@ import { Component } from '@angular/core';
   selector: 'app-office-figure',
   templateUrl: './office-figure.component.html',
   styleUrl: './figure.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class OfficeFigureComponent {}

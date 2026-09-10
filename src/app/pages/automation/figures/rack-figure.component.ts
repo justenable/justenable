@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 /**
  * A-03's figure: a rack elevation being provisioned from a terminal. Units
@@ -10,6 +10,7 @@ import { Component } from '@angular/core';
   selector: 'app-rack-figure',
   templateUrl: './rack-figure.component.html',
   styleUrl: './rack-figure.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class RackFigureComponent {}

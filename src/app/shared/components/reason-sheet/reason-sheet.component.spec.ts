@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
   provideTranslateService,
@@ -21,6 +21,7 @@ import { ReasonSheetComponent } from './reason-sheet.component';
       [items]="items"
     />
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 class HostComponent {
@@ -29,6 +30,7 @@ class HostComponent {
 
 @Component({
   template: `<app-reason-sheet id="m-06" tag="M-06" titleKey="GLOBAL.AUTOMATION_OUTRO" />`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 class StaticIdHostComponent {}

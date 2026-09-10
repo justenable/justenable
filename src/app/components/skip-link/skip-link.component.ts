@@ -1,11 +1,12 @@
 import { Location } from '@angular/common';
-import { Component, DOCUMENT, inject } from '@angular/core';
+import { Component, DOCUMENT, inject, ChangeDetectionStrategy } from '@angular/core';
 
 // First element inside app-root; its target is main#main in app.component.html.
 @Component({
   selector: 'app-skip-link',
   standalone: false,
   templateUrl: './skip-link.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./skip-link.component.scss'],
 })
 export class SkipLinkComponent {

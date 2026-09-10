@@ -1,38 +1,70 @@
+// The Tailwind cascade order, declared before anything emits a layer.
+// Sass hoists @use and @import, so the components layer below is emitted
+// before Tailwind's own `@layer theme, base, components, utilities;` and,
+// without this line, `base` (the preflight reset) would outrank `components`
+// and .container-x would lose its padding. tokens.scss is the first @use in
+// styles.scss, so this is the earliest point in the output.
+@layer theme, base, components, utilities;
+
 // Design tokens (spec section 2).
 //
-// Colour tokens are stored as space-separated RGB channel triplets so that
-// Tailwind's `rgb(var(--color-x) / <alpha-value>)` mapping can add an alpha
-// channel. In SCSS always write `rgb(var(--color-ink))`; never use
-// `var(--color-ink)` on its own, it is not a valid colour value.
+// Colour tokens are stored as space-separated RGB channel triplets under
+// --rgb-*, so styles/theme.scss can map each one to a Tailwind colour as
+// `rgb(var(--rgb-x))` and Tailwind can add alpha with color-mix.
+// In SCSS always write `rgb(var(--rgb-ink))`; never use `var(--rgb-ink)` on
+// its own, it is not a valid colour value. The Tailwind-facing names are
+// --color-*, which hold real colours; keep the two namespaces distinct.
 // Non-colour tokens are plain values.
+
+// Tailwind resolves a colour utility through --color-x, so every scope that
+// re-points the --rgb-x triplets (the dark theme, the footer's rear panel)
+// must recompute --color-x too. Without this the utility would keep the
+// value computed at :root and the re-scoped subtree would not change.
+@mixin colours {
+  --color-canvas: rgb(var(--rgb-canvas));
+  --color-surface: rgb(var(--rgb-surface));
+  --color-surface-raised: rgb(var(--rgb-surface-raised));
+  --color-accent-soft: rgb(var(--rgb-accent-soft));
+  --color-border: rgb(var(--rgb-border));
+  --color-border-strong: rgb(var(--rgb-border-strong));
+  --color-ink: rgb(var(--rgb-ink));
+  --color-ink-muted: rgb(var(--rgb-ink-muted));
+  --color-ink-subtle: rgb(var(--rgb-ink-subtle));
+  --color-accent: rgb(var(--rgb-accent));
+  --color-accent-hover: rgb(var(--rgb-accent-hover));
+  --color-accent-text: rgb(var(--rgb-accent-text));
+  --color-accent-contrast: rgb(var(--rgb-accent-contrast));
+  --color-focus: rgb(var(--rgb-focus));
+  --color-screen: rgb(var(--rgb-screen));
+}
 
 :root {
   color-scheme: light;
 
   /* grounds */
-  --color-canvas: 232 234 231; /* #E8EAE7 enclosure grey (RAL 7035 lifted) */
-  --color-surface: 255 255 255; /* #FFFFFF label plate */
-  --color-surface-raised: 243 244 242; /* #F3F4F2 inset panel face: chips, sheet header, figure ground */
-  --color-accent-soft: 255 227 207; /* #FFE3CF tinted sheet header row */
+  --rgb-canvas: 232 234 231; /* #E8EAE7 enclosure grey (RAL 7035 lifted) */
+  --rgb-surface: 255 255 255; /* #FFFFFF label plate */
+  --rgb-surface-raised: 243 244 242; /* #F3F4F2 inset panel face: chips, sheet header, figure ground */
+  --rgb-accent-soft: 255 227 207; /* #FFE3CF tinted sheet header row */
 
   /* lines */
-  --color-border: 195 199 195; /* #C3C7C3 decorative rules, plate edges */
-  --color-border-strong: 110 116 111; /* #6E746F interactive borders, unlit lamp ring */
+  --rgb-border: 195 199 195; /* #C3C7C3 decorative rules, plate edges */
+  --rgb-border-strong: 110 116 111; /* #6E746F interactive borders, unlit lamp ring */
 
   /* ink */
-  --color-ink: 17 20 17; /* #111411 headings, primary text, strokes */
-  --color-ink-muted: 69 74 70; /* #454A46 body copy, eyebrows */
-  --color-ink-subtle: 95 101 95; /* #5F655F tags, captions (never below 12px) */
+  --rgb-ink: 17 20 17; /* #111411 headings, primary text, strokes */
+  --rgb-ink-muted: 69 74 70; /* #454A46 body copy, eyebrows */
+  --rgb-ink-subtle: 95 101 95; /* #5F655F tags, captions (never below 12px) */
 
   /* signal */
-  --color-accent: 255 106 0; /* #FF6A00 lit lamp, primary button, 3px title rule. NON-TEXT ONLY in light */
-  --color-accent-hover: 232 95 0; /* #E85F00 */
-  --color-accent-text: 168 64 0; /* #A84000 text-safe orange: links, live labels */
-  --color-accent-contrast: 17 20 17; /* #111411 text on orange (safety-sign black-on-orange) */
-  --color-focus: 168 64 0; /* #A84000 */
+  --rgb-accent: 255 106 0; /* #FF6A00 lit lamp, primary button, 3px title rule. NON-TEXT ONLY in light */
+  --rgb-accent-hover: 232 95 0; /* #E85F00 */
+  --rgb-accent-text: 168 64 0; /* #A84000 text-safe orange: links, live labels */
+  --rgb-accent-contrast: 17 20 17; /* #111411 text on orange (safety-sign black-on-orange) */
+  --rgb-focus: 168 64 0; /* #A84000 */
 
   /* the fixed-light "screen" the map sits on in BOTH themes */
-  --color-screen: 243 244 242; /* #F3F4F2 */
+  --rgb-screen: 243 244 242; /* #F3F4F2 */
 
   /* spacing (8px module) */
   --space-1: 0.25rem;
@@ -56,9 +88,9 @@
 
   /* shadow: elevation is expressed by plate borders; shadows exist only for things that float
      (the language popover, and the header once content has scrolled under it) */
-  --shadow-0: none;
-  --shadow-popover: 0 8px 24px rgb(0 0 0 / 0.12);
-  --shadow-header: 0 4px 16px rgb(0 0 0 / 0.08);
+  --elevation-0: none;
+  --elevation-popover: 0 8px 24px rgb(0 0 0 / 0.12);
+  --elevation-header: 0 4px 16px rgb(0 0 0 / 0.08);
 
   /* motion: every duration is finite and short; nothing loops, nothing blinks */
   --dur-1: 120ms; /* colour, border, underline, button lift */
@@ -82,55 +114,61 @@
   --z-header: 50; /* sticky header */
   --z-popover: 60; /* language popover (inside header) */
   --z-skip: 100; /* skip link when focused */
+
+  @include colours;
 }
 
 .dark {
   color-scheme: dark;
 
-  --color-canvas: 23 25 27; /* #17191B night-shift graphite */
-  --color-surface: 32 35 38; /* #202326 */
-  --color-surface-raised: 41 45 48; /* #292D30 */
-  --color-accent-soft: 58 36 22; /* #3A2416 */
+  --rgb-canvas: 23 25 27; /* #17191B night-shift graphite */
+  --rgb-surface: 32 35 38; /* #202326 */
+  --rgb-surface-raised: 41 45 48; /* #292D30 */
+  --rgb-accent-soft: 58 36 22; /* #3A2416 */
 
-  --color-border: 54 59 62; /* #363B3E */
-  --color-border-strong: 122 128 132; /* #7A8084 (#6F7579 rejected at 2.97:1 on raised) */
+  --rgb-border: 54 59 62; /* #363B3E */
+  --rgb-border-strong: 122 128 132; /* #7A8084 (#6F7579 rejected at 2.97:1 on raised) */
 
-  --color-ink: 233 234 230; /* #E9EAE6 */
-  --color-ink-muted: 184 188 183; /* #B8BCB7 */
-  --color-ink-subtle: 147 152 147; /* #939893 */
+  --rgb-ink: 233 234 230; /* #E9EAE6 */
+  --rgb-ink-muted: 184 188 183; /* #B8BCB7 */
+  --rgb-ink-subtle: 147 152 147; /* #939893 */
 
-  --color-accent: 255 106 0; /* #FF6A00 */
-  --color-accent-hover: 255 122 31; /* #FF7A1F */
-  --color-accent-text: 255 138 61; /* #FF8A3D night amber */
-  --color-accent-contrast: 17 20 17; /* #111411 stays black: #E9EAE6 on orange is 2.38:1 */
-  --color-focus: 255 138 61; /* #FF8A3D */
+  --rgb-accent: 255 106 0; /* #FF6A00 */
+  --rgb-accent-hover: 255 122 31; /* #FF7A1F */
+  --rgb-accent-text: 255 138 61; /* #FF8A3D night amber */
+  --rgb-accent-contrast: 17 20 17; /* #111411 stays black: #E9EAE6 on orange is 2.38:1 */
+  --rgb-focus: 255 138 61; /* #FF8A3D */
 
-  --shadow-popover: 0 8px 24px rgb(0 0 0 / 0.5);
-  --shadow-header: 0 4px 16px rgb(0 0 0 / 0.4);
+  --elevation-popover: 0 8px 24px rgb(0 0 0 / 0.5);
+  --elevation-header: 0 4px 16px rgb(0 0 0 / 0.4);
   /* screen tokens unchanged: the screen stays light at night */
+
+  @include colours;
 }
 
 /* Footer rear panel: the dark token set re-scoped on one subtree, both themes.
    Tailwind utilities keep working inside it. */
 .rear-panel {
   color-scheme: dark;
-  --color-canvas: 32 35 38;
-  --color-surface: 32 35 38;
-  --color-surface-raised: 41 45 48;
-  --color-border: 54 59 62;
-  --color-border-strong: 122 128 132;
-  --color-ink: 233 234 230;
-  --color-ink-muted: 184 188 183;
-  --color-ink-subtle: 147 152 147;
-  --color-accent-text: 255 138 61;
-  --color-focus: 255 138 61;
+  --rgb-canvas: 32 35 38;
+  --rgb-surface: 32 35 38;
+  --rgb-surface-raised: 41 45 48;
+  --rgb-border: 54 59 62;
+  --rgb-border-strong: 122 128 132;
+  --rgb-ink: 233 234 230;
+  --rgb-ink-muted: 184 188 183;
+  --rgb-ink-subtle: 147 152 147;
+  --rgb-accent-text: 255 138 61;
+  --rgb-focus: 255 138 61;
+
+  @include colours;
 }
 
 /* Screen: a lit wall screen in a dark room. The map sits on it in both themes
    so Google's tiles never land on graphite. Drawn figures need no screen. */
 .screen {
-  background: rgb(var(--color-screen));
-  border: 1px solid rgb(var(--color-border));
+  background: rgb(var(--rgb-screen));
+  border: 1px solid rgb(var(--rgb-border));
   border-radius: var(--radius-1);
   color-scheme: light;
 }

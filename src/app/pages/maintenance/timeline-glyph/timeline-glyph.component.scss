@@ -1,3 +1,5 @@
+@reference '../../../../styles/tailwind-reference.scss';
+
 :host {
   display: block;
 }
@@ -16,12 +18,12 @@
 // Fill via a class, not an attribute: presentation attributes do not resolve
 // var() reliably across browsers.
 .glyph__marker {
-  fill: rgb(var(--color-accent));
+  fill: rgb(var(--rgb-accent));
 }
 
 // Rings sit on the line the way the marker does, so they cover it.
 .glyph__ring {
-  fill: rgb(var(--color-surface));
+  fill: rgb(var(--rgb-surface));
 }
 
 // The tag step inside the SVG, as .mimic-tag. The root svg sets the stroke

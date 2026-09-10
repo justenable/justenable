@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Industry } from 'src/app/models/industry.model';
 import { ServiceCard } from 'src/app/models/service-card.model';
 import { SITE_INDEX, SitePage } from 'src/app/shared/site-index';
@@ -20,6 +20,7 @@ export const INDEX_STAGGER = 60;
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class HomeComponent {

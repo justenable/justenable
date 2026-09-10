@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
 export interface ContentsItem {
   /** Fragment of the target H2, e.g. `a-01`. */
@@ -16,6 +16,7 @@ export interface ContentsItem {
   selector: 'app-title-block',
   templateUrl: './title-block.component.html',
   styleUrl: './title-block.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class TitleBlockComponent {

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
 /**
  * One service section (A-01..A-04, M-01..M-05) or About row: a section
@@ -20,6 +20,7 @@ import { Component, Input } from '@angular/core';
   // `id="a-01"` written on the host in the DOM as well, so without this the
   // page would carry two elements with that id and the anchor would land on
   // the host instead of the heading. The spec exercises the static form.
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: { '[attr.id]': 'null' },
 })
 export class FeatureSectionComponent {

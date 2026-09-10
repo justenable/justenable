@@ -1,0 +1,8 @@
+/* Tailwind 4 compiles every component stylesheet on its own, so @apply in a
+   component file cannot see the theme that styles.scss sets up. @reference
+   loads the theme for resolution only, emitting no CSS.
+
+   Tailwind parses this file as CSS, so comments here must be CSS comments.
+   Keep it in sync with the Tailwind setup at the top of styles.scss. */
+@import 'tailwindcss';
+@import './theme.scss';

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
 import { INDUSTRY_KEYS, SERVICE_KEYS } from 'src/app/shared/catalogue';
@@ -22,6 +22,7 @@ export const NAME_SEPARATOR = '\u00a0· ';
   selector: 'app-nameplate',
   templateUrl: './nameplate.component.html',
   styleUrl: './nameplate.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class NameplateComponent {

@@ -19,9 +19,12 @@
   line-gap-override: 0%;
 }
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+// Tailwind 4 is CSS-first: one import in place of the three @tailwind
+// directives, the theme in styles/theme.scss, and @source for the templates
+// that the removed tailwind.config.js used to list as `content`.
+@import 'tailwindcss';
+@import 'styles/theme.scss';
+@source '../src/**/*.{html,ts}';
 
 @layer base {
   // Every in-page jump glides: rail and contents links, the skip link, the
@@ -48,12 +51,12 @@
   *,
   ::before,
   ::after {
-    border-color: rgb(var(--color-border));
+    border-color: rgb(var(--rgb-border));
   }
 
   // Outline, not box-shadow: it survives overflow: hidden and forced colours.
   :focus-visible {
-    outline: 2px solid rgb(var(--color-focus));
+    outline: 2px solid rgb(var(--rgb-focus));
     outline-offset: 2px;
   }
   @media (forced-colors: active) {

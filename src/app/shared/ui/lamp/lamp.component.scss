@@ -6,7 +6,7 @@
 
 .lamp path {
   fill: none;
-  stroke: rgb(var(--color-border-strong));
+  stroke: rgb(var(--rgb-border-strong));
   stroke-width: 1.25;
   vector-effect: non-scaling-stroke;
 }
@@ -16,8 +16,8 @@
 // stops a consumer restyling this rule directly, but a custom property
 // inherits through it.
 .lamp--lit path {
-  fill: rgb(var(--color-accent));
-  stroke: rgb(var(--lamp-ring, var(--color-ink)));
+  fill: rgb(var(--rgb-accent));
+  stroke: rgb(var(--lamp-ring, var(--rgb-ink)));
 }
 
 @media (prefers-reduced-motion: no-preference) {

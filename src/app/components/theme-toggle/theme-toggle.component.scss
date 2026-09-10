@@ -1,3 +1,5 @@
+@reference '../../../styles/tailwind-reference.scss';
+
 :host {
   display: block;
 }
@@ -30,9 +32,9 @@
   flex: none;
   width: 56px;
   height: 28px;
-  border: 1px solid rgb(var(--color-border-strong));
+  border: 1px solid rgb(var(--rgb-border-strong));
   border-radius: var(--radius-round);
-  background: rgb(var(--color-surface-raised));
+  background: rgb(var(--rgb-surface-raised));
 }
 
 .rocker__knob {
@@ -48,7 +50,7 @@
   // Forced colours replace backgrounds with Canvas but keep borders, so the
   // transparent border is what makes the knob visible in high contrast.
   border: 1px solid transparent;
-  background: rgb(var(--color-ink));
+  background: rgb(var(--rgb-ink));
   transform: translateX(0);
 }
 

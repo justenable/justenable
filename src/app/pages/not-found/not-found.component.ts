@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 /**
@@ -9,6 +9,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
   selector: 'app-not-found',
   imports: [SharedModule],
   templateUrl: './not-found.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './not-found.component.scss',
 })
 export class NotFoundComponent {}

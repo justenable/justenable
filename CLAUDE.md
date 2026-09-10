@@ -1,6 +1,6 @@
 # Justenable
 
-Marketing site for Justenable. Angular 20 + Tailwind 3.4, deployed to Netlify.
+Marketing site for Justenable. Angular 22 + Tailwind 4 on Node 24, deployed to Netlify.
 
 ## Commands
 
@@ -17,10 +17,16 @@ Marketing site for Justenable. Angular 20 + Tailwind 3.4, deployed to Netlify.
 - `src/app/shared/shared.module.ts` re-exports common modules, `UiModule` (`app-lamp`, `app-logo` in `src/app/shared/ui`) and the shared page components in `src/app/shared/components`: `app-title-block`, `app-feature-section`, `app-reason-sheet`, `app-cta-band`, `app-figure` (wrapper for the drawn SVG figures that live in each page folder under `figures/`). Import `SharedModule` instead of duplicating imports.
 - Services: `ThemeService` (theme signal, `.dark` on `<html>`, `isDarkMode` in localStorage, theme-color meta sync; mirrors the inline pre-paint script in `index.html`), `LayoutService` (`menuOpen` signal), `TranslatedTitleStrategy` (route `title` keys), `UtilsService.streamTitledList`.
 - Constants in `src/app/shared`: `NAV` (header, panel, footer), `LANGUAGES` (endonyms, `LanguageCode`), `TAGLINES` (from `src/assets/i18n/taglines.json`), `CONTACT` (footer, contact page, nameplate).
-- Styles: `src/styles/tokens.scss` (CSS variables, light on `:root`, dark under `.dark`, `.rear-panel`, `.screen`), `src/styles/components.scss` (`.container-x`, `.section`, `.section-marker`, `.plate`, `.btn*`, `.eyebrow`, `.tag`, `.dash-list`, `.hazard`), `src/styles.scss` (font imports, base layer). Colour tokens are RGB triplets: always `rgb(var(--color-x))`, never `var(--color-x)` alone; `tailwind.config.js` maps them with `<alpha-value>`.
+- Styles: `src/styles/tokens.scss` (CSS variables, light on `:root`, dark under `.dark`, `.rear-panel`, `.screen`), `src/styles/components.scss` (`.container-x`, `.section`, `.section-marker`, `.plate`, `.btn*`, `.eyebrow`, `.tag`, `.dash-list`, `.hazard`), `src/styles.scss` (font imports, base layer). Colour tokens are RGB triplets: always `rgb(var(--rgb-x))`, never `var(--rgb-x)` alone; `tokens.scss` maps each to a real `--color-x` via its `colours` mixin and `theme.scss` registers those names with Tailwind (alpha via `color-mix`). Shadow tokens are `--elevation-*` for the same reason: `--shadow-*` is Tailwind's own namespace.
 - Fonts are self-hosted via `@fontsource` imports at the top of `src/styles.scss` (Archivo `wdth.css`, IBM Plex Sans, IBM Plex Mono). No Swiper, no `CUSTOM_ELEMENTS_SCHEMA`.
 - i18n: ngx-translate with flat dotted keys in `src/assets/i18n/{en,af,fr,sw,zu}.json`. Every key must exist in all 5 files; `npm run i18n:check` enforces it.
 - Build is `outputMode: static` -- all routes prerendered (English, light); Netlify serves `index.csr.html` with a 404 status for unknown URLs. Client hydration is on: an app initializer loads the stored language before the first render so the prerendered DOM is reused (see `app.module.ts`).
+
+## Styling
+
+- Tailwind 4 is CSS-first: the theme is `src/styles/theme.scss` (`@theme`, `@utility`, `@custom-variant`), not a `tailwind.config.js`. `.postcssrc.json` wires the `@tailwindcss/postcss` plugin.
+- Colour tokens are RGB triplets under `--rgb-*`; `tokens.scss` maps each to a real `--color-*` with its `colours` mixin. Re-scoping the triplets (`.dark`, `.rear-panel`) must re-run that mixin.
+- A component stylesheet using `@apply` must start with `@reference '<rel>/styles/tailwind-reference.scss';`.
 
 ## Conventions
 

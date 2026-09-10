@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { CONTACT } from 'src/app/shared/contact';
 
 interface ChannelRow {
@@ -57,6 +57,7 @@ export const DIRECTIONS_URL = `https://www.google.com/maps/dir/?${new URLSearchP
   selector: 'app-contact-us',
   templateUrl: './contact-us.component.html',
   styleUrl: './contact-us.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class ContactUsComponent {

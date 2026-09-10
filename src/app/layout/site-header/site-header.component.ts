@@ -12,13 +12,14 @@ import {
   OnDestroy,
   PLATFORM_ID,
   viewChild,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
 import { LayoutService } from 'src/app/services/layout.service';
 import { NAV } from 'src/app/shared/navigation';
 
-// Must match the `nav` screen in tailwind.config.js.
+// Must match the `nav` breakpoint (--breakpoint-nav) in src/styles/theme.scss.
 const NAV_BAR_QUERY = '(min-width: 1180px)';
 /** Scroll depth past which the header's rule becomes a shadow (`.is-scrolled`). */
 export const SCROLLED_OFFSET = 24;
@@ -44,6 +45,7 @@ export const FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]';
   selector: 'app-site-header',
   standalone: false,
   templateUrl: './site-header.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./site-header.component.scss'],
 })
 export class SiteHeaderComponent implements OnDestroy {
@@ -146,9 +148,13 @@ export class SiteHeaderComponent implements OnDestroy {
   }
 
   // Tab is trapped inside the panel; Escape is the way out.
+  // Angular types a keyed host listener's $event as Event, so narrow here.
   @HostListener('keydown.tab', ['$event'])
   @HostListener('keydown.shift.tab', ['$event'])
-  onTab(event: KeyboardEvent): void {
+  onTab(event: Event): void {
+    if (!(event instanceof KeyboardEvent)) {
+      return;
+    }
     const panel = this.panel()?.nativeElement;
     if (!panel || !panel.contains(event.target as Node)) {
       return;

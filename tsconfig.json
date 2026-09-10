@@ -2,6 +2,9 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    // The app imports via src/-prefixed paths, so baseUrl stays; TypeScript 6
+    // requires this acknowledgement until those imports are made relative.
+    "ignoreDeprecations": "6.0",
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "strict": true,
@@ -18,11 +21,7 @@
     "importHelpers": true,
     "target": "es2022",
     "module": "es2020",
-    "useDefineForClassFields": false,
-    "lib": [
-      "es2022",
-      "dom"
-    ]
+    "useDefineForClassFields": false
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

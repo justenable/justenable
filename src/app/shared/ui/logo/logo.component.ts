@@ -1,4 +1,4 @@
-import { Component, Input, numberAttribute } from '@angular/core';
+import { Component, Input, numberAttribute, ChangeDetectionStrategy } from '@angular/core';
 
 /**
  * The JE mark. je-logo.webp is opaque white, so it sits on a white label
@@ -9,6 +9,7 @@ import { Component, Input, numberAttribute } from '@angular/core';
   selector: 'app-logo',
   standalone: false,
   templateUrl: './logo.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./logo.component.scss'],
 })
 export class LogoComponent {

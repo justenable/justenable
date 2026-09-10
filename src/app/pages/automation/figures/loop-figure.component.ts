@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 /**
  * A-02's figure: a P&ID fragment of a level control loop. A tank with a
@@ -10,6 +10,7 @@ import { Component } from '@angular/core';
   selector: 'app-loop-figure',
   templateUrl: './loop-figure.component.html',
   styleUrl: './loop-figure.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class LoopFigureComponent {}

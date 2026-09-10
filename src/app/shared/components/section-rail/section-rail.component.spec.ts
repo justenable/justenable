@@ -1,4 +1,4 @@
-import { Component, PLATFORM_ID, signal } from '@angular/core';
+import { Component, PLATFORM_ID, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, RouterModule } from '@angular/router';
 import {
@@ -33,6 +33,7 @@ const ITEMS: ContentsItem[] = [
     <h2 id="a-03">Three</h2>
     <h2 id="a-05">Five</h2>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 class HostComponent {

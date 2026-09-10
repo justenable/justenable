@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 /**
  * A-01's figure: an approval workflow as a flow diagram. REQUEST, CHECK,
@@ -10,6 +10,7 @@ import { Component } from '@angular/core';
   selector: 'app-process-figure',
   templateUrl: './process-figure.component.html',
   styleUrl: './process-figure.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class ProcessFigureComponent {}

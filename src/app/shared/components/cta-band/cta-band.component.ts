@@ -1,10 +1,11 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
 /** Closing plate on every page: one sentence and the primary contact button. */
 @Component({
   selector: 'app-cta-band',
   templateUrl: './cta-band.component.html',
   styleUrl: './cta-band.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class CtaBandComponent {

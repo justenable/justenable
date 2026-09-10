@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
 import { SpyLocation } from '@angular/common/testing';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HydrationService } from 'src/app/services/hydration.service';
 import { FakeIntersectionObserver } from 'src/testing/intersection-observer';
@@ -8,6 +8,7 @@ import { REVEAL_BOTTOM_MARGIN, REVEAL_THRESHOLD, RevealDirective } from './revea
 
 @Component({
   template: `<section appReveal [appRevealDelay]="120">content</section>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 class HostComponent {}
@@ -18,6 +19,7 @@ class HostComponent {}
     <div style="height: 300vh"></div>
     <section appReveal>content</section>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 class BelowFoldHostComponent {}
@@ -29,6 +31,7 @@ class BelowFoldHostComponent {}
   template: `
     <section appReveal [style.top.px]="top" style="position: fixed; height: 200px">content</section>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 class FoldHostComponent {
@@ -41,6 +44,7 @@ class FoldHostComponent {
     <div style="height: 300vh"></div>
     <section appReveal><h2 id="m-04">Four</h2></section>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 class TargetHostComponent {}

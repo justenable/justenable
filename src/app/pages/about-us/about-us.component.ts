@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { AboutSection } from 'src/app/models/about-section.model';
 import { ContentsItem } from 'src/app/shared/components/title-block/title-block.component';
 
@@ -6,6 +6,7 @@ import { ContentsItem } from 'src/app/shared/components/title-block/title-block.
   selector: 'app-about-us',
   templateUrl: './about-us.component.html',
   styleUrl: './about-us.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class AboutUsComponent {

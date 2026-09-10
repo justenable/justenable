@@ -1,3 +1,5 @@
+@reference '../../../styles/tailwind-reference.scss';
+
 :host {
   display: block;
 }
@@ -20,7 +22,7 @@
   padding: 16px 20px;
 }
 
-@screen sm {
+@media (width >= 40rem) {
   .channel-row {
     grid-template-columns: 3rem 7rem 1fr 2rem;
     grid-template-areas: 'tag label value arrow';
@@ -34,7 +36,7 @@
 // (value 262px, so the email takes its one break there) and 27rem from xl
 // (310px, one line): at 1024 the embed centres the office pin and a wider
 // plate would sit on it.
-@screen lg {
+@media (width >= 64rem) {
   .map-band__plate .channel-row {
     @include stacked-row;
   }

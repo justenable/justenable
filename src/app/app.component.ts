@@ -7,6 +7,7 @@ import {
   Injector,
   OnInit,
   PLATFORM_ID,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -19,6 +20,7 @@ import { writeStorage } from './shared/storage';
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class AppComponent implements OnInit {

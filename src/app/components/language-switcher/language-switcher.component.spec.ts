@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideTranslateService, TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ClickElsewhereDirective } from 'src/app/directives/click-elsewhere.directive';
@@ -7,6 +7,7 @@ import { LanguageSwitcherComponent } from './language-switcher.component';
 
 @Component({
   template: `<app-language-switcher [segmented]="segmented" /><button id="after" type="button">after</button>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 class HostComponent {

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideTranslateService, TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { THEME_STORAGE_KEY, ThemeService } from 'src/app/services/theme.service';
@@ -7,6 +7,7 @@ import { ThemeToggleComponent } from './theme-toggle.component';
 
 @Component({
   template: `<app-theme-toggle [labelled]="labelled" />`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 class HostComponent {

@@ -1,4 +1,4 @@
-import { Component, Input, numberAttribute } from '@angular/core';
+import { Component, Input, numberAttribute, ChangeDetectionStrategy } from '@angular/core';
 
 /**
  * The astroid in a 10 x 10 box: four concave sides, cusps at the box
@@ -21,6 +21,7 @@ export const LAMP_PATH = 'M5 0 C5 3 3 5 0 5 C3 5 5 7 5 10 C5 7 7 5 10 5 C7 5 5 3
   selector: 'app-lamp',
   standalone: false,
   templateUrl: './lamp.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./lamp.component.scss'],
 })
 export class LampComponent {

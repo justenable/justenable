@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { GlyphVariant } from 'src/app/models/content-section.model';
 
 const CAPTION_KEYS: Record<GlyphVariant, string> = {
@@ -34,6 +34,7 @@ const OUTCOME_KEYS: Record<GlyphVariant, string> = {
   selector: 'app-timeline-glyph',
   templateUrl: './timeline-glyph.component.html',
   styleUrl: './timeline-glyph.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class TimelineGlyphComponent {

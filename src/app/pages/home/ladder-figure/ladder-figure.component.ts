@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 /**
  * A PLC ladder-logic rung pair, the software engineering card's media and,
@@ -10,6 +10,7 @@ import { Component } from '@angular/core';
   selector: 'app-ladder-figure',
   templateUrl: './ladder-figure.component.html',
   styleUrl: './ladder-figure.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class LadderFigureComponent {}

@@ -1,6 +1,8 @@
+@reference '../../../../styles/tailwind-reference.scss';
+
 :host {
   display: block;
-  color: rgb(var(--color-ink));
+  color: rgb(var(--rgb-ink));
 }
 
 .rail,
@@ -26,12 +28,12 @@
 }
 
 .block {
-  fill: rgb(var(--color-surface));
+  fill: rgb(var(--rgb-surface));
 }
 
 // The one accent on the card: the energised coil. Q0.1 stays in ink.
 .coil--lit {
-  stroke: rgb(var(--color-accent));
+  stroke: rgb(var(--rgb-accent));
   stroke-width: 2;
 }
 

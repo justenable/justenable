@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ContentSection } from 'src/app/models/content-section.model';
 import { TitledText } from 'src/app/models/titled-text.model';
@@ -35,6 +35,7 @@ const FIGURE_OUTCOMES: Record<AutomationFigure, string> = {
   selector: 'app-automation',
   templateUrl: './automation.component.html',
   styleUrl: './automation.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class AutomationComponent {

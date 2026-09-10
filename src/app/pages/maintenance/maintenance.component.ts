@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
   ContentSection,
@@ -22,6 +22,7 @@ type MaintenanceSection = ContentSection<{ glyph: GlyphVariant }> & {
   selector: 'app-maintenance',
   templateUrl: './maintenance.component.html',
   styleUrl: './maintenance.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class MaintenanceComponent {

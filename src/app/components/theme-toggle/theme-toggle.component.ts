@@ -1,4 +1,4 @@
-import { booleanAttribute, Component, inject, Input } from '@angular/core';
+import { booleanAttribute, Component, inject, Input, ChangeDetectionStrategy } from '@angular/core';
 import { ThemeService } from 'src/app/services/theme.service';
 
 let nextId = 0;
@@ -12,6 +12,7 @@ let nextId = 0;
   selector: 'app-theme-toggle',
   standalone: false,
   templateUrl: './theme-toggle.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./theme-toggle.component.scss'],
 })
 export class ThemeToggleComponent {

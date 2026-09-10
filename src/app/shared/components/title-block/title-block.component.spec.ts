@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, RouterModule } from '@angular/router';
 import {
@@ -19,6 +19,7 @@ import { ContentsItem, TitleBlockComponent } from './title-block.component';
       [contents]="contents"
     />
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 class HostComponent {

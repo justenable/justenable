@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { INDUSTRY_KEYS, SERVICE_KEYS } from 'src/app/shared/catalogue';
 import { LAMP_PATH } from 'src/app/shared/ui/lamp/lamp.component';
 
@@ -77,6 +77,7 @@ function lane(i: number): Lane {
   selector: 'app-mimic',
   templateUrl: './mimic.component.html',
   styleUrl: './mimic.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class MimicComponent {

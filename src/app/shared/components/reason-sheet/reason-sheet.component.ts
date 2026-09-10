@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { TitledText } from 'src/app/models/titled-text.model';
 
 /**
@@ -15,6 +15,7 @@ import { TitledText } from 'src/app/models/titled-text.model';
   // `id="a-05"` written on the host in the DOM as well, so without this the
   // page would carry two elements with that id and the anchor would land on
   // the host instead of the heading. The spec exercises the static form.
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: { '[attr.id]': 'null' },
 })
 export class ReasonSheetComponent {

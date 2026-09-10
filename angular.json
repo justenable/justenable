@@ -45,7 +45,12 @@
             "scripts": [],
             "browser": "src/main.ts",
             "server": "src/main.server.ts",
-            "outputMode": "static"
+            "outputMode": "static",
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "."
+              ]
+            }
           },
           "configurations": {
             "production": {
@@ -128,7 +133,12 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "."
+              ]
+            }
           }
         },
         "lint": {

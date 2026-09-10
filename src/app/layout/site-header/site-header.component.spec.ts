@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, Router, RouterModule } from '@angular/router';
 import { provideTranslateService, TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -16,7 +16,8 @@ import {
   SiteHeaderComponent,
 } from './site-header.component';
 
-@Component({ template: '', standalone: true })
+@Component({ template: '', changeDetection: ChangeDetectionStrategy.Eager,
+ standalone: true })
 class PageStubComponent {}
 
 describe('SiteHeaderComponent', () => {

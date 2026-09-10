@@ -1,6 +1,6 @@
 # Design system
 
-Maintainer reference for the Just Enable site. It describes the system as it is in the code, so when the two disagree, fix one of them. Source of truth for values is `src/styles/tokens.scss` and `tailwind.config.js`; this page explains the intent behind them.
+Maintainer reference for the Just Enable site. It describes the system as it is in the code, so when the two disagree, fix one of them. Source of truth for values is `src/styles/tokens.scss` and `src/styles/theme.scss` (the Tailwind 4 `@theme`, which replaced `tailwind.config.js`); this page explains the intent behind them.
 
 ## 1. Direction
 
@@ -23,37 +23,39 @@ Defined in `src/styles/tokens.scss` on `:root` (light), overridden under `.dark`
 
 ### Storage convention
 
-Colour tokens are space-separated RGB channel triplets, not colours: `--color-ink: 17 20 17;`. Tailwind maps each one as `rgb(var(--color-ink) / <alpha-value>)` so utilities like `bg-ink/50` work. In SCSS always write `rgb(var(--color-ink))`; `var(--color-ink)` on its own is not a valid colour and silently produces nothing. Non-colour tokens are plain values.
+Colour tokens are space-separated RGB channel triplets, not colours, and live under `--rgb-*`: `--rgb-ink: 17 20 17;`. `tokens.scss` turns each one into a real colour with its `colours` mixin (`--color-ink: rgb(var(--rgb-ink))`), and `theme.scss` registers those `--color-*` names with Tailwind, so utilities like `bg-ink/50` work (Tailwind 4 adds the alpha with `color-mix`, which replaced the v3 `<alpha-value>` placeholder). In SCSS always write `rgb(var(--rgb-ink))`; `var(--rgb-ink)` on its own is not a valid colour and silently produces nothing. Non-colour tokens are plain values.
+
+The two namespaces must stay distinct: `--rgb-*` holds triplets, `--color-*` holds colours. Any scope that re-points the triplets has to `@include colours` as well, or Tailwind keeps the colour computed at `:root` — this is what `.dark` and `.rear-panel` do.
 
 ### Colour
 
 | Token | Light | Dark | Used for |
 |---|---|---|---|
-| `--color-canvas` | #E8EAE7 | #17191B | page ground |
-| `--color-surface` | #FFFFFF | #202326 | plates, header |
-| `--color-surface-raised` | #F3F4F2 | #292D30 | chips, inset plates, sheet header, media ground |
-| `--color-accent-soft` | #FFE3CF | #3A2416 | reason-sheet header row |
-| `--color-border` | #C3C7C3 | #363B3E | decorative rules, plate edges |
-| `--color-border-strong` | #6E746F | #7A8084 | interactive borders, unlit lamp ring |
-| `--color-ink` | #111411 | #E9EAE6 | headings, primary text, strokes |
-| `--color-ink-muted` | #454A46 | #B8BCB7 | body copy, eyebrows |
-| `--color-ink-subtle` | #5F655F | #939893 | tags, captions (never below 12px) |
-| `--color-accent` | #FF6A00 | #FF6A00 | lit lamp, primary button, title rule (non-text) |
-| `--color-accent-hover` | #E85F00 | #FF7A1F | primary button hover |
-| `--color-accent-text` | #A84000 | #FF8A3D | text-safe orange: links, ghost buttons |
-| `--color-accent-contrast` | #111411 | #111411 | text on orange (stays black in both themes) |
-| `--color-focus` | #A84000 | #FF8A3D | focus outline |
-| `--color-screen` | #F3F4F2 | unchanged | map ground |
+| `--rgb-canvas` | #E8EAE7 | #17191B | page ground |
+| `--rgb-surface` | #FFFFFF | #202326 | plates, header |
+| `--rgb-surface-raised` | #F3F4F2 | #292D30 | chips, inset plates, sheet header, media ground |
+| `--rgb-accent-soft` | #FFE3CF | #3A2416 | reason-sheet header row |
+| `--rgb-border` | #C3C7C3 | #363B3E | decorative rules, plate edges |
+| `--rgb-border-strong` | #6E746F | #7A8084 | interactive borders, unlit lamp ring |
+| `--rgb-ink` | #111411 | #E9EAE6 | headings, primary text, strokes |
+| `--rgb-ink-muted` | #454A46 | #B8BCB7 | body copy, eyebrows |
+| `--rgb-ink-subtle` | #5F655F | #939893 | tags, captions (never below 12px) |
+| `--rgb-accent` | #FF6A00 | #FF6A00 | lit lamp, primary button, title rule (non-text) |
+| `--rgb-accent-hover` | #E85F00 | #FF7A1F | primary button hover |
+| `--rgb-accent-text` | #A84000 | #FF8A3D | text-safe orange: links, ghost buttons |
+| `--rgb-accent-contrast` | #111411 | #111411 | text on orange (stays black in both themes) |
+| `--rgb-focus` | #A84000 | #FF8A3D | focus outline |
+| `--rgb-screen` | #F3F4F2 | unchanged | map ground |
 
 Every text pairing is at least 4.5:1 in both themes; the lowest are `ink-subtle` on the light canvas (4.94) and on the dark raised surface (4.73), which is why `ink-subtle` is only ever used at 12px or larger and never condensed. Plate-on-canvas contrast is only 1.21:1, so every plate carries a 1px `border`.
 
-`.rear-panel` (the footer) re-declares the dark token set on one subtree in both themes, so Tailwind utilities keep working inside it and the footer is always the dark surface.
+`.rear-panel` (the footer) re-declares the dark token set on one subtree in both themes and re-runs the `colours` mixin, so Tailwind utilities keep working inside it and the footer is always the dark surface.
 
 ### Other tokens
 
 - Spacing: `--space-1` to `--space-10` on an 8px module; `--section-y` (section padding, clamp 2.5rem to 4.5rem); `--plate-pad` (clamp 1.25rem to 2rem); `--gutter` (the `.container-x` padding: 1rem, 1.5rem from `sm`, 2rem from `lg`, 3rem from `xl`).
 - Radius: `--radius-1` 4px (buttons, chips, inputs, screens), `--radius-2` 6px (plates), `--radius-round` (rocker track and knob only). Nothing is a pill and nothing is square.
-- Shadow: `--shadow-popover` and `--shadow-header`; elevation is expressed by plate borders, and shadows exist only for things that float: the language popover, and the header once content has scrolled under it.
+- Shadow: `--elevation-popover` and `--elevation-header`; elevation is expressed by plate borders, and shadows exist only for things that float: the language popover, and the header once content has scrolled under it. The token name avoids Tailwind's own `--shadow-*` namespace: `theme.scss` maps `shadow-popover`/`shadow-header` onto these with `var()`, so the dark theme's stronger values still reach the utilities (a literal in `@theme` would be frozen at its light value).
 - Motion: `--dur-1` 120ms (colour, border, underline, button lift), `--dur-2` 200ms (rocker knob, panel, popover, nav underline, ghost arrow), `--dur-reveal` 480ms (scroll reveal), `--dur-draw` 500ms (mimic bus), `--dur-figure` 700ms and `--dur-figure-step` 60ms (one figure line, and the stagger between lines), `--dur-route-out` 160ms and `--dur-route-in` 240ms (route transition), `--ease-out`, `--ease-std`.
 - Anchors: `--anchor-offset` 80px, where a fragment target lands below the viewport top (the 64px header plus a 16px breath). `h2[id]` uses it as `scroll-margin-top`, and `SmoothViewportScroller` reads the same token (below, under `.section-marker` and In-page scrolling).
 - Z layers: `--z-panel` 40, `--z-header` 50, `--z-popover` 60, `--z-skip` 100.
@@ -80,11 +82,11 @@ No italics are imported anywhere. An `Archivo Fallback` face (Arial or Helvetica
 | `font-sans` | IBM Plex Sans Variable, IBM Plex Sans, Helvetica Neue, Arial, sans-serif |
 | `font-mono` | IBM Plex Mono, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace |
 
-Archivo's width axis is driven with `font-stretch` through the `stretch-75`, `stretch-85`, `stretch-100` and `stretch-112` utilities (a plugin in `tailwind.config.js`), never with `font-variation-settings`. `.font-mono` sets `tabular-nums`.
+Archivo's width axis is driven with `font-stretch` through the `stretch-75`, `stretch-85`, `stretch-100` and `stretch-112` utilities (`@utility` rules in `src/styles/theme.scss`), never with `font-variation-settings`. `.font-mono` sets `tabular-nums`.
 
 ### Named scale
 
-Every step is a `text-*` utility in `tailwind.config.js` that sets size, line height and, where relevant, tracking and weight.
+Every step is a `text-*` utility in `src/styles/theme.scss` that sets size, line height and, where relevant, tracking and weight.
 
 | Step | Family | Size | Where |
 |---|---|---|---|
@@ -108,7 +110,11 @@ Rules: uppercase is applied with `text-transform` only, on the eyebrow and tag s
 
 ## 4. Layout primitives and CSS classes
 
-All in `src/styles/components.scss`, inside `@layer components` so a utility on the same element still wins. The motion rules at the end of that file sit outside the layer on purpose: Tailwind purges custom classes inside a layer that no template mentions, and the figure contract keys on an attribute and on classes figure authors add later. That block is gated on `@media screen and (prefers-reduced-motion: no-preference)`: `screen` because a printed page never scrolls, so a section still waiting for its reveal would print blank.
+All in `src/styles/components.scss`, inside `@layer components` so a utility on the same element still wins. `tokens.scss` declares `@layer theme, base, components, utilities;` at the top of the output: Sass hoists its `@use` rules above the `@import 'tailwindcss'`, so without that line the components layer would be emitted before Tailwind can state the order and the preflight reset in `base` would outrank `.container-x`.
+
+The motion rules at the end of that file sit outside the layer on purpose: Tailwind purges custom classes inside a layer that no template mentions, and the figure contract keys on an attribute and on classes figure authors add later. That block is gated on `@media screen and (prefers-reduced-motion: no-preference)`: `screen` because a printed page never scrolls, so a section still waiting for its reveal would print blank.
+
+A component stylesheet that uses `@apply` must start with `@reference '<relative path>/styles/tailwind-reference.scss';`. Tailwind 4 compiles each component file on its own, so without the reference it cannot see the theme and the build fails on the first unknown utility. The reference emits no CSS.
 
 | Class | What it is |
 |---|---|
@@ -231,7 +237,7 @@ Clicking a rail row starts a glide that crosses every section in between, and th
 
 ### Interactive mimic
 
-Hovering or focusing a service node S-n on the home mimic highlights its feeder, the bus and all four outputs and terminals; hovering or focusing a terminal X-n highlights all four feeders, the bus and its own output. The highlight is `stroke: rgb(var(--color-accent))` at `stroke-width: 2.5` with a 200 ms (`--dur-2`) transition, driven by `:has()` on the mimic root (`.mimic:has(.node--s1:is(:hover, :focus-visible)) .feeder--s1`); a browser without `:has()` simply shows no highlight. Accent strokes are otherwise forbidden, and here they are allowed only while the path is hovered or focused, because "this path is selected" is a state. Focus-visible on the SVG anchors is a 2px `accent-text` outline on the node rect.
+Hovering or focusing a service node S-n on the home mimic highlights its feeder, the bus and all four outputs and terminals; hovering or focusing a terminal X-n highlights all four feeders, the bus and its own output. The highlight is `stroke: rgb(var(--rgb-accent))` at `stroke-width: 2.5` with a 200 ms (`--dur-2`) transition, driven by `:has()` on the mimic root (`.mimic:has(.node--s1:is(:hover, :focus-visible)) .feeder--s1`); a browser without `:has()` simply shows no highlight. Accent strokes are otherwise forbidden, and here they are allowed only while the path is hovered or focused, because "this path is selected" is a state. Focus-visible on the SVG anchors is a 2px `accent-text` outline on the node rect.
 
 ### In-page scrolling
 
@@ -253,7 +259,7 @@ Every in-page jump glides rather than snapping. `src/styles.scss` sets `scroll-b
 
 ### Utility motion
 
-- Header: after 24px of scroll the host carries `.is-scrolled`; the bottom rule becomes `--shadow-header` over `--dur-2`, both properties on `--ease-out` so they arrive together. The scroll handler defers its read to the next animation frame (one layout read per frame however many events arrive) and holds the state through an 8px dead band below the offset (`SCROLLED_HYSTERESIS`), so a scroll resting on the threshold cannot flicker the shadow. Only `border-color` and `box-shadow` change: the height is fixed, so nothing the header does can shift the page. Nav link underline: `scaleX` 0 to 1 from the left on hover over `--dur-2`, in ink; the current page's stays full and is orange.
+- Header: after 24px of scroll the host carries `.is-scrolled`; the bottom rule becomes `--elevation-header` over `--dur-2`, both properties on `--ease-out` so they arrive together. The scroll handler defers its read to the next animation frame (one layout read per frame however many events arrive) and holds the state through an 8px dead band below the offset (`SCROLLED_HYSTERESIS`), so a scroll resting on the threshold cannot flicker the shadow. Only `border-color` and `box-shadow` change: the height is fixed, so nothing the header does can shift the page. Nav link underline: `scaleX` 0 to 1 from the left on hover over `--dur-2`, in ink; the current page's stays full and is orange.
 - Buttons: `.btn--primary` darkens on hover (exists) and lifts 1px over `--dur-1`, landing again on press. `.btn--ghost` and the footer map link nudge their arrow 4px right over `--dur-2`.
 - Service cards: on hover the plate edge firms up to `border-strong` (`--dur-1`) and the photo or ladder scales to 1.03 over 500 ms inside its overflow-hidden slot. No shadow, no card transform.
 - Colour, border and underline transitions, 120ms. Rocker knob 200ms `--ease-std`; the theme switch itself has no cross-fade, because a global transition flashes every plate. `ThemeService` puts `.theme-swap` on `<html>` for the two frames the palette takes to swap, and `src/styles.scss` switches every transition off under it: without that, every element carrying a colour transition for its own hover runs it at the moment the tokens change (measured at 79 concurrent transitions on one toggle, 0 with it), which reads as the page smearing rather than switching. Mobile panel and language popover slide in 8px over 200ms (`site-menu-in`, `lang-menu-in`: top-level rules with a `reduce` override, per the authoring rule above).
