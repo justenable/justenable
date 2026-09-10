@@ -41,6 +41,18 @@ export function breakParts(value: string): string[] {
   return [value.slice(0, at + 1), value.slice(at + 1)];
 }
 
+const [street, suburb, city] = CONTACT.addressLines;
+
+/**
+ * Google Maps URLs directions request. The country is left out: the postal
+ * code already places the destination, and the Maps embed's own place card
+ * carries the same street address.
+ */
+export const DIRECTIONS_URL = `https://www.google.com/maps/dir/?${new URLSearchParams({
+  api: '1',
+  destination: `${street}, ${suburb}, ${city}`,
+})}`;
+
 @Component({
   selector: 'app-contact-us',
   templateUrl: './contact-us.component.html',
@@ -50,6 +62,7 @@ export function breakParts(value: string): string[] {
 export class ContactUsComponent {
   readonly addressLines = CONTACT.addressLines;
   readonly mapsUrl = CONTACT.mapsUrl;
+  readonly directionsUrl = DIRECTIONS_URL;
 
   readonly channels: ContactChannel[] = [
     {

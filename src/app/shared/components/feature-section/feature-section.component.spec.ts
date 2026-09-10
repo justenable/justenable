@@ -6,6 +6,9 @@ import {
   TranslatePipe,
   TranslateService,
 } from '@ngx-translate/core';
+import { RevealDirective } from 'src/app/directives/reveal.directive';
+import { FakeIntersectionObserver } from 'src/testing/intersection-observer';
+import { stubReducedMotion } from 'src/testing/motion';
 import { FeatureSectionComponent } from './feature-section.component';
 
 @Component({
@@ -39,8 +42,15 @@ describe('FeatureSectionComponent', () => {
   let element: HTMLElement;
 
   beforeEach(() => {
+    stubReducedMotion(false);
+    FakeIntersectionObserver.install();
     TestBed.configureTestingModule({
-      declarations: [FeatureSectionComponent, HostComponent, StaticIdHostComponent],
+      declarations: [
+        FeatureSectionComponent,
+        RevealDirective,
+        HostComponent,
+        StaticIdHostComponent,
+      ],
       imports: [CommonModule, TranslatePipe],
       providers: [provideTranslateService()],
     });
@@ -52,6 +62,14 @@ describe('FeatureSectionComponent', () => {
     fixture = TestBed.createComponent(HostComponent);
     element = fixture.nativeElement;
     fixture.detectChanges();
+  });
+
+  afterEach(() => FakeIntersectionObserver.restore());
+
+  it('reveals the whole section on scroll', () => {
+    const section = element.querySelector('section')!;
+    expect(section.classList.contains('reveal')).toBeTrue();
+    expect(FakeIntersectionObserver.instances[0].observed).toEqual([section]);
   });
 
   it('renders a focusable H2 carrying the section id', () => {
@@ -84,6 +102,15 @@ describe('FeatureSectionComponent', () => {
     const figureColumn = element.querySelector('.screen')?.parentElement;
     expect(figureColumn?.classList).toContain('order-first');
     expect(figureColumn?.classList).toContain('lg:order-none');
+  });
+
+  it('splits 7/5 from lg and 6/6 from xl', () => {
+    const textColumn = element.querySelector('h2')?.parentElement;
+    const figureColumn = element.querySelector('.screen')?.parentElement;
+    expect(textColumn?.classList).toContain('lg:col-span-7');
+    expect(textColumn?.classList).toContain('xl:col-span-6');
+    expect(figureColumn?.classList).toContain('lg:col-span-5');
+    expect(figureColumn?.classList).toContain('xl:col-span-6');
   });
 
   it('keeps the figure first at lg when reversed', () => {

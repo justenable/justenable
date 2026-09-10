@@ -6,51 +6,61 @@
   stroke-width="1.5"
   stroke-linecap="round"
   stroke-linejoin="round"
+  style="--steps: 7"
 >
-  <!-- Terminal and the command going into the rack. -->
-  <rect x="32" y="128" width="160" height="88" rx="3" />
-  <line x1="32" y1="144" x2="192" y2="144" />
-  <text class="figure-tag" x="48" y="172">&gt; provision</text>
-  <text class="figure-tag" x="48" y="196">&gt; deploy</text>
-  <line x1="192" y1="172" x2="240" y2="172" />
-  <path d="M234 168l6 4-6 4" />
+  <!-- Terminal and the command going into the rack. Draw order (--i): the
+       terminal, its command line into the rack, the frame, then the units
+       from the bottom up as a rack is populated. -->
+  <rect x="32" y="128" width="160" height="88" rx="3" pathLength="1" style="--i: 0" />
+  <line x1="32" y1="144" x2="192" y2="144" pathLength="1" style="--i: 1" />
+  <g class="typed" style="--step: 0">
+    <text class="figure-tag" x="48" y="172">&gt; provision</text>
+  </g>
+  <g class="typed" style="--step: 1">
+    <text class="figure-tag" x="48" y="196">&gt; deploy</text>
+  </g>
+  <line x1="192" y1="172" x2="240" y2="172" pathLength="1" style="--i: 2" />
+  <path d="M234 168l6 4-6 4" pathLength="1" style="--i: 2" />
 
   <!-- Rack frame and units, numbered from the bottom. -->
-  <rect x="240" y="40" width="208" height="216" rx="3" />
+  <rect x="240" y="40" width="208" height="216" rx="3" pathLength="1" style="--i: 3" />
 
-  <rect class="face" x="256" y="56" width="176" height="40" rx="2" />
+  <rect class="face" x="256" y="56" width="176" height="40" rx="2" pathLength="1" style="--i: 7" />
   <text class="figure-tag" x="264" y="81">U4</text>
-  <circle class="ring" cx="304" cy="76" r="5" />
-  <rect x="336" y="64" width="16" height="8" />
-  <rect x="360" y="64" width="16" height="8" />
-  <rect x="384" y="64" width="16" height="8" />
-  <rect x="408" y="64" width="16" height="8" />
-  <rect x="336" y="80" width="16" height="8" />
-  <rect x="360" y="80" width="16" height="8" />
-  <rect x="384" y="80" width="16" height="8" />
-  <rect x="408" y="80" width="16" height="8" />
+  <circle class="ring" cx="304" cy="76" r="5" pathLength="1" style="--i: 7" />
+  <rect x="336" y="64" width="16" height="8" pathLength="1" style="--i: 7" />
+  <rect x="360" y="64" width="16" height="8" pathLength="1" style="--i: 7" />
+  <rect x="384" y="64" width="16" height="8" pathLength="1" style="--i: 7" />
+  <rect x="408" y="64" width="16" height="8" pathLength="1" style="--i: 7" />
+  <rect x="336" y="80" width="16" height="8" pathLength="1" style="--i: 7" />
+  <rect x="360" y="80" width="16" height="8" pathLength="1" style="--i: 7" />
+  <rect x="384" y="80" width="16" height="8" pathLength="1" style="--i: 7" />
+  <rect x="408" y="80" width="16" height="8" pathLength="1" style="--i: 7" />
 
-  <rect class="face" x="256" y="104" width="176" height="40" rx="2" />
+  <rect class="face" x="256" y="104" width="176" height="40" rx="2" pathLength="1" style="--i: 6" />
   <text class="figure-tag" x="264" y="129">U3</text>
-  <circle class="ring" cx="304" cy="124" r="5" />
-  <rect x="336" y="112" width="16" height="24" />
-  <rect x="360" y="112" width="16" height="24" />
-  <rect x="384" y="112" width="16" height="24" />
-  <rect x="408" y="112" width="16" height="24" />
+  <circle class="ring" cx="304" cy="124" r="5" pathLength="1" style="--i: 6" />
+  <rect x="336" y="112" width="16" height="24" pathLength="1" style="--i: 6" />
+  <rect x="360" y="112" width="16" height="24" pathLength="1" style="--i: 6" />
+  <rect x="384" y="112" width="16" height="24" pathLength="1" style="--i: 6" />
+  <rect x="408" y="112" width="16" height="24" pathLength="1" style="--i: 6" />
 
-  <rect class="face" x="256" y="152" width="176" height="40" rx="2" />
+  <rect class="face" x="256" y="152" width="176" height="40" rx="2" pathLength="1" style="--i: 5" />
   <text class="figure-tag" x="264" y="177">U2</text>
-  <circle class="figure-marker" cx="304" cy="172" r="5" />
-  <rect x="336" y="160" width="16" height="24" />
-  <rect x="360" y="160" width="16" height="24" />
-  <rect x="384" y="160" width="16" height="24" />
-  <rect x="408" y="160" width="16" height="24" />
+  <!-- The unit being provisioned lights once both commands have been typed. -->
+  <g class="typed" style="--step: 2">
+    <circle class="figure-marker" cx="304" cy="172" r="5" />
+  </g>
+  <rect x="336" y="160" width="16" height="24" pathLength="1" style="--i: 5" />
+  <rect x="360" y="160" width="16" height="24" pathLength="1" style="--i: 5" />
+  <rect x="384" y="160" width="16" height="24" pathLength="1" style="--i: 5" />
+  <rect x="408" y="160" width="16" height="24" pathLength="1" style="--i: 5" />
 
-  <rect class="face" x="256" y="200" width="176" height="40" rx="2" />
+  <rect class="face" x="256" y="200" width="176" height="40" rx="2" pathLength="1" style="--i: 4" />
   <text class="figure-tag" x="264" y="225">U1</text>
-  <circle class="ring" cx="304" cy="220" r="5" />
-  <rect x="336" y="208" width="16" height="24" />
-  <rect x="360" y="208" width="16" height="24" />
-  <rect x="384" y="208" width="16" height="24" />
-  <rect x="408" y="208" width="16" height="24" />
+  <circle class="ring" cx="304" cy="220" r="5" pathLength="1" style="--i: 4" />
+  <rect x="336" y="208" width="16" height="24" pathLength="1" style="--i: 4" />
+  <rect x="360" y="208" width="16" height="24" pathLength="1" style="--i: 4" />
+  <rect x="384" y="208" width="16" height="24" pathLength="1" style="--i: 4" />
+  <rect x="408" y="208" width="16" height="24" pathLength="1" style="--i: 4" />
 </svg>

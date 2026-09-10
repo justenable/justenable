@@ -7,54 +7,60 @@
 
 <div class="section">
   <div class="container-x">
-    <div class="grid gap-8 lg:grid-cols-12">
-      <div class="lg:col-span-6">
-        <ul class="plate divide-y divide-border p-0">
-          @for (channel of channels; track channel.tag) {
-            <li>
-              <a
-                [href]="channel.href"
-                [attr.target]="channel.kind === 'address' ? '_blank' : null"
-                [attr.rel]="channel.kind === 'address' ? 'noopener' : null"
-                class="channel-row hover:bg-surface-raised motion-safe:transition-colors motion-safe:duration-1"
-              >
-                <span class="channel-row__tag tag">{{ channel.tag }}</span>
-                <span class="channel-row__label eyebrow">
-                  {{ channel.labelKey | translate }}
+    <div class="map-band relative isolate">
+      <!-- The plate floats on the right: the embed draws its place card, with the
+           "View larger map" and "Directions" controls, in the top-left corner, and
+           that must stay uncovered. Widths: see the lg note in the stylesheet. -->
+      <ul
+        class="map-band__plate plate mb-6 divide-y divide-border p-0 lg:absolute lg:right-8 lg:top-8 lg:z-10 lg:mb-0 lg:w-[24rem] lg:shadow-popover xl:w-[27rem]"
+      >
+        @for (channel of channels; track channel.tag) {
+          <li>
+            <a
+              [href]="channel.href"
+              [attr.target]="channel.kind === 'address' ? '_blank' : null"
+              [attr.rel]="channel.kind === 'address' ? 'noopener' : null"
+              class="channel-row hover:bg-surface-raised motion-safe:transition-colors motion-safe:duration-1"
+            >
+              <span class="channel-row__tag tag">{{ channel.tag }}</span>
+              <span class="channel-row__label eyebrow">
+                {{ channel.labelKey | translate }}
+              </span>
+              @if (channel.kind === 'address') {
+                <span
+                  class="channel-row__value font-mono text-mono-value"
+                  lang="en"
+                >
+                  {{ channel.value }}
                 </span>
-                @if (channel.kind === 'address') {
-                  <span
-                    class="channel-row__value font-mono text-mono-value"
-                    lang="en"
-                  >
-                    {{ channel.value }}
-                  </span>
-                  <span class="sr-only">{{ 'GLOBAL.NEW_WINDOW' | translate }}</span>
-                } @else {
-                  <span class="channel-row__value channel-row__value--identifier font-mono text-mono-value-l" translate="no">
-                    @for (part of channel.valueParts; track $index; let last = $last) {{{ part }}@if (!last) {<wbr />}}
-                  </span>
-                }
-                <span class="channel-row__arrow text-ink-muted" aria-hidden="true">
-                  &rarr;
+                <span class="sr-only">{{ 'GLOBAL.NEW_WINDOW' | translate }}</span>
+              } @else {
+                <span class="channel-row__value channel-row__value--identifier font-mono text-mono-value-l" translate="no">
+                  @for (part of channel.valueParts; track $index; let last = $last) {{{ part }}@if (!last) {<wbr />}}
                 </span>
-              </a>
-            </li>
-          }
-        </ul>
-      </div>
+              }
+              <span class="channel-row__arrow text-ink-muted" aria-hidden="true">
+                &rarr;
+              </span>
+            </a>
+          </li>
+        }
+      </ul>
 
-      <div class="lg:col-span-6">
-        <div class="screen overflow-hidden p-0">
-          <iframe
-            [title]="'CONTACT.MAP_TITLE' | translate"
-            class="block aspect-[4/3] min-h-[320px] w-full border-0"
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3592.774396556427!2d28.281045276882622!3d-25.778014277341704!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1e9560965d11f047%3A0x6fc40db5e1b65adf!2s68%20Glenwood%20Rd%2C%20Lynnwood%20Glen%2C%20Pretoria%2C%200081%2C%20South%20Africa!5e0!3m2!1sen!2sus!4v1689975341370!5m2!1sen!2sus"
-          ></iframe>
-        </div>
-        <address class="map-address mt-4 font-mono text-mono-value not-italic text-ink" lang="en">
+      <div class="screen aspect-[16/9] min-h-[420px] w-full overflow-hidden p-0 lg:h-[600px]">
+        <iframe
+          [title]="'CONTACT.MAP_TITLE' | translate"
+          class="block h-full w-full border-0"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3592.774396556427!2d28.281045276882622!3d-25.778014277341704!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1e9560965d11f047%3A0x6fc40db5e1b65adf!2s68%20Glenwood%20Rd%2C%20Lynnwood%20Glen%2C%20Pretoria%2C%200081%2C%20South%20Africa!5e0!3m2!1sen!2sus!4v1689975341370!5m2!1sen!2sus"
+        ></iframe>
+      </div>
+    </div>
+
+    <div class="mt-4 flex flex-wrap items-end justify-between gap-x-8 gap-y-2">
+      <div>
+        <address class="map-address font-mono text-mono-value not-italic text-ink" lang="en">
           @for (line of addressLines; track line) {
             <span class="block">{{ line }}</span>
           }
@@ -65,6 +71,11 @@
           <span class="sr-only">{{ 'GLOBAL.NEW_WINDOW' | translate }}</span>
         </a>
       </div>
+      <a [href]="directionsUrl" class="btn btn--ghost -mx-2" rel="noopener" target="_blank">
+        <span>{{ 'CONTACT.DIRECTIONS' | translate }}</span>
+        <span aria-hidden="true">&rarr;</span>
+        <span class="sr-only">{{ 'GLOBAL.NEW_WINDOW' | translate }}</span>
+      </a>
     </div>
   </div>
 </div>

@@ -1,5 +1,21 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes, TitleStrategy } from '@angular/router';
+import { ViewportScroller } from '@angular/common';
+import {
+  DOCUMENT,
+  inject,
+  ModuleWithProviders,
+  NgModule,
+  provideAppInitializer,
+} from '@angular/core';
+import {
+  provideRouter,
+  Router,
+  RouterModule,
+  Routes,
+  TitleStrategy,
+  ViewTransitionInfo,
+  withInMemoryScrolling,
+  withViewTransitions,
+} from '@angular/router';
 import { TranslatedTitleStrategy } from './services/translated-title.strategy';
 
 const routes: Routes = [
@@ -52,14 +68,76 @@ const routes: Routes = [
   },
 ];
 
+/**
+ * The cross-fade means "the page you leave fades into the page you open". A
+ * contents-row link only changes the fragment, so no page is left and the
+ * transition is skipped; anchorScrolling still jumps to the heading.
+ */
+function skipFragmentOnlyTransition({ transition }: ViewTransitionInfo): void {
+  const router = inject(Router);
+  const target = router.getCurrentNavigation()?.finalUrl;
+  if (
+    target &&
+    router.isActive(target, {
+      paths: 'exact',
+      matrixParams: 'exact',
+      queryParams: 'ignored',
+      fragment: 'ignored',
+    })
+  ) {
+    transition.skipTransition();
+  }
+}
+
+/**
+ * The router's anchor scrolling positions a fragment target from its own
+ * offset and ignores CSS scroll-margin, so it reads the token h2[id] uses
+ * (tokens.scss) and a heading lands in the same place whether the browser
+ * or the router scrolled to it. Read at scroll time, not at start-up: the
+ * stylesheet need not have loaded yet.
+ */
+function useAnchorOffset(): void {
+  const document = inject(DOCUMENT);
+  inject(ViewportScroller).setOffset(() => [
+    0,
+    parseFloat(
+      getComputedStyle(document.documentElement).getPropertyValue('--anchor-offset')
+    ),
+  ]);
+}
+
 @NgModule({
-  imports: [
-    RouterModule.forRoot(routes, {
-      anchorScrolling: 'enabled',
-      scrollPositionRestoration: 'top',
-    }),
-  ],
+  imports: [RouterModule],
   exports: [RouterModule],
-  providers: [{ provide: TitleStrategy, useClass: TranslatedTitleStrategy }],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule {
+  /**
+   * Router providers are created here, per application, rather than in the
+   * decorator: provideRouter rather than RouterModule.forRoot because the
+   * forRoot options can switch view transitions on but cannot skip the
+   * first one, and on a hydrated page that first transition would fade the
+   * prerendered content out and back in. The skip is a one-shot flag inside
+   * the providers, so building them once per bundle would let whichever
+   * spec navigates first consume it. The styles live in src/styles.scss.
+   */
+  static forRoot(): ModuleWithProviders<AppRoutingModule> {
+    return {
+      ngModule: AppRoutingModule,
+      providers: [
+        provideRouter(
+          routes,
+          withInMemoryScrolling({
+            anchorScrolling: 'enabled',
+            scrollPositionRestoration: 'top',
+          }),
+          withViewTransitions({
+            skipInitialTransition: true,
+            onViewTransitionCreated: skipFragmentOnlyTransition,
+          })
+        ),
+        { provide: TitleStrategy, useClass: TranslatedTitleStrategy },
+        provideAppInitializer(useAnchorOffset),
+      ],
+    };
+  }
+}

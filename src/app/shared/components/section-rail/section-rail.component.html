@@ -1,0 +1,20 @@
+<nav class="rail" [attr.aria-label]="'A11Y.CONTENTS' | translate">
+  <p class="eyebrow rail__label" aria-hidden="true">{{ 'A11Y.CONTENTS' | translate }}</p>
+  <ol class="rail__list">
+    @for (item of items; track item.id) {
+      <li>
+        <a
+          [routerLink]="[]"
+          [fragment]="item.id"
+          class="rail__link"
+          [class.is-active]="activeId() === item.id"
+          [attr.aria-current]="activeId() === item.id ? 'true' : null"
+        >
+          <app-lamp class="rail__lamp" [lit]="activeId() === item.id" size="8" />
+          <span class="tag rail__tag">{{ item.tag }}</span>&ngsp;
+          <span class="rail__name">{{ item.key | translate: item.params }}</span>
+        </a>
+      </li>
+    }
+  </ol>
+</nav>

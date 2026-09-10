@@ -1,9 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, RouterModule } from '@angular/router';
 import { provideTranslateService, TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { RevealDirective } from 'src/app/directives/reveal.directive';
 import { CONTACT } from 'src/app/shared/contact';
 import { TAGLINES } from 'src/app/shared/taglines';
 import { LogoComponent } from 'src/app/shared/ui/logo/logo.component';
+import { FakeIntersectionObserver } from 'src/testing/intersection-observer';
+import { stubReducedMotion } from 'src/testing/motion';
 import { SiteFooterComponent } from './site-footer.component';
 
 describe('SiteFooterComponent', () => {
@@ -14,8 +17,10 @@ describe('SiteFooterComponent', () => {
   const taglines = (): HTMLLIElement[] => Array.from(root().querySelectorAll('.tagline-stack li'));
 
   beforeEach(() => {
+    stubReducedMotion(false);
+    FakeIntersectionObserver.install();
     TestBed.configureTestingModule({
-      declarations: [SiteFooterComponent, LogoComponent],
+      declarations: [SiteFooterComponent, LogoComponent, RevealDirective],
       imports: [TranslatePipe, RouterModule],
       providers: [provideTranslateService(), provideRouter([])],
     });
@@ -36,6 +41,19 @@ describe('SiteFooterComponent', () => {
     translate.use('en');
     fixture = TestBed.createComponent(SiteFooterComponent);
     fixture.detectChanges();
+  });
+
+  afterEach(() => FakeIntersectionObserver.restore());
+
+  it('reveals the three columns 80 ms apart', () => {
+    const columns = Array.from(root().querySelectorAll<HTMLElement>('.site-footer__columns > *'));
+    expect(columns.length).toBe(3);
+    expect(columns.every((column) => column.classList.contains('reveal'))).toBeTrue();
+    expect(columns.map((column) => column.style.getPropertyValue('--reveal-delay'))).toEqual([
+      '',
+      '80ms',
+      '160ms',
+    ]);
   });
 
   it('renders the current year and the locale-invariant plate text', () => {

@@ -1,17 +1,17 @@
-<section class="section">
+<section class="section" appReveal>
   <div class="container-x">
     <div class="section-marker" aria-hidden="true">
       <span class="tag tag--chip">{{ tag }}</span>
     </div>
-    <div class="grid gap-6 lg:grid-cols-12 lg:gap-8">
-      <div class="lg:col-span-7">
+    <div class="grid gap-6 lg:grid-cols-12 lg:gap-8 xl:gap-12">
+      <div class="lg:col-span-7 xl:col-span-6">
         <h2 class="mb-4 text-heading-m text-ink" [id]="id" tabindex="-1">
           {{ titleKey | translate }}
         </h2>
         <ng-content select="[body]" />
       </div>
       <div
-        class="order-first lg:col-span-5 lg:self-start"
+        class="order-first lg:col-span-5 lg:self-start xl:col-span-6"
         [ngClass]="{ 'lg:order-none': !reverse }"
       >
         <ng-content select="[figure]" />

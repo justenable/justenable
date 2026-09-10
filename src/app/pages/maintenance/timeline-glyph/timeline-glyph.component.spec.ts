@@ -23,6 +23,22 @@ const LABELS: Record<GlyphVariant, string[]> = {
   facility: ['HVAC', 'LV', 'FP', 'W1', 'W2', 'W3', 'W4', 'W5'],
 };
 
+/**
+ * Where the marker slides in from: the offset back from its documented
+ * position to the start of its own strip line. The predictive marker
+ * travels the trend line instead, through its own keyframes.
+ */
+const SLIDE_X: Record<Exclude<GlyphVariant, 'predictive'>, string> = {
+  preventive: '-224px',
+  corrective: '-320px',
+  asset: '-368px',
+  facility: '-216px',
+};
+
+function customProperty(element: Element, name: string): string {
+  return (element as SVGElement).style.getPropertyValue(name).trim();
+}
+
 describe('TimelineGlyphComponent', () => {
   let fixture: ComponentFixture<TimelineGlyphComponent>;
   let element: HTMLElement;
@@ -34,6 +50,10 @@ describe('TimelineGlyphComponent', () => {
 
   function svg(): SVGSVGElement | null {
     return element.querySelector('app-figure figure svg');
+  }
+
+  function strokes(): SVGElement[] {
+    return Array.from(element.querySelectorAll<SVGElement>('svg :is(line, path, polyline, circle)'));
   }
 
   beforeEach(() => {
@@ -84,6 +104,7 @@ describe('TimelineGlyphComponent', () => {
       const markers = element.querySelectorAll('circle.glyph__marker');
       expect(markers.length).withContext(variant).toBe(1);
       expect(markers[0].getAttribute('r')).toBe('5');
+      expect(markers[0].hasAttribute('pathLength')).withContext(variant).toBeFalse();
     }
   });
 
@@ -113,7 +134,72 @@ describe('TimelineGlyphComponent', () => {
   it('projects the current event onto the shared axis', () => {
     for (const variant of VARIANTS) {
       render(variant);
-      expect(svg()?.querySelector('[stroke-dasharray]')).withContext(variant).not.toBeNull();
+      expect(svg()?.querySelector('.glyph__projection[stroke-dasharray]'))
+        .withContext(variant)
+        .not.toBeNull();
+    }
+  });
+
+  it('draws every solid stroke through the figure draw-in contract, strip before axis', () => {
+    for (const variant of VARIANTS) {
+      render(variant);
+      const drawn = strokes().filter(
+        (stroke) =>
+          !stroke.classList.contains('glyph__marker') &&
+          !stroke.classList.contains('glyph__projection')
+      );
+      expect(drawn.length).withContext(variant).toBeGreaterThan(2);
+      const order = drawn.map((stroke) => {
+        expect(stroke.getAttribute('pathLength')).withContext(stroke.outerHTML).toBe('1');
+        const index = Number(customProperty(stroke, '--i'));
+        expect(Number.isInteger(index)).withContext(stroke.outerHTML).toBeTrue();
+        return index;
+      });
+      for (let i = 1; i < order.length; i++) {
+        expect(order[i]).withContext(`${variant} element ${i}`).toBeGreaterThan(order[i - 1]);
+      }
+      // The axis at y=152 is the last line drawn before the marker arrives.
+      const axis = drawn.find((stroke) => stroke.getAttribute('y1') === '152');
+      expect(axis).withContext(variant).toBeDefined();
+      expect(order.indexOf(Number(customProperty(axis!, '--i')))).toBe(order.length - 2);
+
+      // --steps is the last index; the component style derives --draw-end from it.
+      const strip = svg()?.querySelector<SVGGElement>('svg > g');
+      expect(customProperty(strip!, '--steps')).withContext(variant).toBe(String(Math.max(...order)));
+    }
+  });
+
+  it('slides the marker in along its strip, or along the trend on the predictive strip', () => {
+    for (const variant of VARIANTS) {
+      render(variant);
+      const slide = element.querySelector<SVGGElement>('g.glyph__slide');
+      expect(slide?.querySelector('circle.glyph__marker')).withContext(variant).not.toBeNull();
+      if (variant === 'predictive') {
+        expect(slide?.classList).toContain('glyph__slide--trend');
+        expect(customProperty(slide!, '--slide-x')).toBe('');
+      } else {
+        expect(slide?.classList).not.toContain('glyph__slide--trend');
+        expect(customProperty(slide!, '--slide-x')).withContext(variant).toBe(SLIDE_X[variant]);
+      }
+    }
+  });
+
+  it('holds the projections back until the marker has settled, never drawing a dashed line', () => {
+    for (const variant of VARIANTS) {
+      render(variant);
+      const dashed = strokes().filter((stroke) => stroke.hasAttribute('stroke-dasharray'));
+      const projections = strokes().filter((stroke) =>
+        stroke.classList.contains('glyph__projection')
+      );
+      expect(dashed.length).withContext(variant).toBeGreaterThan(0);
+      for (const stroke of dashed) {
+        expect(stroke.classList).withContext(stroke.outerHTML).toContain('glyph__projection');
+      }
+      for (const stroke of projections) {
+        expect(stroke.hasAttribute('pathLength')).withContext(stroke.outerHTML).toBeFalse();
+      }
+      // The predicted failure is part of the projection, dashed lines and the x alike.
+      expect(projections.length).toBe(variant === 'predictive' ? 4 : dashed.length);
     }
   });
 });

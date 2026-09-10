@@ -1,16 +1,16 @@
 <section class="section hero">
   <div class="container-x">
     <div class="grid gap-10 lg:grid-cols-12 lg:items-center lg:gap-8">
-      <div class="lg:col-span-7">
-        <p class="eyebrow">{{ 'HOME.EYEBROW' | translate }}</p>
+      <div class="lg:col-span-6">
+        <p class="eyebrow hero__eyebrow">{{ 'HOME.EYEBROW' | translate }}</p>
         <h1
-          class="mt-3 max-w-[22ch] font-display text-display-xl text-ink stretch-112"
+          class="hero__title mt-3 max-w-[22ch] text-wrap font-display text-display-xl text-ink stretch-112"
         >
           {{ 'HOME.TITLE' | translate }}
         </h1>
-        <div class="my-4 h-[3px] w-16 bg-accent" aria-hidden="true"></div>
-        <p class="tagline">{{ 'HOME.SUBTITLE' | translate }}</p>
-        <div class="mt-8 flex flex-wrap items-center gap-x-4 gap-y-3">
+        <div class="hero__rule my-4 h-[3px] w-16 bg-accent" aria-hidden="true"></div>
+        <p class="tagline hero__tagline">{{ 'HOME.SUBTITLE' | translate }}</p>
+        <div class="hero__actions mt-8 flex flex-wrap items-center gap-x-4 gap-y-3">
           <a routerLink="/contact-us" class="btn btn--primary btn--lg max-sm:w-full">
             {{ 'NAVIGATION.CONTACT_US' | translate }}
           </a>
@@ -24,7 +24,7 @@
           </a>
         </div>
       </div>
-      <app-mimic class="lg:col-span-5" [class.is-testing]="testing" />
+      <app-mimic class="lg:col-span-6" />
     </div>
   </div>
 </section>
@@ -34,12 +34,12 @@
     <div class="section-marker" aria-hidden="true">
       <span class="tag tag--chip">S</span>
     </div>
-    <h2 id="services" class="mb-6 text-heading-m text-ink">
+    <h2 id="services" class="mb-6 text-heading-m text-ink" tabindex="-1">
       {{ 'GLOBAL.SERVICES_WE_PROVIDE' | translate }}
     </h2>
     <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
       @for (service of services; track service.tag) {
-        <li>
+        <li appReveal [appRevealDelay]="$index * 80">
           <app-service-card
             [tag]="service.tag"
             [titleKey]="service.titleKey"
@@ -57,13 +57,13 @@
     <div class="section-marker" aria-hidden="true">
       <span class="tag tag--chip">X</span>
     </div>
-    <h2 id="industries" class="mb-6 text-heading-m text-ink">
+    <h2 id="industries" class="mb-6 text-heading-m text-ink" tabindex="-1">
       {{ 'GLOBAL.INDUSTRIES' | translate }}
     </h2>
     <div class="plate p-0">
       <ul class="grid sm:grid-cols-2 lg:grid-cols-4">
         @for (industry of industries; track industry.tag) {
-          <li class="terminal-cell">
+          <li class="terminal-cell" appReveal [appRevealDelay]="$index * 60">
             <span class="tag">{{ industry.tag }}</span>
             <h3 class="mt-2 text-heading-s text-ink">
               {{ industry.nameKey | translate }}
@@ -71,6 +71,41 @@
           </li>
         }
       </ul>
+    </div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="index">
+  <div class="container-x">
+    <div class="section-marker" aria-hidden="true">
+      <span class="tag tag--chip">I</span>
+    </div>
+    <h2 id="index" class="mb-6 text-heading-m text-ink" tabindex="-1">
+      {{ 'HOME.INDEX_TITLE' | translate }}
+    </h2>
+    <div class="plate site-index grid overflow-hidden p-0 md:grid-cols-2">
+      @for (page of siteIndex; track page.url) {
+        <div class="site-index__column">
+          <p class="eyebrow site-index__head" [id]="indexLabelId(page)">
+            {{ page.pageKey | translate }}
+          </p>
+          <ul [attr.aria-labelledby]="indexLabelId(page)">
+            @for (section of page.sections; track section.id) {
+              <li class="site-index__row" appReveal [appRevealDelay]="$index * indexStagger">
+                <a
+                  [routerLink]="page.url"
+                  [fragment]="section.id"
+                  class="site-index__link flex min-h-[48px] items-center gap-4 px-5 py-2 text-ink hover:bg-surface-raised motion-safe:transition-colors motion-safe:duration-1"
+                >
+                  <span class="tag shrink-0 whitespace-nowrap">{{ section.tag }}</span>&ngsp;
+                  <span class="min-w-0 flex-1 font-medium">{{ section.key | translate }}</span>&ngsp;
+                  <span class="site-index__arrow shrink-0 text-ink-subtle" aria-hidden="true">&rarr;</span>
+                </a>
+              </li>
+            }
+          </ul>
+        </div>
+      }
     </div>
   </div>
 </section>

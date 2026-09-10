@@ -6,36 +6,45 @@
   stroke-width="1.5"
   stroke-linecap="round"
   stroke-linejoin="round"
+  style="--steps: 9"
 >
-  <!-- Process: tank, level, pipe, pump, control valve, outlet. -->
-  <rect x="32" y="80" width="96" height="160" rx="3" />
-  <line x1="32" y1="144" x2="128" y2="144" />
-  <path d="M104 136h16l-8 8z" />
-  <line x1="128" y1="224" x2="208" y2="224" />
-  <line x1="240" y1="224" x2="304" y2="224" />
-  <line x1="352" y1="224" x2="464" y2="224" />
-  <path d="M458 220l6 4-6 4" />
-  <path d="M304 212v24l24-12z" />
-  <path d="M352 212v24l-24-12z" />
+  <!-- Process: tank, level, pipe, pump, control valve, outlet. Draw order
+       (--i) follows the product: tank, level, pipework downstream, then the
+       instruments and their signals. -->
+  <rect x="32" y="80" width="96" height="160" rx="3" pathLength="1" style="--i: 0" />
+  <line x1="32" y1="144" x2="128" y2="144" pathLength="1" style="--i: 1" />
+  <path d="M104 136h16l-8 8z" pathLength="1" style="--i: 1" />
+  <line x1="128" y1="224" x2="208" y2="224" pathLength="1" style="--i: 2" />
+  <line x1="240" y1="224" x2="304" y2="224" pathLength="1" style="--i: 4" />
+  <line x1="352" y1="224" x2="464" y2="224" pathLength="1" style="--i: 6" />
+  <path d="M458 220l6 4-6 4" pathLength="1" style="--i: 6" />
+  <path d="M304 212v24l24-12z" pathLength="1" style="--i: 5" />
+  <path d="M352 212v24l-24-12z" pathLength="1" style="--i: 5" />
 
   <!-- Diaphragm actuator on its stem, with the valve's position marker. -->
-  <path d="M312 180a16 16 0 0 1 32 0z" />
-  <line x1="328" y1="180" x2="328" y2="224" />
+  <path d="M312 180a16 16 0 0 1 32 0z" pathLength="1" style="--i: 7" />
+  <line x1="328" y1="180" x2="328" y2="224" pathLength="1" style="--i: 7" />
 
-  <!-- Signals: transmitter to PLC, PLC to actuator. -->
-  <line x1="128" y1="128" x2="160" y2="128" />
-  <path d="M176 112V64h120" stroke-dasharray="2 4" />
-  <line x1="328" y1="80" x2="328" y2="164" stroke-dasharray="2 4" />
+  <!-- Signals: transmitter to PLC, PLC to actuator. Dotted lines cannot draw
+       (pathLength="1" would rescale their dots to the whole path), so they
+       come on last, once the plant is drawn. -->
+  <line x1="128" y1="128" x2="160" y2="128" pathLength="1" style="--i: 8" />
+  <path class="figure-late" d="M176 112V64h120" stroke-dasharray="2 4" />
+  <line class="figure-late" x1="328" y1="80" x2="328" y2="164" stroke-dasharray="2 4" />
 
-  <circle class="face" cx="176" cy="128" r="16" />
+  <circle class="face" cx="176" cy="128" r="16" pathLength="1" style="--i: 8" />
   <text class="figure-tag" x="176" y="133" text-anchor="middle">LT</text>
   <!-- Pump: a circle with a discharge triangle, so it is not read as another
        instrument bubble. -->
-  <circle class="face" cx="224" cy="224" r="16" />
-  <path d="M214 214l24 10-24 10z" />
-  <rect class="face" x="296" y="48" width="64" height="32" rx="3" />
+  <circle class="face" cx="224" cy="224" r="16" pathLength="1" style="--i: 3" />
+  <path d="M214 214l24 10-24 10z" pathLength="1" style="--i: 3" />
+  <rect class="face" x="296" y="48" width="64" height="32" rx="3" pathLength="1" style="--i: 9" />
   <text class="figure-tag" x="328" y="69" text-anchor="middle">PLC</text>
   <text class="figure-tag" x="328" y="260" text-anchor="middle">CV</text>
 
-  <circle class="figure-marker" cx="328" cy="200" r="5" />
+  <!-- The valve's position marker. The group carries the one-time opening
+       stroke so the marker's own fade-in stays untouched. -->
+  <g class="valve-position">
+    <circle class="figure-marker" cx="328" cy="200" r="5" />
+  </g>
 </svg>

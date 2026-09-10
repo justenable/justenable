@@ -10,13 +10,16 @@
   <!-- Header surface per theme; ThemeService and the script below rewrite both on a manual toggle. -->
   <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#202326" media="(prefers-color-scheme: dark)" />
-  <!-- Applies the stored/OS theme before first paint; prerendered HTML is light. Must match ThemeService. -->
+  <!-- Applies the stored/OS theme before first paint; prerendered HTML is light. Must match ThemeService.
+       Also marks the document for motion: the home choreography keys on html.motion so its CSS animations
+       start on the prerendered first paint instead of after hydration; reduced-motion visitors never get it. -->
   <script>
     (function () {
+      var root = document.documentElement;
+      if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) root.classList.add("motion");
       try {
         var stored = localStorage.getItem("isDarkMode");
         var dark = stored === "true" || (stored !== "false" && window.matchMedia("(prefers-color-scheme: dark)").matches);
-        var root = document.documentElement;
         root.classList.toggle("dark", dark);
         var color = dark ? "#202326" : "#FFFFFF";
         var tags = document.querySelectorAll('meta[name="theme-color"]');

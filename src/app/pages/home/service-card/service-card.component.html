@@ -1,8 +1,8 @@
-<div class="plate flex h-full flex-col overflow-hidden p-0">
+<div class="plate service-card flex h-full flex-col overflow-hidden p-0">
   <div class="aspect-[4/3] overflow-hidden border-b border-border bg-surface-raised">
     @if (media.kind === 'photo') {
       <img
-        class="h-full w-full object-cover"
+        class="service-card__media h-full w-full object-cover"
         [src]="media.src"
         [alt]="media.altKey | translate"
         [width]="media.width"
@@ -11,7 +11,7 @@
         loading="lazy"
       />
     } @else {
-      <app-ladder-figure class="h-full w-full" />
+      <app-ladder-figure class="service-card__media h-full w-full" />
     }
   </div>
   <div class="p-5 sm:p-6">

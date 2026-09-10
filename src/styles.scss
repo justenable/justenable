@@ -1,5 +1,6 @@
 @use 'styles/tokens';
 @use 'styles/components';
+@use 'styles/figure-motion';
 
 // Self-hosted fonts. wdth.css carries both the wght (100-900) and wdth (62-125)
 // axes of Archivo; index.css would only carry wght. No italics anywhere.
@@ -66,12 +67,47 @@
     overflow-wrap: anywhere;
   }
 
-  // Contents-row anchors land clear of the sticky header.
+  // Fragment targets land clear of the sticky header. The router's own
+  // anchor scrolling ignores scroll-margin and reads the same token
+  // (AppRoutingModule).
   h2[id] {
-    scroll-margin-top: 80px;
+    scroll-margin-top: var(--anchor-offset);
   }
 
   .font-mono {
     font-variant-numeric: tabular-nums;
+  }
+}
+
+// Route transitions (withViewTransitions in AppRoutingModule.forRoot): the
+// old page fades out, the new one fades in with an 8px rise. The header carries
+// its own view-transition-name so it never fades with the page. Outside the
+// Tailwind layers so the pseudo-elements are never purged.
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root) {
+    animation: route-out var(--dur-route-out) var(--ease-std) both;
+  }
+  ::view-transition-new(root) {
+    animation: route-in var(--dur-route-in) var(--ease-out) both;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none;
+  }
+}
+
+@keyframes route-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes route-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
   }
 }

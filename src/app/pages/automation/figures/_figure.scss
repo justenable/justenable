@@ -8,10 +8,18 @@
   width: 100%;
 }
 
-// Drawn 480 units wide and rendered anywhere from 290px to 520px, so strokes
-// keep their CSS px weight like the mimic's.
-svg :is(line, path, rect, circle, ellipse, polyline, polygon) {
-  vector-effect: non-scaling-stroke;
+// The drawing scales as one piece, tags and strokes alike, with no
+// vector-effect: non-scaling-stroke. Chrome dashes a non-scaling stroke in
+// screen space while pathLength keeps the dash in user units, so above 480px
+// wide the draw-in would show each line's tail first and pop complete at the
+// end.
+
+// Draw-in contract (components.scss): inside .figure.is-revealed every
+// element with pathLength="1" draws over --dur-figure, starting --i steps in;
+// the accent and the tags wait for --draw-end. Each svg sets --steps to its
+// last index so that wait covers its slowest line.
+svg {
+  --draw-end: calc(var(--dur-figure) + var(--steps, 0) * var(--dur-figure-step));
 }
 
 .face {
@@ -49,3 +57,5 @@ svg :is(line, path, rect, circle, ellipse, polyline, polygon) {
   font-weight: 500;
   letter-spacing: 0.02em;
 }
+
+// Late fades and in-flight motion are global CSS: src/styles/components.scss and src/styles/figure-motion.scss.

@@ -4,6 +4,7 @@ import { ContentSection } from 'src/app/models/content-section.model';
 import { TitledText } from 'src/app/models/titled-text.model';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ContentsItem } from 'src/app/shared/components/title-block/title-block.component';
+import { sitePage } from 'src/app/shared/site-index';
 
 /** The drawn figure each automation section projects into its figure slot. */
 export type AutomationFigure = 'process' | 'loop' | 'rack' | 'integration';
@@ -73,9 +74,19 @@ export class AutomationComponent {
 
   readonly captions = FIGURE_CAPTIONS;
 
-  readonly contents: ContentsItem[] = this.sections.map(
-    ({ id, tag, title }) => ({ id, tag, key: title })
-  );
+  /** The closing reason sheet: a section of this page, not of the site index. */
+  readonly sheet: ContentsItem = {
+    id: 'a-05',
+    tag: 'A-05',
+    key: 'GLOBAL.AUTOMATION_OUTRO',
+    params: this.params,
+  };
+
+  /** Every section with an H2, for the rail and the contents row. */
+  readonly contents: ContentsItem[] = [
+    ...sitePage('/automation').sections,
+    this.sheet,
+  ];
 
   readonly outroItems$: Observable<TitledText[]> = this.utils.streamTitledList(
     'GLOBAL.AUTOMATION_OUTRO_TEXT'

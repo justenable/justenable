@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideTranslateService, TranslateService } from '@ngx-translate/core';
+import { FakeIntersectionObserver } from 'src/testing/intersection-observer';
+import { stubReducedMotion } from 'src/testing/motion';
 import { SharedModule } from '../../shared.module';
 
 @Component({
@@ -18,6 +20,8 @@ describe('FigureComponent', () => {
   let element: HTMLElement;
 
   beforeEach(() => {
+    stubReducedMotion(false);
+    FakeIntersectionObserver.install();
     TestBed.configureTestingModule({
       declarations: [HostComponent],
       imports: [SharedModule],
@@ -29,6 +33,14 @@ describe('FigureComponent', () => {
     fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
     element = fixture.nativeElement;
+  });
+
+  afterEach(() => FakeIntersectionObserver.restore());
+
+  it('reveals the figure on scroll, which starts the draw-in', () => {
+    const figure = element.querySelector('figure')!;
+    expect(figure.classList.contains('reveal')).toBeTrue();
+    expect(FakeIntersectionObserver.instances[0].observed).toEqual([figure]);
   });
 
   it('projects the drawing inside a figure with the translated caption', () => {

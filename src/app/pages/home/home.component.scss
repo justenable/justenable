@@ -2,6 +2,73 @@
   display: block;
 }
 
+// The hero's load choreography: the text rises in first, then the mimic runs
+// its lamp test from 300 ms. It keys on html.motion, which the pre-paint
+// script in index.html adds unless the visitor prefers reduced motion, so the
+// animations start on the prerendered first paint (a class bound after
+// hydration would show the finished hero, hide it, then animate) and run
+// again whenever a client-side navigation creates the hero. Every hidden
+// start value lives in a keyframe `from` block under that class, so HTML
+// without the script and reduced-motion visitors see the finished hero.
+// Timeline: eyebrow 0, title 80, rule 240, tagline 320, buttons 400 ms, each
+// 480 ms; the mimic is done at 1.4 s, its signals by 3.1 s.
+:host-context(html.motion) .hero {
+  .hero__eyebrow,
+  .hero__title,
+  .hero__tagline,
+  .hero__actions {
+    animation: hero-rise 480ms var(--ease-out) both;
+  }
+
+  .hero__title {
+    animation-delay: 80ms;
+  }
+
+  .hero__rule {
+    transform-origin: left;
+    animation: hero-rule 480ms var(--ease-out) 240ms both;
+  }
+
+  .hero__tagline {
+    animation-delay: 320ms;
+  }
+
+  .hero__actions {
+    animation-delay: 400ms;
+  }
+
+  app-mimic {
+    --lamp-test-delay: 300ms;
+  }
+}
+
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes hero-rule {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+// Belt and braces for a preference that changes after the page was marked.
+@media (prefers-reduced-motion: reduce) {
+  :host-context(html.motion) .hero * {
+    animation: none !important;
+  }
+}
+
 // Industries strip (spec 4.13): four cells on one plate, separated by lines
 // like a terminal block. The cells keep the row height so the separators run
 // the full height; names may run three lines (Zulu FMCG is 48 characters).
@@ -31,5 +98,49 @@
     &:last-child {
       border-right: 0;
     }
+  }
+}
+
+// Site index: one plate, a column per service page, every numbered section a
+// 48px row. Rows are separated like terminal cells; from md the two columns
+// sit side by side with a rule between them, and the header row is the
+// tinted sheet header the reason sheet uses.
+.site-index__head {
+  padding: 14px 20px;
+  background: rgb(var(--color-accent-soft));
+}
+
+.site-index__row {
+  border-top: 1px solid rgb(var(--color-border));
+}
+
+.site-index__column + .site-index__column {
+  border-top: 1px solid rgb(var(--color-border));
+
+  @screen md {
+    border-top: 0;
+    border-left: 1px solid rgb(var(--color-border));
+  }
+}
+
+.site-index__link span:not(.tag) {
+  overflow-wrap: anywhere;
+}
+
+// The rows fill their column edge to edge and the plate clips to its rounded
+// corners, so the global outline, drawn 2px outside the row, would lose its
+// outer edges. Drawn 2px inside instead: same colour and weight, whole ring.
+.site-index__link:focus-visible {
+  outline-offset: -2px;
+}
+
+// The trailing arrow nudges like the ghost button's.
+@media (prefers-reduced-motion: no-preference) {
+  .site-index__arrow {
+    transition: transform var(--dur-2) var(--ease-out);
+  }
+
+  .site-index__link:hover .site-index__arrow {
+    transform: translateX(4px);
   }
 }

@@ -5,7 +5,10 @@ import {
   TranslatePipe,
   TranslateService,
 } from '@ngx-translate/core';
+import { RevealDirective } from 'src/app/directives/reveal.directive';
 import { TitledText } from 'src/app/models/titled-text.model';
+import { FakeIntersectionObserver } from 'src/testing/intersection-observer';
+import { stubReducedMotion } from 'src/testing/motion';
 import { ReasonSheetComponent } from './reason-sheet.component';
 
 @Component({
@@ -36,8 +39,15 @@ describe('ReasonSheetComponent', () => {
   let element: HTMLElement;
 
   beforeEach(() => {
+    stubReducedMotion(false);
+    FakeIntersectionObserver.install();
     TestBed.configureTestingModule({
-      declarations: [ReasonSheetComponent, HostComponent, StaticIdHostComponent],
+      declarations: [
+        ReasonSheetComponent,
+        RevealDirective,
+        HostComponent,
+        StaticIdHostComponent,
+      ],
       imports: [TranslatePipe],
       providers: [provideTranslateService()],
     });
@@ -53,6 +63,14 @@ describe('ReasonSheetComponent', () => {
     host = fixture.componentInstance;
     element = fixture.nativeElement;
     fixture.detectChanges();
+  });
+
+  afterEach(() => FakeIntersectionObserver.restore());
+
+  it('reveals the whole sheet on scroll', () => {
+    const section = element.querySelector('section')!;
+    expect(section.classList.contains('reveal')).toBeTrue();
+    expect(FakeIntersectionObserver.instances[0].observed).toEqual([section]);
   });
 
   it('renders the heading and an empty sheet before the items arrive', () => {

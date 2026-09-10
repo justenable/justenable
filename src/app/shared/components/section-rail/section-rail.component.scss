@@ -1,0 +1,45 @@
+// Only the xl layout has room for the rail; below it the title block's
+// contents row is the in-page navigation. Sticky 96px under the header, and
+// start-aligned so the grid area does not stretch it to the row's height,
+// which would leave it nothing to stick within. The top margin lines its
+// label up with the first section marker; a margin, not padding, so the
+// stuck rail still sits at 96px.
+:host {
+  @apply sticky top-24 hidden self-start xl:block;
+  margin-top: var(--section-y);
+}
+
+.rail__label {
+  @apply mb-2;
+}
+
+// One row per section, ruled like the rows of a sheet.
+.rail__list {
+  @apply border-t border-border;
+  > li {
+    @apply border-b border-border;
+  }
+}
+
+// Lamp, tag and name on one line, top-aligned so a name that wraps hangs
+// under its own first line.
+.rail__link {
+  @apply grid min-h-[44px] items-start gap-x-2.5 py-2.5 text-body-s text-ink-muted hover:text-ink motion-safe:transition-colors motion-safe:duration-1;
+  grid-template-columns: auto auto 1fr;
+}
+.rail__link.is-active {
+  @apply text-ink;
+  .rail__name {
+    font-weight: 500;
+  }
+}
+
+// 21px is the name's line box (14px at 1.5): the 8px lamp centres on it
+// and the 13px tag shares its baseline.
+.rail__lamp {
+  margin-top: 6.5px;
+}
+.rail__tag {
+  @apply text-ink-muted;
+  line-height: 21px;
+}

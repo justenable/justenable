@@ -3,7 +3,7 @@ import { provideRouter } from '@angular/router';
 import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { CONTACT } from 'src/app/shared/contact';
 import { SharedModule } from 'src/app/shared/shared.module';
-import { breakParts, ContactUsComponent } from './contact-us.component';
+import { breakParts, ContactUsComponent, DIRECTIONS_URL } from './contact-us.component';
 
 describe('breakParts', () => {
   it('splits an email address only after the @', () => {
@@ -16,6 +16,14 @@ describe('breakParts', () => {
   });
 });
 
+describe('DIRECTIONS_URL', () => {
+  it('asks Google Maps for directions to the street address', () => {
+    expect(DIRECTIONS_URL).toBe(
+      'https://www.google.com/maps/dir/?api=1&destination=68+Glenwood+Rd%2C+Lynnwood+Glen%2C+Pretoria%2C+0081'
+    );
+  });
+});
+
 describe('ContactUsComponent', () => {
   let component: ContactUsComponent;
   let fixture: ComponentFixture<ContactUsComponent>;
@@ -23,6 +31,15 @@ describe('ContactUsComponent', () => {
 
   const rows = (): HTMLAnchorElement[] =>
     Array.from(element.querySelectorAll('ul.plate > li > a'));
+  const query = (selector: string): Element => {
+    const found = element.querySelector(selector);
+    if (!found) {
+      throw new Error(`Missing ${selector}`);
+    }
+    return found;
+  };
+  const follows = (later: Element, earlier: Element): boolean =>
+    (earlier.compareDocumentPosition(later) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -41,6 +58,7 @@ describe('ContactUsComponent', () => {
       'GLOBAL.NEW_WINDOW': '(opens in a new tab)',
       'GLOBAL.OPEN_IN_MAPS': 'Open in Google Maps',
       'CONTACT.MAP_TITLE': 'Map showing the office',
+      'CONTACT.DIRECTIONS': 'Get directions',
     });
     translate.use('en');
     fixture = TestBed.createComponent(ContactUsComponent);
@@ -128,27 +146,68 @@ describe('ContactUsComponent', () => {
     }
   });
 
-  it('opens Google Maps in a new tab with noopener and an sr-only note', () => {
+  it('opens every external link in a new tab with noopener and an sr-only note', () => {
     const external = Array.from(
       element.querySelectorAll<HTMLAnchorElement>('a[target="_blank"]')
     );
-    expect(external.length).toBe(2);
+    expect(external.map((link) => link.getAttribute('href'))).toEqual([
+      component.mapsUrl,
+      component.mapsUrl,
+      component.directionsUrl,
+    ]);
     for (const link of external) {
-      expect(link.getAttribute('href')).toBe(component.mapsUrl);
       expect(link.getAttribute('rel')).toBe('noopener');
       expect(link.querySelector('.sr-only')?.textContent?.trim()).toBe(
         '(opens in a new tab)'
       );
     }
-    expect(external[1].classList.contains('btn--ghost')).toBeTrue();
-    expect(external[1].textContent).toContain('Open in Google Maps');
   });
 
-  it('gives the map iframe a translated title inside a screen', () => {
+  it('offers "Open in Google Maps" and "Get directions" as ghost links under the map', () => {
+    const [maps, directions] = Array.from(
+      element.querySelectorAll<HTMLAnchorElement>('a.btn--ghost')
+    );
+    expect(maps.getAttribute('href')).toBe(component.mapsUrl);
+    expect(maps.textContent).toContain('Open in Google Maps');
+    expect(directions.getAttribute('href')).toBe(DIRECTIONS_URL);
+    expect(directions.getAttribute('target')).toBe('_blank');
+    expect(directions.getAttribute('rel')).toBe('noopener');
+    expect(directions.textContent).toContain('Get directions');
+    expect(directions.querySelector('[aria-hidden="true"]')?.textContent?.trim()).toBe('→');
+    expect(directions.querySelector('.sr-only')?.textContent?.trim()).toBe(
+      '(opens in a new tab)'
+    );
+    // Both follow the map: the address block sits between the screen and the links.
+    const screen = query('.screen');
+    expect(follows(maps, screen)).toBeTrue();
+    expect(follows(directions, screen)).toBeTrue();
+  });
+
+  it('gives the map iframe a translated title inside a screen that fills the band', () => {
     const iframe = element.querySelector('.screen > iframe');
     expect(iframe?.getAttribute('title')).toBe('Map showing the office');
     expect(iframe?.getAttribute('loading')).toBe('lazy');
+    expect(iframe?.getAttribute('referrerpolicy')).toBe('no-referrer-when-downgrade');
     expect(iframe?.getAttribute('src')).toContain('https://www.google.com/maps/embed');
+    expect(element.querySelectorAll('iframe').length).toBe(1);
+  });
+
+  it('keeps the channel list before the map in reading order and floats it over the map from lg', () => {
+    const plate = query('ul.plate');
+    const screen = query('.screen');
+    expect(follows(screen, plate)).toBeTrue();
+    expect(plate.parentElement).toBe(screen.parentElement);
+    // right-8: Google's place card sits top-left; 24rem at lg keeps the plate
+    // off the centred office pin at 1024.
+    for (const cls of [
+      'lg:absolute',
+      'lg:right-8',
+      'lg:w-[24rem]',
+      'xl:w-[27rem]',
+      'lg:shadow-popover',
+    ]) {
+      expect(plate.classList.contains(cls)).withContext(cls).toBeTrue();
+    }
   });
 
   it('renders no lamps on the contact page', () => {

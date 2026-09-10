@@ -8,6 +8,27 @@ p {
   overflow-wrap: anywhere;
 }
 
+// Hover: the plate edge firms up to border-strong and, with motion allowed,
+// the media grows 3% inside its overflow-hidden slot. No shadow and no card
+// transform: plates sit on the enclosure, they do not float.
+.service-card:hover {
+  border-color: rgb(var(--color-border-strong));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .service-card {
+    transition: border-color var(--dur-1) var(--ease-std);
+  }
+
+  .service-card__media {
+    transition: transform 500ms var(--ease-out);
+  }
+
+  .service-card:hover .service-card__media {
+    transform: scale(1.03);
+  }
+}
+
 // Photographs are the only non-token colour on the page; dim them a touch at night.
 :host-context(.dark) img {
   filter: brightness(0.92);

@@ -7,28 +7,33 @@
   [contents]="contents"
 />
 
-@for (section of sections; track section.id; let odd = $odd) {
-  <app-feature-section
-    [tag]="section.tag"
-    [id]="section.id"
-    [titleKey]="section.title"
-    [reverse]="odd"
-  >
-    <ul body class="dash-list">
-      @for (text of section.texts; track text) {
-        <li>{{ text | translate }}</li>
-      }
-    </ul>
-    <app-timeline-glyph figure [variant]="section.figure.glyph" />
-  </app-feature-section>
-}
+<div class="page-rail">
+  <app-section-rail [items]="contents" />
+  <div>
+    @for (section of sections; track section.id; let odd = $odd) {
+      <app-feature-section
+        [tag]="section.tag"
+        [id]="section.id"
+        [titleKey]="section.title"
+        [reverse]="odd"
+      >
+        <ul body class="dash-list">
+          @for (text of section.texts; track text) {
+            <li>{{ text | translate }}</li>
+          }
+        </ul>
+        <app-timeline-glyph figure [variant]="section.figure.glyph" />
+      </app-feature-section>
+    }
 
-<app-reason-sheet
-  tag="M-06"
-  [id]="'m-06'"
-  titleKey="GLOBAL.MAINTENANCE_OUTRO"
-  [titleParams]="params"
-  [items]="outroItems$ | async"
-/>
+    <app-reason-sheet
+      [tag]="sheet.tag"
+      [id]="sheet.id"
+      [titleKey]="sheet.key"
+      [titleParams]="sheet.params"
+      [items]="outroItems$ | async"
+    />
 
-<app-cta-band textKey="GLOBAL.MAINTENANCE_OUTRO_SUMMARY" />
+    <app-cta-band textKey="GLOBAL.MAINTENANCE_OUTRO_SUMMARY" />
+  </div>
+</div>

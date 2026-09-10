@@ -13,78 +13,108 @@
       Every strip shares one time axis at y=152 (ticks at x=80..400, step 80,
       labels at y=180) so the five figures read as sheets from one schedule.
       The dashed verticals project the current event onto that axis.
+
+      Draw-in (styles/components.scss, .figure.is-revealed): every solid
+      stroke carries pathLength="1" and its place in the drawing order in
+      --i (60 ms apart, 700 ms each): the strip, its events, then the axis.
+      --steps on the strip group is the last index, so --draw-end (the
+      component style) covers the slowest line. The marker then slides in
+      along its strip from the strip's start (--slide-x is the offset back
+      to it) while it fades in, and the projections follow once it has
+      settled.
     -->
     @switch (variant) {
       @case ('preventive') {
-        <line x1="16" y1="64" x2="464" y2="64" />
-        <path d="M80 48v32M160 48v32M240 48v32M320 48v32M400 48v32" />
-        <circle class="glyph__marker" cx="240" cy="64" r="5" stroke-width="1.25" />
-        <line x1="240" y1="80" x2="240" y2="144" stroke-dasharray="2 4" />
-        <line x1="16" y1="152" x2="464" y2="152" />
-        <path d="M80 144v16M160 144v16M240 144v16M320 144v16M400 144v16" />
-        <text class="figure-tag" x="80" y="180" text-anchor="middle">30 D</text>
-        <text class="figure-tag" x="160" y="180" text-anchor="middle">60 D</text>
-        <text class="figure-tag" x="240" y="180" text-anchor="middle">90 D</text>
-        <text class="figure-tag" x="320" y="180" text-anchor="middle">120 D</text>
-        <text class="figure-tag" x="400" y="180" text-anchor="middle">150 D</text>
+        <g style="--steps: 3">
+          <line x1="16" y1="64" x2="464" y2="64" pathLength="1" style="--i: 0" />
+          <path d="M80 48v32M160 48v32M240 48v32M320 48v32M400 48v32" pathLength="1" style="--i: 1" />
+          <line x1="16" y1="152" x2="464" y2="152" pathLength="1" style="--i: 2" />
+          <path d="M80 144v16M160 144v16M240 144v16M320 144v16M400 144v16" pathLength="1" style="--i: 3" />
+          <g class="glyph__slide" style="--slide-x: -224px">
+            <circle class="glyph__marker" cx="240" cy="64" r="5" stroke-width="1.25" />
+          </g>
+          <line class="glyph__projection" x1="240" y1="80" x2="240" y2="144" stroke-dasharray="2 4" />
+          <text class="figure-tag" x="80" y="180" text-anchor="middle">30 D</text>
+          <text class="figure-tag" x="160" y="180" text-anchor="middle">60 D</text>
+          <text class="figure-tag" x="240" y="180" text-anchor="middle">90 D</text>
+          <text class="figure-tag" x="320" y="180" text-anchor="middle">120 D</text>
+          <text class="figure-tag" x="400" y="180" text-anchor="middle">150 D</text>
+        </g>
       }
       @case ('corrective') {
-        <line x1="16" y1="64" x2="240" y2="64" />
-        <path d="M248 56l16 16M248 72l16-16" />
-        <circle class="glyph__marker" cx="336" cy="64" r="5" stroke-width="1.25" />
-        <line x1="352" y1="64" x2="464" y2="64" />
-        <line x1="256" y1="80" x2="256" y2="144" stroke-dasharray="2 4" />
-        <line x1="336" y1="80" x2="336" y2="144" stroke-dasharray="2 4" />
-        <line x1="16" y1="152" x2="464" y2="152" />
-        <path d="M256 144v16M336 144v16" />
-        <text class="figure-tag" x="296" y="180" text-anchor="middle">MTTR</text>
+        <g style="--steps: 4">
+          <line x1="16" y1="64" x2="240" y2="64" pathLength="1" style="--i: 0" />
+          <path d="M248 56l16 16M248 72l16-16" pathLength="1" style="--i: 1" />
+          <line x1="352" y1="64" x2="464" y2="64" pathLength="1" style="--i: 2" />
+          <line x1="16" y1="152" x2="464" y2="152" pathLength="1" style="--i: 3" />
+          <path d="M256 144v16M336 144v16" pathLength="1" style="--i: 4" />
+          <g class="glyph__slide" style="--slide-x: -320px">
+            <circle class="glyph__marker" cx="336" cy="64" r="5" stroke-width="1.25" />
+          </g>
+          <line class="glyph__projection" x1="256" y1="80" x2="256" y2="144" stroke-dasharray="2 4" />
+          <line class="glyph__projection" x1="336" y1="80" x2="336" y2="144" stroke-dasharray="2 4" />
+          <text class="figure-tag" x="296" y="180" text-anchor="middle">MTTR</text>
+        </g>
       }
       @case ('predictive') {
-        <polyline points="32,136 128,128 224,112 304,80" />
-        <circle class="glyph__marker" cx="304" cy="80" r="5" stroke-width="1.25" />
-        <!-- The projection continues the last measured slope (-0.4) and the x sits on it. -->
-        <line x1="316" y1="75.2" x2="408" y2="38.4" stroke-dasharray="2 4" />
-        <path class="text-ink-subtle" d="M416 24l16 16M416 40l16-16" />
-        <line x1="304" y1="96" x2="304" y2="144" stroke-dasharray="2 4" />
-        <line x1="424" y1="48" x2="424" y2="144" stroke-dasharray="2 4" />
-        <line x1="16" y1="152" x2="464" y2="152" />
-        <path d="M32 144v16M304 144v16M424 144v16" />
-        <text class="figure-tag" x="32" y="180" text-anchor="middle">T0</text>
-        <text class="figure-tag" x="304" y="180" text-anchor="middle">T1</text>
-        <text class="figure-tag" x="424" y="180" text-anchor="middle">T2</text>
+        <g style="--steps: 2">
+          <polyline points="32,136 128,128 224,112 304,80" pathLength="1" style="--i: 0" />
+          <line x1="16" y1="152" x2="464" y2="152" pathLength="1" style="--i: 1" />
+          <path d="M32 144v16M304 144v16M424 144v16" pathLength="1" style="--i: 2" />
+          <!-- The marker travels the measured trend itself (glyph-slide-trend keyframes). -->
+          <g class="glyph__slide glyph__slide--trend">
+            <circle class="glyph__marker" cx="304" cy="80" r="5" stroke-width="1.25" />
+          </g>
+          <!-- The projection continues the last measured slope (-0.4) and the x sits on it. -->
+          <line class="glyph__projection" x1="316" y1="75.2" x2="408" y2="38.4" stroke-dasharray="2 4" />
+          <path class="glyph__projection text-ink-subtle" d="M416 24l16 16M416 40l16-16" />
+          <line class="glyph__projection" x1="304" y1="96" x2="304" y2="144" stroke-dasharray="2 4" />
+          <line class="glyph__projection" x1="424" y1="48" x2="424" y2="144" stroke-dasharray="2 4" />
+          <text class="figure-tag" x="32" y="180" text-anchor="middle">T0</text>
+          <text class="figure-tag" x="304" y="180" text-anchor="middle">T1</text>
+          <text class="figure-tag" x="424" y="180" text-anchor="middle">T2</text>
+        </g>
       }
       @case ('asset') {
-        <text class="figure-tag" x="32" y="40">P-101</text>
-        <path d="M40 56h-8v48h8M440 56h8v48h-8" />
-        <line x1="32" y1="80" x2="448" y2="80" />
-        <circle class="glyph__ring" cx="112" cy="80" r="5" stroke-width="1.25" />
-        <circle class="glyph__ring" cx="208" cy="80" r="5" stroke-width="1.25" />
-        <circle class="glyph__ring" cx="304" cy="80" r="5" stroke-width="1.25" />
-        <circle class="glyph__marker" cx="400" cy="80" r="5" stroke-width="1.25" />
-        <line x1="400" y1="96" x2="400" y2="144" stroke-dasharray="2 4" />
-        <line x1="16" y1="152" x2="464" y2="152" />
-        <path d="M32 144v16M240 144v16M448 144v16" />
-        <text class="figure-tag" x="32" y="180" text-anchor="middle">Y0</text>
-        <text class="figure-tag" x="240" y="180" text-anchor="middle">Y5</text>
-        <text class="figure-tag" x="448" y="180" text-anchor="middle">Y10</text>
+        <g style="--steps: 6">
+          <text class="figure-tag" x="32" y="40">P-101</text>
+          <path d="M40 56h-8v48h8M440 56h8v48h-8" pathLength="1" style="--i: 0" />
+          <line x1="32" y1="80" x2="448" y2="80" pathLength="1" style="--i: 1" />
+          <circle class="glyph__ring" cx="112" cy="80" r="5" stroke-width="1.25" pathLength="1" style="--i: 2" />
+          <circle class="glyph__ring" cx="208" cy="80" r="5" stroke-width="1.25" pathLength="1" style="--i: 3" />
+          <circle class="glyph__ring" cx="304" cy="80" r="5" stroke-width="1.25" pathLength="1" style="--i: 4" />
+          <line x1="16" y1="152" x2="464" y2="152" pathLength="1" style="--i: 5" />
+          <path d="M32 144v16M240 144v16M448 144v16" pathLength="1" style="--i: 6" />
+          <g class="glyph__slide" style="--slide-x: -368px">
+            <circle class="glyph__marker" cx="400" cy="80" r="5" stroke-width="1.25" />
+          </g>
+          <line class="glyph__projection" x1="400" y1="96" x2="400" y2="144" stroke-dasharray="2 4" />
+          <text class="figure-tag" x="32" y="180" text-anchor="middle">Y0</text>
+          <text class="figure-tag" x="240" y="180" text-anchor="middle">Y5</text>
+          <text class="figure-tag" x="448" y="180" text-anchor="middle">Y10</text>
+        </g>
       }
       @case ('facility') {
-        <text class="figure-tag" x="16" y="45">HVAC</text>
-        <text class="figure-tag" x="16" y="85">LV</text>
-        <text class="figure-tag" x="16" y="125">FP</text>
-        <path d="M64 40h400M64 80h400M64 120h400" />
-        <path d="M80 32v16M240 32v16M400 32v16" />
-        <path d="M120 72v16M280 72v16M440 72v16" />
-        <path d="M160 112v16M320 112v16" />
-        <circle class="glyph__marker" cx="280" cy="80" r="5" stroke-width="1.25" />
-        <line x1="280" y1="96" x2="280" y2="144" stroke-dasharray="2 4" />
-        <line x1="16" y1="152" x2="464" y2="152" />
-        <path d="M80 144v16M160 144v16M240 144v16M320 144v16M400 144v16" />
-        <text class="figure-tag" x="80" y="180" text-anchor="middle">W1</text>
-        <text class="figure-tag" x="160" y="180" text-anchor="middle">W2</text>
-        <text class="figure-tag" x="240" y="180" text-anchor="middle">W3</text>
-        <text class="figure-tag" x="320" y="180" text-anchor="middle">W4</text>
-        <text class="figure-tag" x="400" y="180" text-anchor="middle">W5</text>
+        <g style="--steps: 5">
+          <text class="figure-tag" x="16" y="45">HVAC</text>
+          <text class="figure-tag" x="16" y="85">LV</text>
+          <text class="figure-tag" x="16" y="125">FP</text>
+          <path d="M64 40h400M64 80h400M64 120h400" pathLength="1" style="--i: 0" />
+          <path d="M80 32v16M240 32v16M400 32v16" pathLength="1" style="--i: 1" />
+          <path d="M120 72v16M280 72v16M440 72v16" pathLength="1" style="--i: 2" />
+          <path d="M160 112v16M320 112v16" pathLength="1" style="--i: 3" />
+          <line x1="16" y1="152" x2="464" y2="152" pathLength="1" style="--i: 4" />
+          <path d="M80 144v16M160 144v16M240 144v16M320 144v16M400 144v16" pathLength="1" style="--i: 5" />
+          <g class="glyph__slide" style="--slide-x: -216px">
+            <circle class="glyph__marker" cx="280" cy="80" r="5" stroke-width="1.25" />
+          </g>
+          <line class="glyph__projection" x1="280" y1="96" x2="280" y2="144" stroke-dasharray="2 4" />
+          <text class="figure-tag" x="80" y="180" text-anchor="middle">W1</text>
+          <text class="figure-tag" x="160" y="180" text-anchor="middle">W2</text>
+          <text class="figure-tag" x="240" y="180" text-anchor="middle">W3</text>
+          <text class="figure-tag" x="320" y="180" text-anchor="middle">W4</text>
+          <text class="figure-tag" x="400" y="180" text-anchor="middle">W5</text>
+        </g>
       }
     }
   </svg>

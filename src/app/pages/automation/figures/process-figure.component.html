@@ -6,32 +6,40 @@
   stroke-width="1.5"
   stroke-linecap="round"
   stroke-linejoin="round"
+  style="--steps: 8"
 >
   <!-- Automated path: solid. Row one runs left to right into the decision,
-       then continues on row two. -->
-  <line x1="144" y1="104" x2="192" y2="104" />
-  <path d="M186 100l6 4-6 4" />
-  <line x1="288" y1="104" x2="336" y2="104" />
-  <path d="M330 100l6 4-6 4" />
-  <path d="M368 136v24H240v32" />
-  <path d="M236 186l4 6 4-6" />
-  <line x1="288" y1="224" x2="336" y2="224" />
-  <path d="M330 220l6 4-6 4" />
+       then continues on row two. Draw order (--i) follows the flow: each box,
+       then the arrow leaving it. -->
+  <line x1="144" y1="104" x2="192" y2="104" pathLength="1" style="--i: 1" />
+  <path d="M186 100l6 4-6 4" pathLength="1" style="--i: 1" />
+  <line x1="288" y1="104" x2="336" y2="104" pathLength="1" style="--i: 3" />
+  <path d="M330 100l6 4-6 4" pathLength="1" style="--i: 3" />
+  <path d="M368 136v24H240v32" pathLength="1" style="--i: 5" />
+  <path d="M236 186l4 6 4-6" pathLength="1" style="--i: 5" />
+  <line x1="288" y1="224" x2="336" y2="224" pathLength="1" style="--i: 7" />
+  <path d="M330 220l6 4-6 4" pathLength="1" style="--i: 7" />
 
-  <!-- Manual bypass: dotted, back from the decision to the request. -->
-  <path d="M368 72V40H96v32" stroke-dasharray="2 4" />
-  <path d="M92 66l4 6 4-6" />
+  <!-- Manual bypass: dotted, back from the decision to the request. A dotted
+       line cannot draw (pathLength="1" would rescale its dots to the whole
+       path), so it and its arrowhead appear last, the exception after the
+       rule. -->
+  <path class="figure-late" d="M368 72V40H96v32" stroke-dasharray="2 4" />
+  <path class="figure-late" d="M92 66l4 6 4-6" />
 
-  <rect class="face" x="48" y="72" width="96" height="64" rx="3" />
+  <rect class="face" x="48" y="72" width="96" height="64" rx="3" pathLength="1" style="--i: 0" />
   <text class="figure-tag" x="96" y="109" text-anchor="middle">REQUEST</text>
-  <rect class="face" x="192" y="72" width="96" height="64" rx="3" />
+  <rect class="face" x="192" y="72" width="96" height="64" rx="3" pathLength="1" style="--i: 2" />
   <text class="figure-tag" x="240" y="109" text-anchor="middle">CHECK</text>
-  <path class="face" d="M368 72l32 32-32 32-32-32z" />
-  <rect class="face" x="192" y="192" width="96" height="64" rx="3" />
+  <path class="face" d="M368 72l32 32-32 32-32-32z" pathLength="1" style="--i: 4" />
+  <rect class="face" x="192" y="192" width="96" height="64" rx="3" pathLength="1" style="--i: 6" />
   <text class="figure-tag" x="240" y="229" text-anchor="middle">APPROVE</text>
-  <rect class="face" x="336" y="192" width="96" height="64" rx="3" />
+  <rect class="face" x="336" y="192" width="96" height="64" rx="3" pathLength="1" style="--i: 8" />
   <text class="figure-tag" x="384" y="229" text-anchor="middle">FILE</text>
 
-  <!-- The step currently running. -->
-  <circle class="figure-marker" cx="240" cy="256" r="5" />
+  <!-- The step currently running. The group carries the one-time walk from
+       REQUEST to APPROVE so the marker's own fade-in stays untouched. -->
+  <g class="running-step">
+    <circle class="figure-marker" cx="240" cy="256" r="5" />
+  </g>
 </svg>

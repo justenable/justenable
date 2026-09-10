@@ -38,7 +38,7 @@ module.exports = {
         mono: ['"IBM Plex Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Consolas', 'monospace'],
       },
       fontSize: {
-        'display-xl': ['clamp(2.25rem, 1.5rem + 3.5vw, 4rem)', { lineHeight: '1.02', letterSpacing: '-0.02em', fontWeight: '700' }],
+        'display-xl': ['clamp(2.25rem, 1.5rem + 3.5vw, 5rem)', { lineHeight: '1.02', letterSpacing: '-0.02em', fontWeight: '700' }],
         'display-l': ['clamp(1.75rem, 1.2rem + 2.2vw, 2.75rem)', { lineHeight: '1.1', letterSpacing: '-0.015em', fontWeight: '650' }],
         'heading-m': ['clamp(1.5rem, 1.15rem + 1.5vw, 2.125rem)', { lineHeight: '1.15', letterSpacing: '-0.01em', fontWeight: '650' }],
         'heading-s': ['clamp(1.25rem, 1.05rem + 0.8vw, 1.5rem)', { lineHeight: '1.2', letterSpacing: '-0.01em', fontWeight: '600' }],
@@ -53,10 +53,10 @@ module.exports = {
         button: ['0.9375rem', { lineHeight: '1', letterSpacing: '0.01em', fontWeight: '600' }],
         nav: ['0.9375rem', { lineHeight: '1', fontWeight: '500' }],
       },
-      maxWidth: { container: '75rem' },
+      maxWidth: { container: '90rem' },
       borderRadius: { 1: 'var(--radius-1)', 2: 'var(--radius-2)' },
-      boxShadow: { popover: 'var(--shadow-popover)' },
-      transitionDuration: { 1: 'var(--dur-1)', 2: 'var(--dur-2)' },
+      boxShadow: { popover: 'var(--shadow-popover)', header: 'var(--shadow-header)' },
+      transitionDuration: { 1: 'var(--dur-1)', 2: 'var(--dur-2)', reveal: 'var(--dur-reveal)' },
       transitionTimingFunction: { out: 'var(--ease-out)', std: 'var(--ease-std)' },
       zIndex: {
         panel: 'var(--z-panel)',

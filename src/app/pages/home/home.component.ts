@@ -1,14 +1,21 @@
-import { isPlatformBrowser } from '@angular/common';
-import { Component, inject, PLATFORM_ID } from '@angular/core';
+import { Component } from '@angular/core';
 import { Industry } from 'src/app/models/industry.model';
 import { ServiceCard } from 'src/app/models/service-card.model';
-import { readStorage, writeStorage } from 'src/app/shared/storage';
-import { NODES, TERMINALS } from './mimic/mimic.component';
+import { SITE_INDEX, SitePage } from 'src/app/shared/site-index';
+import {
+  NODE_NAME_KEYS,
+  NODES,
+  TERMINAL_NAME_KEYS,
+  TERMINALS,
+} from './mimic/mimic.component';
 
-/** Session flag: the lamp test runs once per browser session. */
-export const LAMP_TEST_STORAGE_KEY = 'je:lamp-test';
-const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)';
+/** Stagger between the rows of one site index column, in ms. */
+export const INDEX_STAGGER = 60;
 
+/**
+ * The hero choreography and the lamp test are pure CSS keyed on `html.motion`
+ * (see index.html), so this component holds only the page's data.
+ */
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -17,89 +24,69 @@ const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)';
 })
 export class HomeComponent {
   /**
-   * Bound as `.is-testing` on the mimic. Decided here, in the constructor,
-   * so the hydrating render already carries the hidden start state: a class
-   * added after that render would show the finished picture, hide it, then
-   * animate.
-   */
-  readonly testing: boolean;
-
-  /**
    * The cards and the industries strip are the mimic's legend, so their tags
-   * are read from the mimic's node and terminal lists rather than retyped.
+   * and names are read from the mimic's node and terminal lists rather than
+   * retyped.
    */
   readonly services: ServiceCard[] = [
     {
       tag: NODES[0],
-      titleKey: 'GLOBAL.DESIGN_ENGINEERING',
+      titleKey: NODE_NAME_KEYS[0],
       descriptionKey: 'GLOBAL.DESIGN_ENGINEERING_DESCRIPTION',
       media: {
         kind: 'photo',
         src: 'assets/img/design-engineering.webp',
         altKey: 'IMG.DESIGN_ENGINEERING_ALT',
-        // Keeps the calipers and the bearing inside the 4:3 crop.
-        position: '50% 40%',
-        width: 634,
-        height: 953,
+        position: '50% 50%',
+        width: 920,
+        height: 690,
       },
     },
     {
       tag: NODES[1],
-      titleKey: 'GLOBAL.SOFTWARE_ENGINEERING',
+      titleKey: NODE_NAME_KEYS[1],
       descriptionKey: 'GLOBAL.SOFTWARE_ENGINEERING_DESCRIPTION',
       media: { kind: 'ladder' },
     },
     {
       tag: NODES[2],
-      titleKey: 'GLOBAL.PROJECT_MANAGEMENT',
+      titleKey: NODE_NAME_KEYS[2],
       descriptionKey: 'GLOBAL.PROJECT_MANAGEMENT_DESCRIPTION',
       media: {
         kind: 'photo',
-        src: 'assets/img/project-management-2.webp',
+        src: 'assets/img/project-management.webp',
         altKey: 'IMG.PROJECT_MANAGEMENT_ALT',
         position: '50% 50%',
-        width: 850,
-        height: 540,
+        width: 920,
+        height: 690,
       },
     },
     {
       tag: NODES[3],
-      titleKey: 'GLOBAL.MAINTENANCE_AND_GENERAL_WORK',
+      titleKey: NODE_NAME_KEYS[3],
       descriptionKey: 'GLOBAL.MAINTENANCE_AND_GENERAL_WORK_DESCRIPTION',
       media: {
         kind: 'photo',
         src: 'assets/img/maintenance-and-general-work.webp',
         altKey: 'IMG.MAINTENANCE_ALT',
-        // Keeps the hands and the box inside the 4:3 crop.
-        position: '65% 50%',
-        width: 1431,
-        height: 955,
+        position: '50% 50%',
+        width: 920,
+        height: 690,
       },
     },
   ];
 
-  readonly industries: Industry[] = [
-    { tag: TERMINALS[0], nameKey: 'GLOBAL.FMCG' },
-    { tag: TERMINALS[1], nameKey: 'GLOBAL.PET' },
-    { tag: TERMINALS[2], nameKey: 'GLOBAL.MINING' },
-    { tag: TERMINALS[3], nameKey: 'GLOBAL.OIL_AND_GAS' },
-  ];
+  readonly industries: Industry[] = TERMINALS.map((tag, i) => ({
+    tag,
+    nameKey: TERMINAL_NAME_KEYS[i],
+  }));
 
-  private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+  /** The site index: every numbered section of the two service pages. */
+  readonly siteIndex = SITE_INDEX;
+  readonly indexStagger = INDEX_STAGGER;
 
-  constructor() {
-    // Only run when the flag actually persists: with storage blocked the
-    // test would otherwise replay on every return to the home page.
-    this.testing =
-      this.isBrowser &&
-      this.lampTestPending() &&
-      writeStorage('session', LAMP_TEST_STORAGE_KEY, '1');
-  }
-
-  private lampTestPending(): boolean {
-    return (
-      readStorage('session', LAMP_TEST_STORAGE_KEY) !== '1' &&
-      !window.matchMedia(REDUCED_MOTION_QUERY).matches
-    );
+  /** Id of the eyebrow that labels a page's list in the index, e.g. `index-automation`. */
+  indexLabelId(page: SitePage): string {
+    return `index-${page.url.replace(/^\//, '')}`;
   }
 }

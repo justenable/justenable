@@ -24,7 +24,7 @@ import { SharedModule } from './shared/shared.module';
     LanguageSwitcherComponent,
     ThemeToggleComponent,
   ],
-  imports: [AppRoutingModule, BrowserModule, SharedModule],
+  imports: [AppRoutingModule.forRoot(), BrowserModule, SharedModule],
   providers: [
     provideTranslateService({
       fallbackLang: 'en',

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AboutSection } from 'src/app/models/about-section.model';
+import { ContentsItem } from 'src/app/shared/components/title-block/title-block.component';
 
 @Component({
   selector: 'app-about-us',
@@ -31,4 +32,9 @@ export class AboutUsComponent {
       figure: 'stack',
     },
   ];
+
+  /** The three rows, for the section rail (from xl) and the title block's contents row (below). */
+  readonly contents: ContentsItem[] = this.sections.map(
+    ({ id, tag, titleKey }) => ({ id, tag, key: titleKey })
+  );
 }

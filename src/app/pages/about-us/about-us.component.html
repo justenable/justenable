@@ -1,33 +1,42 @@
-<app-title-block eyebrowKey="NAVIGATION.ABOUT_US" titleKey="NAVIGATION.ABOUT_US" />
+<app-title-block
+  eyebrowKey="NAVIGATION.ABOUT_US"
+  titleKey="NAVIGATION.ABOUT_US"
+  [contents]="contents"
+/>
 
-@for (section of sections; track section.id; let odd = $odd) {
-  <app-feature-section
-    [tag]="section.tag"
-    [id]="section.id"
-    [titleKey]="section.titleKey"
-    [reverse]="odd"
-  >
-    <div body class="flex max-w-[68ch] flex-col gap-4">
-      @for (key of section.textKeys; track key) {
-        <p class="text-body text-ink-muted">{{ key | translate }}</p>
-      }
-    </div>
-    @switch (section.figure) {
-      @case ('nameplate') {
-        <app-nameplate figure />
-      }
-      @case ('office') {
-        <app-figure figure captionKey="ABOUT.FIGURE_CULTURE">
-          <app-office-figure />
-        </app-figure>
-      }
-      @case ('stack') {
-        <app-figure figure captionKey="ABOUT.FIGURE_TECHNOLOGY">
-          <app-stack-figure />
-        </app-figure>
-      }
+<div class="page-rail">
+  <app-section-rail [items]="contents" />
+  <div>
+    @for (section of sections; track section.id; let odd = $odd) {
+      <app-feature-section
+        [tag]="section.tag"
+        [id]="section.id"
+        [titleKey]="section.titleKey"
+        [reverse]="odd"
+      >
+        <div body class="flex max-w-[68ch] flex-col gap-4">
+          @for (key of section.textKeys; track key) {
+            <p class="text-body text-ink-muted">{{ key | translate }}</p>
+          }
+        </div>
+        @switch (section.figure) {
+          @case ('nameplate') {
+            <app-nameplate figure />
+          }
+          @case ('office') {
+            <app-figure figure captionKey="ABOUT.FIGURE_CULTURE">
+              <app-office-figure />
+            </app-figure>
+          }
+          @case ('stack') {
+            <app-figure figure captionKey="ABOUT.FIGURE_TECHNOLOGY">
+              <app-stack-figure />
+            </app-figure>
+          }
+        }
+      </app-feature-section>
     }
-  </app-feature-section>
-}
 
-<app-cta-band textKey="GLOBAL.CONTACT_US_TEXT" />
+    <app-cta-band textKey="GLOBAL.CONTACT_US_TEXT" />
+  </div>
+</div>

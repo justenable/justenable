@@ -9,7 +9,7 @@ import { LayoutService } from 'src/app/services/layout.service';
 import { THEME_STORAGE_KEY } from 'src/app/services/theme.service';
 import { LampComponent } from 'src/app/shared/ui/lamp/lamp.component';
 import { LogoComponent } from 'src/app/shared/ui/logo/logo.component';
-import { FOCUSABLE, SiteHeaderComponent } from './site-header.component';
+import { FOCUSABLE, SCROLLED_OFFSET, SiteHeaderComponent } from './site-header.component';
 
 @Component({ template: '', standalone: true })
 class PageStubComponent {}
@@ -110,6 +110,24 @@ describe('SiteHeaderComponent', () => {
     expect(root().querySelector('.site-header__brand')?.getAttribute('aria-label')).toBe(
       'Just Enable, home'
     );
+  });
+
+  it('marks itself scrolled once the page has moved past the offset, and stops on destroy', () => {
+    const scrollY = spyOnProperty(window, 'scrollY', 'get');
+    const scroll = (to: number) => {
+      scrollY.and.returnValue(to);
+      window.dispatchEvent(new Event('scroll'));
+    };
+
+    scroll(SCROLLED_OFFSET + 1);
+    expect(root().classList.contains('is-scrolled')).toBeTrue();
+    scroll(SCROLLED_OFFSET);
+    expect(root().classList.contains('is-scrolled')).toBeFalse();
+
+    scroll(SCROLLED_OFFSET + 1);
+    fixture.destroy();
+    scroll(0);
+    expect(root().classList.contains('is-scrolled')).toBeTrue();
   });
 
   it('marks the contact button current on /contact-us', async () => {

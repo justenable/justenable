@@ -26,15 +26,21 @@
   @apply mt-3 flex flex-wrap gap-2;
 }
 
+// Top-level rule plus a reduce override, as site-header's panel: an
+// animation opening a rule inside an at-rule keeps its unscoped name in a
+// minified build (design-system section 6).
+.lang__menu {
+  animation: lang-menu-in var(--dur-2) var(--ease-out) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .lang__menu {
+    animation: none;
+  }
+}
+
 @keyframes lang-menu-in {
   from {
     opacity: 0;
     transform: translateY(-8px);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .lang__menu {
-    animation: lang-menu-in var(--dur-2) var(--ease-out) both;
   }
 }

@@ -3,6 +3,7 @@ import { provideRouter } from '@angular/router';
 import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { TitledText } from 'src/app/models/titled-text.model';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { sitePage } from 'src/app/shared/site-index';
 import { AutomationComponent } from './automation.component';
 import { AUTOMATION_FIGURES } from './automation.module';
 
@@ -12,6 +13,13 @@ const CAPTIONS = {
   'AUTOMATION.FIGURE_IT': 'Server provisioning',
   'AUTOMATION.FIGURE_DATA': 'Integration bus',
 };
+
+const OUTRO_TITLE = {
+  'GLOBAL.AUTOMATION_OUTRO': 'Partner with {{ companyName }} for automation excellence',
+};
+
+const normalize = (text: string | null | undefined): string =>
+  text?.replace(/\s+/g, ' ').trim() ?? '';
 
 describe('AutomationComponent', () => {
   let component: AutomationComponent;
@@ -26,7 +34,7 @@ describe('AutomationComponent', () => {
       providers: [provideRouter([]), provideTranslateService()],
     });
     translate = TestBed.inject(TranslateService);
-    translate.setTranslation('en', CAPTIONS);
+    translate.setTranslation('en', { ...CAPTIONS, ...OUTRO_TITLE });
     translate.use('en');
     fixture = TestBed.createComponent(AutomationComponent);
     component = fixture.componentInstance;
@@ -53,19 +61,62 @@ describe('AutomationComponent', () => {
     }
   });
 
-  it('lists every section in the contents row', () => {
+  it('lists the index sections and then the reason sheet as its contents', () => {
+    expect(component.sheet).toEqual({
+      id: 'a-05',
+      tag: 'A-05',
+      key: 'GLOBAL.AUTOMATION_OUTRO',
+      params: component.params,
+    });
+    expect(component.contents).toEqual([
+      ...sitePage('/automation').sections,
+      component.sheet,
+    ]);
     expect(component.contents.map((item) => item.id)).toEqual([
       'a-01',
       'a-02',
       'a-03',
       'a-04',
+      'a-05',
     ]);
-    expect(component.contents[0].key).toBe(component.sections[0].title);
   });
 
-  it('renders one H1 and a fragment-addressable H2 per section', () => {
+  // The index is the one list the rail, the contents row and the home
+  // index read; the sections must not drift from it.
+  it('keeps its sections in step with the site index', () => {
+    expect(
+      component.sections.map(({ id, tag, title }) => ({ id, tag, key: title }))
+    ).toEqual(sitePage('/automation').sections);
+  });
+
+  it('mounts the section rail ahead of the sections with one link per item', () => {
+    const rail = element.querySelector('.page-rail > app-section-rail:first-child');
+    expect(rail).not.toBeNull();
+    const links = Array.from(rail?.querySelectorAll('a') ?? []);
+    expect(links.map((link) => link.getAttribute('href'))).toEqual([
+      '/#a-01',
+      '/#a-02',
+      '/#a-03',
+      '/#a-04',
+      '/#a-05',
+    ]);
+    links.slice(0, 4).forEach((link, index) => {
+      const item = component.contents[index];
+      expect(normalize(link.textContent)).toContain(item.tag);
+      expect(normalize(link.textContent)).toContain(item.key);
+    });
+    // The sheet's title interpolates the company name, in the rail as on the sheet.
+    expect(normalize(links[4].textContent)).toBe(
+      'A-05 Partner with Just Enable for automation excellence'
+    );
+    expect(normalize(element.querySelector('app-title-block nav a[href="/#a-05"]')?.textContent)).toBe(
+      'A-05 Partner with Just Enable for automation excellence'
+    );
+  });
+
+  it('renders one H1, then the sections, the reason sheet and the CTA in the rail grid', () => {
     expect(element.querySelectorAll('h1').length).toBe(1);
-    const headings = Array.from(element.querySelectorAll('h2'));
+    const headings = Array.from(element.querySelectorAll('.page-rail h2'));
     expect(headings.map((heading) => heading.id)).toEqual([
       'a-01',
       'a-02',
@@ -73,7 +124,13 @@ describe('AutomationComponent', () => {
       'a-04',
       'a-05',
     ]);
-    expect(element.querySelector('app-cta-band a[href="/contact-us"]')).not.toBeNull();
+    expect(element.querySelectorAll('.page-rail app-feature-section').length).toBe(4);
+    expect(normalize(element.querySelector('.page-rail app-reason-sheet h2#a-05')?.textContent)).toBe(
+      'Partner with Just Enable for automation excellence'
+    );
+    expect(
+      element.querySelector('.page-rail app-cta-band a[href="/contact-us"]')
+    ).not.toBeNull();
   });
 
   it('draws each section its own figure, in order, with no Lottie left', () => {

@@ -20,7 +20,7 @@
       </div>
     </div>
     @if (contents?.length) {
-      <nav class="mt-6" [attr.aria-label]="'A11Y.CONTENTS' | translate">
+      <nav class="mt-6 xl:hidden" [attr.aria-label]="'A11Y.CONTENTS' | translate">
         <ul class="flex flex-wrap gap-x-6 gap-y-0">
           @for (item of contents; track item.id) {
             <li>
@@ -30,7 +30,7 @@
                 class="tag inline-flex min-h-[44px] items-center gap-2 py-3 text-ink-muted hover:text-ink motion-safe:transition-colors motion-safe:duration-1"
               >
                 <span class="shrink-0 whitespace-nowrap">{{ item.tag }}</span>&ngsp;
-                <span class="normal-case">{{ item.key | translate }}</span>
+                <span class="normal-case">{{ item.key | translate: item.params }}</span>
               </a>
             </li>
           }

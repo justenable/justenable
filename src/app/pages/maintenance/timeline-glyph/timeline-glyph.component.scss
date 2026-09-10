@@ -2,12 +2,15 @@
   display: block;
 }
 
-// The strip is drawn in a 480px-wide space and rendered at whatever the
-// figure column gives it, so strokes are pinned to their CSS px width like
-// the mimic's: the glyph stays an ink drawing next to the text rather than
-// a thick bar.
-.glyph * {
-  vector-effect: non-scaling-stroke;
+// Draw-in contract (components.scss): inside .figure.is-revealed every
+// element with pathLength="1" draws over --dur-figure, starting --i steps
+// in; the marker and the tags wait for --draw-end. Each strip group sets
+// --steps to its last index so that wait covers its slowest line.
+// The strokes scale with the drawing rather than pinning to CSS px: a
+// non-scaling stroke is dashed in screen space, so pathLength="1" would no
+// longer make one dash the whole line and the draw-in could not complete.
+.glyph > g {
+  --draw-end: calc(var(--dur-figure) + var(--steps, 0) * var(--dur-figure-step));
 }
 
 // Fill via a class, not an attribute: presentation attributes do not resolve
@@ -31,3 +34,5 @@
   font-weight: 500;
   letter-spacing: 0.02em;
 }
+
+// Late fades and in-flight motion are global CSS: src/styles/components.scss and src/styles/figure-motion.scss.

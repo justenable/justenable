@@ -7,6 +7,8 @@ export interface ContentsItem {
   tag: string;
   /** Translation key of the section title. */
   key: string;
+  /** Interpolation params of `key`, for a title such as `GLOBAL.AUTOMATION_OUTRO` ({{ companyName }}). */
+  params?: Record<string, unknown>;
 }
 
 /** Page header of every inner page; the only thing that renders an H1 there. */

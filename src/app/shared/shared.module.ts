@@ -10,11 +10,13 @@ import { CtaBandComponent } from './components/cta-band/cta-band.component';
 import { FeatureSectionComponent } from './components/feature-section/feature-section.component';
 import { FigureComponent } from './components/figure/figure.component';
 import { ReasonSheetComponent } from './components/reason-sheet/reason-sheet.component';
+import { SectionRailComponent } from './components/section-rail/section-rail.component';
 import { TitleBlockComponent } from './components/title-block/title-block.component';
 import { UiModule } from './ui/ui.module';
 
 const PAGE_COMPONENTS = [
   TitleBlockComponent,
+  SectionRailComponent,
   FeatureSectionComponent,
   ReasonSheetComponent,
   CtaBandComponent,

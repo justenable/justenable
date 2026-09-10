@@ -39,6 +39,15 @@
 .site-footer__maps {
   @apply mt-3 inline-flex min-h-[44px] items-center gap-1 text-accent-text decoration-2 underline-offset-[3px] hover:underline;
 }
+// The arrow nudges right on hover, as the ghost button's does (components.scss).
+@media (prefers-reduced-motion: no-preference) {
+  .site-footer__maps > [aria-hidden='true'] {
+    transition: transform var(--dur-2) var(--ease-out);
+  }
+  .site-footer__maps:hover > [aria-hidden='true'] {
+    transform: translateX(4px);
+  }
+}
 
 .site-footer__bottom {
   @apply mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-border pt-5 text-ink-muted;

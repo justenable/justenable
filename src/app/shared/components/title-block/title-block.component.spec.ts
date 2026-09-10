@@ -27,6 +27,12 @@ class HostComponent {
   contents?: ContentsItem[] = [
     { id: 'a-01', tag: 'A-01', key: 'GLOBAL.PROCESS_AUTOMATION' },
     { id: 'a-02', tag: 'A-02', key: 'GLOBAL.INDUSTRIAL_AUTOMATION' },
+    {
+      id: 'a-05',
+      tag: 'A-05',
+      key: 'GLOBAL.AUTOMATION_OUTRO',
+      params: { companyName: 'Just Enable' },
+    },
   ];
 }
 
@@ -48,6 +54,7 @@ describe('TitleBlockComponent', () => {
       'GLOBAL.AUTOMATION_INTRO_TEXT': 'At {{ companyName }}, we automate.',
       'GLOBAL.PROCESS_AUTOMATION': 'Process automation',
       'GLOBAL.INDUSTRIAL_AUTOMATION': 'Industrial automation',
+      'GLOBAL.AUTOMATION_OUTRO': 'Partner with {{ companyName }} for automation excellence',
       'A11Y.CONTENTS': 'On this page',
     });
     translate.use('en');
@@ -75,16 +82,21 @@ describe('TitleBlockComponent', () => {
     );
   });
 
-  it('lists the contents as fragment links in a labelled nav', () => {
+  it('lists the contents as fragment links in a labelled nav that the rail replaces from xl', () => {
     const nav = element.querySelector('nav');
     expect(nav?.getAttribute('aria-label')).toBe('On this page');
+    expect(nav?.classList).toContain('xl:hidden');
     const links = Array.from(nav?.querySelectorAll('a') ?? []);
     expect(links.map((link) => link.getAttribute('href'))).toEqual([
       '/#a-01',
       '/#a-02',
+      '/#a-05',
     ]);
     expect(links[0].textContent?.replace(/\s+/g, ' ').trim()).toBe(
       'A-01 Process automation'
+    );
+    expect(links[2].textContent?.replace(/\s+/g, ' ').trim()).toBe(
+      'A-05 Partner with Just Enable for automation excellence'
     );
   });
 

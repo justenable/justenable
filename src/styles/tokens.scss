@@ -47,23 +47,35 @@
   --space-10: 8rem;
   --section-y: clamp(2.5rem, 1.75rem + 3vw, 4.5rem);
   --plate-pad: clamp(1.25rem, 1rem + 1.5vw, 2rem);
-  --gutter: 1rem; /* 1.5rem from 640px, 2rem from 1024px (see .container-x) */
+  --gutter: 1rem; /* 1.5rem from 640px, 2rem from 1024px, 3rem from 1280px (see .container-x) */
 
   /* radius: enclosures have small radii; nothing is a pill, nothing is zero */
   --radius-1: 4px; /* buttons, chips, inputs, screens */
   --radius-2: 6px; /* plates */
   --radius-round: 999px; /* rocker track and knob only */
 
-  /* shadow: elevation is expressed by plate borders; shadows exist only for things that float */
+  /* shadow: elevation is expressed by plate borders; shadows exist only for things that float
+     (the language popover, and the header once content has scrolled under it) */
   --shadow-0: none;
   --shadow-popover: 0 8px 24px rgb(0 0 0 / 0.12);
+  --shadow-header: 0 4px 16px rgb(0 0 0 / 0.08);
 
-  /* motion */
-  --dur-1: 120ms; /* colour, border, underline */
-  --dur-2: 200ms; /* rocker knob, mobile panel, popover */
+  /* motion: every duration is finite and short; nothing loops, nothing blinks */
+  --dur-1: 120ms; /* colour, border, underline, button lift */
+  --dur-2: 200ms; /* rocker knob, mobile panel, popover, nav underline, ghost arrow */
+  --dur-reveal: 480ms; /* scroll reveal (RevealDirective) */
   --dur-draw: 500ms; /* mimic bus draw */
+  --dur-figure: 700ms; /* one figure line drawing in; lines are staggered by --dur-figure-step */
+  --dur-figure-step: 60ms;
+  --dur-route-out: 160ms; /* view transition: old page fades out */
+  --dur-route-in: 240ms; /* view transition: new page fades in and rises 8px */
   --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
   --ease-std: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* anchors: a fragment target lands this far below the viewport top, the 64px
+     sticky header plus a 16px breath. Read by h2[id]'s scroll-margin-top (native
+     fragment loads, focus nudges) and by the router's anchor scrolling. */
+  --anchor-offset: 80px;
 
   /* z layers */
   --z-panel: 40; /* mobile nav panel */
@@ -94,6 +106,7 @@
   --color-focus: 255 138 61; /* #FF8A3D */
 
   --shadow-popover: 0 8px 24px rgb(0 0 0 / 0.5);
+  --shadow-header: 0 4px 16px rgb(0 0 0 / 0.4);
   /* screen tokens unchanged: the screen stays light at night */
 }
 

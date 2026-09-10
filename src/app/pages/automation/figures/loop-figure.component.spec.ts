@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { expectDrawContract } from './figure.spec-helpers';
 import { LoopFigureComponent } from './loop-figure.component';
 
 describe('LoopFigureComponent', () => {
@@ -25,6 +26,14 @@ describe('LoopFigureComponent', () => {
     for (const text of texts) {
       expect(text.classList).toContain('figure-tag');
     }
+  });
+
+  it('draws every stroke in order under the draw-in contract', () => {
+    expectDrawContract(svg);
+  });
+
+  it('opens the valve on a group of its own, so the marker keeps its fade-in', () => {
+    expect(svg.querySelector('g.valve-position > .figure-marker')).not.toBeNull();
   });
 
   it('lights exactly one element', () => {

@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { expectDrawContract } from './figure.spec-helpers';
 import { ProcessFigureComponent } from './process-figure.component';
 
 describe('ProcessFigureComponent', () => {
@@ -25,6 +26,14 @@ describe('ProcessFigureComponent', () => {
     for (const text of texts) {
       expect(text.classList).toContain('figure-tag');
     }
+  });
+
+  it('draws every stroke in order under the draw-in contract', () => {
+    expectDrawContract(svg);
+  });
+
+  it('walks the running step on a group of its own, so the marker keeps its fade-in', () => {
+    expect(svg.querySelector('g.running-step > .figure-marker')).not.toBeNull();
   });
 
   it('lights exactly one element', () => {

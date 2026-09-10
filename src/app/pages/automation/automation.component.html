@@ -7,43 +7,48 @@
   [contents]="contents"
 />
 
-@for (section of sections; track section.id; let odd = $odd) {
-  <app-feature-section
-    [tag]="section.tag"
-    [id]="section.id"
-    [titleKey]="section.title"
-    [reverse]="odd"
-  >
-    <ul body class="dash-list">
-      @for (text of section.texts; track text) {
-        <li>{{ text | translate }}</li>
-      }
-    </ul>
-    <app-figure figure [captionKey]="captions[section.figure]">
-      @switch (section.figure) {
-        @case ('process') {
-          <app-process-figure />
-        }
-        @case ('loop') {
-          <app-loop-figure />
-        }
-        @case ('rack') {
-          <app-rack-figure />
-        }
-        @case ('integration') {
-          <app-integration-figure />
-        }
-      }
-    </app-figure>
-  </app-feature-section>
-}
+<div class="page-rail">
+  <app-section-rail [items]="contents" />
+  <div>
+    @for (section of sections; track section.id; let odd = $odd) {
+      <app-feature-section
+        [tag]="section.tag"
+        [id]="section.id"
+        [titleKey]="section.title"
+        [reverse]="odd"
+      >
+        <ul body class="dash-list">
+          @for (text of section.texts; track text) {
+            <li>{{ text | translate }}</li>
+          }
+        </ul>
+        <app-figure figure [captionKey]="captions[section.figure]">
+          @switch (section.figure) {
+            @case ('process') {
+              <app-process-figure />
+            }
+            @case ('loop') {
+              <app-loop-figure />
+            }
+            @case ('rack') {
+              <app-rack-figure />
+            }
+            @case ('integration') {
+              <app-integration-figure />
+            }
+          }
+        </app-figure>
+      </app-feature-section>
+    }
 
-<app-reason-sheet
-  tag="A-05"
-  [id]="'a-05'"
-  titleKey="GLOBAL.AUTOMATION_OUTRO"
-  [titleParams]="params"
-  [items]="outroItems$ | async"
-/>
+    <app-reason-sheet
+      [tag]="sheet.tag"
+      [id]="sheet.id"
+      [titleKey]="sheet.key"
+      [titleParams]="sheet.params"
+      [items]="outroItems$ | async"
+    />
 
-<app-cta-band textKey="GLOBAL.AUTOMATION_OUTRO_SUMMARY" />
+    <app-cta-band textKey="GLOBAL.AUTOMATION_OUTRO_SUMMARY" />
+  </div>
+</div>

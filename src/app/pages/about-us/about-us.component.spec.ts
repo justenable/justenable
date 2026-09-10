@@ -9,6 +9,9 @@ import { OfficeFigureComponent } from './figures/office-figure.component';
 import { StackFigureComponent } from './figures/stack-figure.component';
 import { NameplateComponent } from './nameplate/nameplate.component';
 
+const normalize = (text: string | null | undefined): string =>
+  (text ?? '').replace(/\s+/g, ' ').trim();
+
 describe('AboutUsComponent', () => {
   let component: AboutUsComponent;
   let fixture: ComponentFixture<AboutUsComponent>;
@@ -30,6 +33,7 @@ describe('AboutUsComponent', () => {
     });
     const translate = TestBed.inject(TranslateService);
     translate.setTranslation('en', {
+      'A11Y.CONTENTS': 'On this page',
       'NAVIGATION.ABOUT_US': 'About us',
       'GLOBAL.OUR_STORY': 'Our story',
       'GLOBAL.OUR_STORY_TEXT.0': 'Just Enable started with roots in software.',
@@ -66,13 +70,30 @@ describe('AboutUsComponent', () => {
     }
   });
 
-  it('renders one H1 from the title block and a fragment-addressable H2 per row', () => {
+  it('lists the three rows as its contents, in row order', () => {
+    expect(component.contents).toEqual([
+      { id: 'our-story', tag: '01', key: 'GLOBAL.OUR_STORY' },
+      { id: 'our-culture', tag: '02', key: 'GLOBAL.OUR_CULTURE' },
+      { id: 'technology', tag: '03', key: 'GLOBAL.TECHNOLOGY' },
+    ]);
+  });
+
+  it('renders one H1 with the contents row and a fragment-addressable H2 per row', () => {
     const headings = element.querySelectorAll('h1');
     expect(headings.length).toBe(1);
     expect(headings[0].textContent?.trim()).toBe('About us');
     expect(element.querySelector('.eyebrow .tag')).toBeNull();
     expect(element.querySelector('app-title-block p.text-lead')).toBeNull();
-    expect(element.querySelector('app-title-block nav')).toBeNull();
+
+    const contentsLinks = Array.from(
+      element.querySelectorAll('app-title-block nav a')
+    );
+    expect(contentsLinks.map((link) => link.getAttribute('href'))).toEqual([
+      '/#our-story',
+      '/#our-culture',
+      '/#technology',
+    ]);
+    expect(normalize(contentsLinks[0].textContent)).toBe('01 Our story');
 
     const subheadings = Array.from(element.querySelectorAll('h2'));
     expect(subheadings.map((heading) => heading.id)).toEqual([
@@ -85,6 +106,33 @@ describe('AboutUsComponent', () => {
       'Our culture',
       'Technology',
     ]);
+  });
+
+  it('mounts the section rail ahead of the rows with one link per row', () => {
+    const rail = element.querySelector('.page-rail > app-section-rail:first-child');
+    expect(rail).not.toBeNull();
+    const links = Array.from(rail?.querySelectorAll('a') ?? []);
+    expect(links.map((link) => link.getAttribute('href'))).toEqual([
+      '/#our-story',
+      '/#our-culture',
+      '/#technology',
+    ]);
+    expect(links.map((link) => normalize(link.textContent))).toEqual([
+      '01 Our story',
+      '02 Our culture',
+      '03 Technology',
+    ]);
+  });
+
+  it('keeps the three rows and the contact band inside the rail grid', () => {
+    expect(element.querySelectorAll('.page-rail app-feature-section').length).toBe(3);
+    expect(element.querySelectorAll('.page-rail h2').length).toBe(3);
+    expect(
+      element.querySelector('.page-rail app-cta-band a[href="/contact-us"]')
+    ).not.toBeNull();
+    expect(element.querySelector('app-cta-band p')?.textContent?.trim()).toBe(
+      'Get in touch.'
+    );
   });
 
   it('renders each paragraph as plain translated text, never as markup', () => {
@@ -113,6 +161,7 @@ describe('AboutUsComponent', () => {
     expect(nameplate?.parentElement?.classList).toContain('order-first');
     expect(story.querySelector('app-figure')).toBeNull();
     expect(element.querySelectorAll('app-nameplate').length).toBe(1);
+    expect(nameplate?.querySelectorAll('dd').length).toBe(6);
   });
 
   it('draws the office plan under the culture row and the stack under the technology row', () => {
@@ -152,13 +201,5 @@ describe('AboutUsComponent', () => {
     expect(
       sections.map((section) => (section.componentInstance as FeatureSectionComponent).reverse)
     ).toEqual([false, true, false]);
-  });
-
-  it('closes with the contact band', () => {
-    const button = element.querySelector('app-cta-band a[href="/contact-us"]');
-    expect(button).not.toBeNull();
-    expect(element.querySelector('app-cta-band p')?.textContent?.trim()).toBe(
-      'Get in touch.'
-    );
   });
 });

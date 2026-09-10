@@ -7,6 +7,7 @@ import {
 import { TitledText } from 'src/app/models/titled-text.model';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ContentsItem } from 'src/app/shared/components/title-block/title-block.component';
+import { sitePage } from 'src/app/shared/site-index';
 
 @Component({
   selector: 'app-maintenance',
@@ -77,9 +78,19 @@ export class MaintenanceComponent {
     },
   ];
 
-  readonly contents: ContentsItem[] = this.sections.map(
-    ({ id, tag, title }) => ({ id, tag, key: title })
-  );
+  /** The closing reason sheet: a section of this page, not of the site index. */
+  readonly sheet: ContentsItem = {
+    id: 'm-06',
+    tag: 'M-06',
+    key: 'GLOBAL.MAINTENANCE_OUTRO',
+    params: this.params,
+  };
+
+  /** Every section with an H2, for the rail and the contents row. */
+  readonly contents: ContentsItem[] = [
+    ...sitePage('/maintenance').sections,
+    this.sheet,
+  ];
 
   readonly outroItems$: Observable<TitledText[]> = this.utils.streamTitledList(
     'GLOBAL.MAINTENANCE_OUTRO_TEXT'

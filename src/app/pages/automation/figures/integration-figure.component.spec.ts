@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { expectDrawContract } from './figure.spec-helpers';
 import { IntegrationFigureComponent } from './integration-figure.component';
 
 describe('IntegrationFigureComponent', () => {
@@ -25,6 +26,14 @@ describe('IntegrationFigureComponent', () => {
     for (const text of texts) {
       expect(text.classList).toContain('figure-tag');
     }
+  });
+
+  it('draws every stroke in order under the draw-in contract', () => {
+    expectDrawContract(svg);
+  });
+
+  it('flies the record on a group of its own, so the marker keeps its fade-in', () => {
+    expect(svg.querySelector('g.bus-record > .figure-marker')).not.toBeNull();
   });
 
   it('lights exactly one element', () => {

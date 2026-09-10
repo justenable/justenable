@@ -3,10 +3,26 @@
   // containing block, and a block host sized to the header would leave it no
   // room to stick.
   @apply sticky top-0 z-header block;
+  // Its own snapshot during a route transition, so it never fades with the page.
+  view-transition-name: header;
 }
 
 .site-header {
   @apply border-b border-border bg-surface;
+}
+
+// Once content has scrolled under it the header floats: the rule becomes a
+// shadow. The height does not change.
+:host(.is-scrolled) .site-header {
+  border-bottom-color: transparent;
+  box-shadow: var(--shadow-header);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .site-header {
+    transition:
+      border-color var(--dur-2),
+      box-shadow var(--dur-2) var(--ease-out);
+  }
 }
 
 .site-header__row {
@@ -32,13 +48,34 @@
 }
 
 // Text nav item: lamp + label; current = ink, accent underline, lit lamp.
+// The underline is a pseudo-element that grows from the left on hover in
+// ink; the current page's stays full and is the one place it is orange.
 .nav-link {
-  @apply inline-flex h-11 items-center gap-2 whitespace-nowrap px-2 text-nav text-ink-muted hover:text-ink motion-safe:transition-colors motion-safe:duration-1;
-  border-bottom: 2px solid transparent;
+  @apply relative inline-flex h-11 items-center gap-2 whitespace-nowrap px-2 text-nav text-ink-muted hover:text-ink motion-safe:transition-colors motion-safe:duration-1;
+  &::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 2px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+  &:hover::after {
+    transform: scaleX(1);
+  }
 }
 .nav-link.is-current {
   @apply text-ink;
-  border-bottom-color: rgb(var(--color-accent));
+  &::after {
+    background: rgb(var(--color-accent));
+    transform: scaleX(1);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .nav-link::after {
+    transition: transform var(--dur-2) var(--ease-out);
+  }
 }
 
 // Contact us is the only black-on-orange control in the bar; orange on
@@ -104,14 +141,24 @@
   @apply flex flex-col gap-4 border-t border-border py-4;
 }
 
+// The animation is referenced from a top-level rule and switched off under
+// reduce, not switched on under no-preference: Angular's style encapsulation
+// only rescopes an `animation` that follows whitespace or a semicolon, and a
+// minified production build leaves an animation that opens a rule inside an
+// at-rule as `{animation:site-menu-in`, pointing at a keyframe name that no
+// longer exists (design-system section 6).
+.site-menu {
+  animation: site-menu-in var(--dur-2) var(--ease-out) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-menu {
+    animation: none;
+  }
+}
+
 @keyframes site-menu-in {
   from {
     opacity: 0;
     transform: translateY(-8px);
-  }
-}
-@media (prefers-reduced-motion: no-preference) {
-  .site-menu {
-    animation: site-menu-in var(--dur-2) var(--ease-out) both;
   }
 }

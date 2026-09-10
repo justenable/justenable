@@ -14,7 +14,7 @@
     </ul>
 
     <div class="site-footer__columns">
-      <nav [attr.aria-label]="'A11Y.FOOTER_NAVIGATION' | translate">
+      <nav [attr.aria-label]="'A11Y.FOOTER_NAVIGATION' | translate" appReveal>
         <p class="eyebrow">{{ 'FOOTER.NAVIGATION' | translate }}</p>
         <ul class="site-footer__list">
           @for (item of nav; track item.url) {
@@ -23,7 +23,7 @@
         </ul>
       </nav>
 
-      <div>
+      <div appReveal [appRevealDelay]="80">
         <p class="eyebrow">{{ 'FOOTER.CONTACT' | translate }}</p>
         <ul class="site-footer__list font-mono text-mono-value" translate="no">
           <li><a [href]="'mailto:' + contact.email" class="site-footer__link">{{ contact.email }}</a></li>
@@ -32,7 +32,7 @@
         </ul>
       </div>
 
-      <div>
+      <div appReveal [appRevealDelay]="160">
         <p class="eyebrow">{{ 'FOOTER.ADDRESS' | translate }}</p>
         <address class="site-footer__address font-mono text-mono-value" lang="en">
           @for (line of contact.addressLines; track line) {

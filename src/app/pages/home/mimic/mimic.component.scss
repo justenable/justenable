@@ -3,6 +3,10 @@
   color: rgb(var(--color-ink));
 }
 
+// The drawing scales as one piece, without vector-effect: non-scaling-stroke.
+// Chrome dashes a non-scaling stroke in screen space but scales pathLength in
+// user space, so at any render scale above 1 the draw-in and the signal would
+// stop short of the bus by the difference (12.5% at 640px on a 560 viewBox).
 .mimic-line,
 .mimic-face,
 .lamp-fill {
@@ -10,7 +14,6 @@
   stroke-width: 1.5;
   stroke-linecap: round;
   stroke-linejoin: round;
-  vector-effect: non-scaling-stroke;
 }
 
 .mimic-line {
@@ -44,26 +47,63 @@
   stroke-width: 1.25;
 }
 
-// Lamp test (spec section 6): once per session, 1.1 s in total. Every hidden
-// start value lives in a keyframe `from` block under .is-testing, so the
-// prerendered page, revisits and reduced motion all show the finished
-// picture. Nothing pulses afterwards: a blinking lamp here is an alarm.
-:host(.is-testing) {
+// The signal: an accent dash that travels each feeder from S to the bus once
+// after the lamp test. Its only picture is the moving dash, so at rest the
+// pattern sits past the end of the feeder (offset -1, where the animation
+// also leaves it) and the feeder reads as a plain line. Butt caps, so the
+// dash cannot leak a round cap onto the feeder at either end of its travel.
+.mimic-signal {
+  fill: none;
+  stroke: rgb(var(--color-accent));
+  stroke-width: 3;
+  stroke-linecap: butt;
+  stroke-dasharray: var(--signal-dash) 2;
+  stroke-dashoffset: -1;
+}
+
+// The dash is 24px at the design size, as a fraction of the feeder: 120 + 8√2
+// user units drawn 640px wide (landscape), 72 + 8√2 drawn 320px wide (portrait).
+.mimic--landscape {
+  --signal-dash: 0.16;
+}
+.mimic--portrait {
+  --signal-dash: 0.29;
+}
+
+// Lamp test (spec section 6): 1.1 s from --lamp-test-delay (0 unless the host
+// sets it; the home hero sets 300 ms so its text rises first), then the four
+// signals, 150 ms apart, 1.2 s each. It keys on html.motion, set before first
+// paint by index.html unless the visitor prefers reduced motion, so it starts
+// on the prerendered first paint rather than after hydration. Every hidden
+// start value lives in a keyframe `from` block under that class, so HTML
+// without the script and reduced motion show the finished picture. Nothing
+// pulses afterwards: a blinking lamp here is an alarm.
+:host-context(html.motion) {
+  --test-start: var(--lamp-test-delay, 0ms);
+  // Bus drawn, X1 to X4 lit 120 ms apart, then the S labels: 1.1 s.
+  --test-end: calc(var(--test-start) + var(--dur-draw) + 5 * 120ms);
+
   .mimic-line {
     // pathLength="1" on every line, so one dash of length 1 is the whole line.
     stroke-dasharray: 1;
     animation: mimic-draw var(--dur-draw) var(--ease-out) both;
+    animation-delay: var(--test-start);
   }
 
   .lamp-fill {
     // X1 to X4 come on 120 ms apart once the bus is drawn; --i is the terminal index.
     animation: mimic-light 120ms linear both;
-    animation-delay: calc(var(--dur-draw) + var(--i, 0) * 120ms);
+    animation-delay: calc(var(--test-start) + var(--dur-draw) + var(--i, 0) * 120ms);
   }
 
   .mimic-tag--node {
     animation: mimic-label 120ms linear both;
-    animation-delay: calc(var(--dur-draw) + 4 * 120ms);
+    animation-delay: calc(var(--test-start) + var(--dur-draw) + 4 * 120ms);
+  }
+
+  .mimic-signal {
+    animation: mimic-signal 1.2s linear both;
+    animation-delay: calc(var(--test-end) + var(--i, 0) * 150ms);
   }
 }
 
@@ -94,9 +134,86 @@
   }
 }
 
-// Belt and braces: HomeComponent never adds the class under reduced motion.
+// The dash starts just before the feeder (offset = its own length) and runs
+// off the far end.
+@keyframes mimic-signal {
+  from {
+    stroke-dashoffset: var(--signal-dash);
+  }
+  to {
+    stroke-dashoffset: -1;
+  }
+}
+
+// Belt and braces for a preference that changes after the page was marked.
 @media (prefers-reduced-motion: reduce) {
-  :host(.is-testing) * {
+  :host-context(html.motion) * {
     animation: none !important;
+  }
+}
+
+// Interactive mimic: each S node and X terminal is an anchor to its home
+// section, and hovering or focusing one selects a path. From a service the
+// selection runs downstream (its feeder, the bus, every output and terminal
+// face); from an industry it runs upstream (every feeder, the bus, its own
+// output). "This path is selected" is a state, so the accent stroke is
+// allowed here and only while the pointer or focus is on the node. The
+// rules key on `:has()` from the svg root: without it nothing is lost, the
+// anchors still work. Each `:has()` argument is a single compound with no
+// spaces or commas, because emulated encapsulation splits selector parts on
+// whitespace without regard to parentheses.
+.mimic-node {
+  cursor: pointer;
+}
+
+// The focus ring is the global 2px focus outline (accent-text in both
+// themes); Chrome and Firefox draw it around the anchor's box, which is the
+// face rect. Restated here so the mimic never loses it to a reset.
+.mimic-node:focus-visible {
+  outline: 2px solid rgb(var(--color-focus));
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .mimic-line,
+  .mimic-face {
+    transition:
+      stroke var(--dur-2) var(--ease-std),
+      stroke-width var(--dur-2) var(--ease-std);
+  }
+}
+
+%selected {
+  stroke: rgb(var(--color-accent));
+  stroke-width: 2.5;
+}
+
+.mimic-node:hover .mimic-face,
+.mimic-node:focus-visible .mimic-face {
+  @extend %selected;
+}
+
+@each $state in hover, focus-visible {
+  @each $n in 1, 2, 3, 4 {
+    .mimic:has(.node--s#{$n}:#{$state}) {
+      .feeder--s#{$n},
+      .mimic-output,
+      .mimic-face--terminal {
+        @extend %selected;
+      }
+    }
+
+    .mimic:has(.node--x#{$n}:#{$state}) {
+      .mimic-feeder,
+      .output--x#{$n} {
+        @extend %selected;
+      }
+    }
+
+    // The bus keeps its 3px weight; only its colour changes.
+    .mimic:has(.node--s#{$n}:#{$state}) .mimic-bus,
+    .mimic:has(.node--x#{$n}:#{$state}) .mimic-bus {
+      stroke: rgb(var(--color-accent));
+    }
   }
 }

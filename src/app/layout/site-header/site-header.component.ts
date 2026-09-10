@@ -8,6 +8,7 @@ import {
   HostListener,
   inject,
   Injector,
+  NgZone,
   OnDestroy,
   PLATFORM_ID,
   viewChild,
@@ -19,6 +20,9 @@ import { NAV } from 'src/app/shared/navigation';
 
 // Must match the `nav` screen in tailwind.config.js.
 const NAV_BAR_QUERY = '(min-width: 1180px)';
+/** Scroll depth past which the header's rule becomes a shadow (`.is-scrolled`). */
+export const SCROLLED_OFFSET = 24;
+const SCROLLED_CLASS = 'is-scrolled';
 
 /** What the panel's focus trap cycles through; exported so the spec cannot drift from it. */
 export const FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]';
@@ -40,6 +44,8 @@ export class SiteHeaderComponent implements OnDestroy {
   readonly layout = inject(LayoutService);
 
   private readonly document = inject(DOCUMENT);
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly zone = inject(NgZone);
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
   private readonly injector = inject(Injector);
   private readonly router = inject(Router);
@@ -53,6 +59,14 @@ export class SiteHeaderComponent implements OnDestroy {
     if (event.matches) {
       this.layout.closeMenu();
     }
+  };
+  // Toggles a class only, so it runs outside the zone: a change-detection
+  // pass per scroll event would be wasted work.
+  private readonly onScroll = () => {
+    this.host.nativeElement.classList.toggle(
+      SCROLLED_CLASS,
+      window.scrollY > SCROLLED_OFFSET
+    );
   };
 
   constructor() {
@@ -70,6 +84,11 @@ export class SiteHeaderComponent implements OnDestroy {
     if (this.isBrowser) {
       this.navBar = window.matchMedia(NAV_BAR_QUERY);
       this.navBar.addEventListener('change', this.onNavBarChange);
+      // A page can open already scrolled (a fragment link), so read once now.
+      this.onScroll();
+      this.zone.runOutsideAngular(() =>
+        window.addEventListener('scroll', this.onScroll, { passive: true })
+      );
     }
   }
 
@@ -77,6 +96,7 @@ export class SiteHeaderComponent implements OnDestroy {
     this.navigation.unsubscribe();
     this.navBar?.removeEventListener('change', this.onNavBarChange);
     if (this.isBrowser) {
+      window.removeEventListener('scroll', this.onScroll);
       this.document.body.style.overflow = '';
     }
   }

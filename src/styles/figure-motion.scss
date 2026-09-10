@@ -1,0 +1,146 @@
+// In-flight motions of the drawn figures, once each, after their draw-in.
+// They live here, not in the components' own stylesheets, because Angular's
+// emulated encapsulation renames a component's @keyframes but does not
+// rewrite an `animation:` declaration that sits inside a media block, so in
+// a production build the two names never meet and the motion is inert.
+// Global CSS is not scoped, and every class below is unique to one figure.
+// Start states live only inside keyframes under `.figure.is-revealed`, a
+// class RevealDirective never adds under reduced motion, so nothing is ever
+// hidden when animations are off; the media query is belt and braces.
+@media screen and (prefers-reduced-motion: no-preference) {
+  // Automation A-01: the running step lights on REQUEST, hops to CHECK,
+  // then to APPROVE, and stays there.
+  .figure.is-revealed .running-step {
+    animation: running-step 1500ms var(--ease-out) both;
+    animation-delay: calc(var(--draw-end, var(--dur-figure)) + 120ms);
+  }
+
+  // Automation A-02: the valve opens once, from the closed stop up the stem.
+  .figure.is-revealed .valve-position {
+    animation: valve-open 900ms var(--ease-out) both;
+    animation-delay: calc(var(--draw-end, var(--dur-figure)) + 420ms);
+  }
+
+  // Automation A-03: the terminal types its two commands, then U2 lights.
+  .figure.is-revealed .typed {
+    animation: typed 300ms var(--ease-out) both;
+    animation-delay: calc(
+      var(--draw-end, var(--dur-figure)) + 120ms + var(--step, 0) * 400ms
+    );
+  }
+
+  // Automation A-04: the record drops from ERP onto the bus and travels once.
+  .figure.is-revealed .bus-record {
+    animation: bus-record 1500ms var(--ease-out) both;
+    animation-delay: calc(var(--draw-end, var(--dur-figure)) + 120ms);
+  }
+
+  // Maintenance strips: the marker slides along the baseline (or the trend)
+  // to its position; the projections onto the axis follow once it has
+  // settled.
+  .figure.is-revealed .glyph__slide {
+    animation: glyph-slide 1000ms var(--ease-out) both;
+    animation-delay: calc(var(--draw-end, var(--dur-figure)) + 120ms);
+  }
+  .figure.is-revealed .glyph__slide--trend {
+    animation-name: glyph-slide-trend;
+  }
+  .figure.is-revealed .glyph__projection {
+    animation: glyph-projection-in 300ms var(--ease-out) both;
+    animation-delay: calc(var(--draw-end, var(--dur-figure)) + 1120ms);
+  }
+
+  // About: dashed groups cannot draw (the dash trick would replace their
+  // pattern), so they fade in with the tags.
+  .figure.is-revealed .figure-dashed {
+    animation: figure-dashed-in 300ms var(--ease-out) both;
+    animation-delay: calc(var(--draw-end, var(--dur-figure)) + 120ms);
+  }
+}
+
+@keyframes running-step {
+  from,
+  30% {
+    transform: translate(-144px, -120px);
+  }
+  40%,
+  70% {
+    transform: translate(0, -120px);
+  }
+  80%,
+  to {
+    transform: none;
+  }
+}
+
+@keyframes valve-open {
+  from {
+    transform: translateY(12px);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes typed {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes bus-record {
+  from,
+  20% {
+    transform: translate(-104px, -64px);
+  }
+  36% {
+    transform: translate(-104px, -8px);
+  }
+  38% {
+    transform: translate(-96px, 0);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes glyph-slide {
+  from {
+    transform: translateX(var(--slide-x));
+  }
+}
+
+// The trend's vertices relative to the marker's rest at (304, 80), each stop
+// placed by the share of the polyline's length it covers, so the marker
+// moves at one speed and only eases on the last leg.
+@keyframes glyph-slide-trend {
+  0% {
+    transform: translate(-272px, 56px);
+    animation-timing-function: linear;
+  }
+  34% {
+    transform: translate(-176px, 48px);
+    animation-timing-function: linear;
+  }
+  69% {
+    transform: translate(-80px, 32px);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+@keyframes glyph-projection-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes figure-dashed-in {
+  from {
+    opacity: 0;
+  }
+}

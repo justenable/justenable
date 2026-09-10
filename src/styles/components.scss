@@ -1,9 +1,25 @@
 // Shared component classes (spec 4.6 to 4.8, 4.24). Everything sits in the
 // Tailwind components layer so a utility on the element still wins.
 
+@mixin container-x {
+  @apply mx-auto w-full max-w-container px-4 sm:px-6 lg:px-8 xl:px-12;
+}
+
 @layer components {
   .container-x {
-    @apply mx-auto w-full max-w-container px-4 sm:px-6 lg:px-8;
+    @include container-x;
+  }
+
+  // A page with a section rail: the container itself, and from xl a grid of
+  // the rail (13rem) beside the sections. The shared sections keep their own
+  // .container-x, which in here would gutter the content a second time, so
+  // it collapses to the column.
+  .page-rail {
+    @include container-x;
+    @apply xl:grid xl:grid-cols-[13rem_1fr] xl:gap-12;
+    .container-x {
+      @apply max-w-none px-0;
+    }
   }
 
   // Plates are literal label plates: plate-on-ground is only 1.21:1, so every
@@ -17,7 +33,7 @@
   }
 
   .btn {
-    @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-1 px-5 text-center font-sans text-button motion-safe:transition-colors motion-safe:duration-1;
+    @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-1 px-5 text-center font-sans text-button;
     // Labels wrap: Afrikaans "Terug na die tuisblad" is 21 characters.
     white-space: normal;
   }
@@ -95,17 +111,105 @@
       rgb(var(--color-accent)) 12px 24px
     );
   }
+}
 
-  // RevealDirective (4.24): not applied anywhere in v1, kept as the sanctioned mechanism.
+// Motion (design-system section 6). Every rule below is gated on
+// prefers-reduced-motion: no-preference, and every hidden start state lives
+// under .reveal (a class RevealDirective never adds under reduced motion) or
+// in a keyframe `from` block, so with animations off nothing is ever hidden.
+// Screen only: a printed page never scrolls, so a section waiting for its
+// reveal would print blank.
+@media screen and (prefers-reduced-motion: no-preference) {
+  .btn {
+    transition:
+      color var(--dur-1),
+      background-color var(--dur-1),
+      border-color var(--dur-1),
+      transform var(--dur-1) var(--ease-out);
+  }
+  // The primary button lifts 1px on hover and lands again on press.
+  .btn--primary:hover {
+    transform: translateY(-1px);
+  }
+  .btn--primary:active {
+    transform: none;
+  }
+  // The ghost button's trailing arrow is its aria-hidden span (spec 4.8).
+  .btn--ghost > [aria-hidden='true'] {
+    transition: transform var(--dur-2) var(--ease-out);
+  }
+  .btn--ghost:hover > [aria-hidden='true'] {
+    transform: translateX(4px);
+  }
+
+  // Scroll reveal (RevealDirective): 12px rise and fade, staggered through
+  // --reveal-delay, which the directive sets from [appRevealDelay].
   .reveal {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(12px);
   }
   .reveal.is-revealed {
     opacity: 1;
     transform: none;
     transition:
-      opacity 240ms var(--ease-out) var(--reveal-delay, 0ms),
-      transform 240ms var(--ease-out) var(--reveal-delay, 0ms);
+      opacity var(--dur-reveal) var(--ease-out) var(--reveal-delay, 0ms),
+      transform var(--dur-reveal) var(--ease-out) var(--reveal-delay, 0ms);
+  }
+
+  // Figure draw-in (app-figure). Ink does not slide: the figure only fades
+  // while its lines draw, so a figure's reveal has no rise.
+  .figure.reveal {
+    transform: none;
+  }
+  // Contract for figure authors: every stroked element that should draw
+  // carries pathLength="1" (so one dash of length 1 is the whole line) and
+  // style="--i: n" in drawing order. Faces fill in as their outline draws.
+  // The revealed state reaches the lines as an inherited custom property,
+  // not through the selector: Chrome does not restyle SVG descendants for
+  // an ancestor's class change when the descendant part of the selector is
+  // a case-sensitive attribute, so `.is-revealed [pathLength="1"]` matches
+  // but never applies.
+  .figure.is-revealed {
+    --figure-draw: figure-draw;
+  }
+  // The gap is longer than the path and the start offset overshoots by 5%,
+  // so the previous dash's round cap never paints at the path start.
+  .figure [pathLength='1'] {
+    stroke-dasharray: 1 2;
+    animation-name: var(--figure-draw, none);
+    animation-duration: var(--dur-figure);
+    animation-timing-function: var(--ease-out);
+    animation-fill-mode: both;
+    animation-delay: calc(var(--i, 0) * var(--dur-figure-step));
+  }
+  // The accent, the tags and anything marked .figure-late (a dashed line,
+  // which pathLength="1" would turn solid, or an arrowhead on one) appear
+  // once the last line has landed; authors set --draw-end on the svg (or a
+  // group) when their last --i ends later than the default 700ms. The
+  // caption sits outside the svg and simply fades with the figure.
+  .figure.is-revealed
+    :is(.figure-marker, .figure-accent, .glyph__marker, .figure-tag, .figure-late) {
+    animation: figure-fade 300ms var(--ease-out) both;
+    animation-delay: calc(var(--draw-end, var(--dur-figure)) + 120ms);
+  }
+}
+
+@keyframes figure-draw {
+  from {
+    stroke-dashoffset: 1.05;
+    fill-opacity: 0;
+  }
+  to {
+    stroke-dashoffset: 0;
+    fill-opacity: 1;
+  }
+}
+
+@keyframes figure-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }

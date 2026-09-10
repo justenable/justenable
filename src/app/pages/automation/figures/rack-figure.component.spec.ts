@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { expectDrawContract } from './figure.spec-helpers';
 import { RackFigureComponent } from './rack-figure.component';
 
 describe('RackFigureComponent', () => {
@@ -25,6 +26,18 @@ describe('RackFigureComponent', () => {
     for (const text of texts) {
       expect(text.classList).toContain('figure-tag');
     }
+  });
+
+  it('draws every stroke in order under the draw-in contract', () => {
+    expectDrawContract(svg);
+  });
+
+  it('types the two commands before the marker lights', () => {
+    const typed = Array.from(svg.querySelectorAll<SVGGElement>('g.typed'));
+    expect(typed.map((group) => group.style.getPropertyValue('--step'))).toEqual(['0', '1', '2']);
+    expect(typed[0].querySelector('text')?.textContent).toBe('> provision');
+    expect(typed[1].querySelector('text')?.textContent).toBe('> deploy');
+    expect(typed[2].querySelector('.figure-marker')).not.toBeNull();
   });
 
   it('lights exactly one element', () => {

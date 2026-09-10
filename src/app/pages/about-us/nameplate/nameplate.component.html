@@ -1,19 +1,37 @@
 <div class="plate plate--inset nameplate">
   <!-- The company row below names the company in text, so the mark is decorative here. -->
-  <app-logo [height]="24" aria-hidden="true" />
+  <app-logo [height]="40" aria-hidden="true" />
   <dl class="nameplate__rows">
-    <dt class="eyebrow">{{ 'NAMEPLATE.COMPANY' | translate }}</dt>
-    <dd class="nameplate__value">{{ company }}</dd>
+    <div class="nameplate__row">
+      <dt class="eyebrow">{{ 'NAMEPLATE.COMPANY' | translate }}</dt>
+      <dd class="nameplate__value">{{ company }}</dd>
+    </div>
 
-    <dt class="eyebrow">{{ 'NAMEPLATE.MOTTO' | translate }}</dt>
-    <dd class="nameplate__value">{{ 'HOME.SUBTITLE' | translate }}</dd>
+    <div class="nameplate__row">
+      <dt class="eyebrow">{{ 'NAMEPLATE.MOTTO' | translate }}</dt>
+      <dd class="nameplate__value">{{ 'HOME.SUBTITLE' | translate }}</dd>
+    </div>
 
-    <dt class="eyebrow">{{ 'GLOBAL.LOCATION' | translate }}</dt>
-    <dd class="nameplate__value" lang="en">{{ location }}</dd>
+    <div class="nameplate__row">
+      <dt class="eyebrow">{{ 'GLOBAL.LOCATION' | translate }}</dt>
+      <dd class="nameplate__value" lang="en">{{ location }}</dd>
+    </div>
 
-    <dt class="eyebrow">{{ 'FOOTER.CONTACT' | translate }}</dt>
-    <dd class="nameplate__value" translate="no">
-      <a [href]="'mailto:' + email" class="nameplate__link">{{ email }}</a>
-    </dd>
+    <div class="nameplate__row">
+      <dt class="eyebrow">{{ 'FOOTER.CONTACT' | translate }}</dt>
+      <dd class="nameplate__value" translate="no">
+        <a [href]="'mailto:' + email" class="nameplate__link">{{ email }}</a>
+      </dd>
+    </div>
+
+    <div class="nameplate__row">
+      <dt class="eyebrow">{{ 'NAMEPLATE.SERVICES' | translate }}</dt>
+      <dd class="nameplate__value">{{ services$ | async }}</dd>
+    </div>
+
+    <div class="nameplate__row">
+      <dt class="eyebrow">{{ 'NAMEPLATE.INDUSTRIES' | translate }}</dt>
+      <dd class="nameplate__value">{{ industries$ | async }}</dd>
+    </div>
   </dl>
 </div>
