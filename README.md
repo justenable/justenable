@@ -57,7 +57,4 @@ Tokens live in `src/styles/tokens.scss` (RGB triplets, mapped in `tailwind.confi
 ## TODO
 
 - Founding year: add "Just Enable was founded in YYYY." to `GLOBAL.OUR_STORY_TEXT.0` in all five locales once confirmed
-- OG image: a 1200 x 630 image instead of the raw logo in the meta tags
-- Native-speaker review of the af, fr, sw and zu strings added or re-cased in the redesign
-- Map click-to-load on the contact page (confirm with the client; confirm the 2023 embed URL still resolves)
 - Real-device pass at 1024 to 1179px in French and Zulu; lamp test on a mid-range Android

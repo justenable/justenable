@@ -325,10 +325,10 @@ The closed trigger names the current language rather than coding it: a globe, th
 
 ## 10. Open follow-ups
 
+**Translations.** SETTLED: the af, fr, sw and zu strings are the client's responsibility and are not an open item for this project. Do not flag them.
+
 Carried over from the design brief and still open:
 
 1. **Founding year.** `GLOBAL.OUR_STORY_TEXT.0` no longer states an age. Once the client confirms the year, prepend "Just Enable was founded in YYYY." in all five locales.
-2. **Native-speaker review** of all af, fr, sw and zu strings added or re-cased in the redesign.
-3. **Map click-to-load.** DECIDED 2026-09-10: the client chose to keep the embedded iframe as it is. Measured cost on a mid-range Android over 4G is about 2.15 MB across 113 third-party requests, taking the contact page from roughly 0.2s to 3.6s, because the map sits above the fold so `loading="lazy"` never defers it. Revisit only if the client raises contact-page speed.
-4. **Figure captions** (`AUTOMATION.FIGURE_*`, `ABOUT.FIGURE_*`, `MAINTENANCE.GLYPH_*`), their outcome lines (`*_OUTCOME`) and the nine section framing sentences (`GLOBAL.<SECTION>_INTRO`) in af, fr, sw and zu were drafted without a native speaker; include them in the review above.
-5. **Real-device pass** at 1024 to 1179px (tablet landscape gets the panel) in French and Zulu, and a mid-range Android profile of the lamp test.
+2. **Map.** SETTLED: the embedded Google Maps iframe stays as it is. The client confirmed this on 2026-09-10 after seeing the measured cost (about 2.15 MB across 113 third-party requests on mobile). Do not raise it again.
+3. **Real-device pass** at 1024 to 1179px (tablet landscape gets the panel) in French and Zulu, and a mid-range Android profile of the lamp test.
